@@ -1,51 +1,48 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Sparkles, Brain, Palette, Users, GraduationCap, Briefcase, Building2, Rocket } from "lucide-react";
+import { Sparkles, GraduationCap, Briefcase, Users } from "lucide-react";
+import whyVoraBg from "@/assets/why-vora-bg.png";
 
-const valueBlocks = [
+const enterpriseTools = [
   {
-    icon: Sparkles,
-    title: "Effortless Creation",
-    description: "Turn raw ideas into beautifully crafted presentations — instantly.",
-    gradient: "from-vora-coral/20 via-pink-blush/30 to-transparent",
-    iconColor: "text-vora-coral",
-    iconBg: "bg-vora-coral/20",
-    glowColor: "rgba(255,127,102,0.3)",
+    company: "Deloitte",
+    tool: "PairD",
+    description: "AI assistant helping over 75,000 employees draft slides, research data, and create client-ready presentations.",
+    tagline: "AI is becoming the foundation of modern communication",
   },
   {
-    icon: Brain,
-    title: "Human + AI Harmony",
-    description: "Your creativity guides the AI — not the other way around.",
-    gradient: "from-vora-cyan/20 via-purple-light/30 to-transparent",
-    iconColor: "text-vora-cyan",
-    iconBg: "bg-vora-cyan/20",
-    glowColor: "rgba(74,125,199,0.3)",
+    company: "Boston Consulting Group",
+    tool: "Deckster",
+    description: "AI slides assistant trained on hundreds of templates to build polished and strategic presentations in minutes.",
+    tagline: "Improving speed and consistency across projects",
   },
   {
-    icon: Palette,
-    title: "Truly Aesthetic Design",
-    description: "Vora ensures every slide looks stunning, modern, and professional without effort.",
-    gradient: "from-purple-deep/20 via-vora-coral/20 to-transparent",
-    iconColor: "text-purple-light",
-    iconBg: "bg-purple-deep/20",
-    glowColor: "rgba(138,94,174,0.3)",
-  },
-  {
-    icon: Users,
-    title: "Universal Value",
-    description: "Built for everyone who wants to present ideas beautifully.",
-    gradient: "from-pink-blush/30 via-vora-cyan/20 to-transparent",
-    iconColor: "text-pink-blush",
-    iconBg: "bg-pink-blush/30",
-    glowColor: "rgba(248,200,195,0.4)",
+    company: "McKinsey & Company",
+    tool: "Lilli",
+    description: "Generative AI system for research, content summarization, and presentation workflows.",
+    tagline: "Creating data-backed, story-driven decks faster than ever",
   },
 ];
 
-const audiences = [
-  { icon: GraduationCap, label: "Students", color: "text-vora-coral" },
-  { icon: Briefcase, label: "Professionals", color: "text-vora-cyan" },
-  { icon: Rocket, label: "Founders", color: "text-purple-light" },
-  { icon: Building2, label: "Teams", color: "text-pink-blush" },
+const voraForEveryone = [
+  {
+    icon: GraduationCap,
+    audience: "For Students",
+    description: "Generate human-like, competition-ready presentations that stand out.",
+    color: "bg-vora-coral/20 text-vora-coral",
+  },
+  {
+    icon: Briefcase,
+    audience: "For Corporates",
+    description: "Produce brand-consistent, data-rich, polished decks for pitches and reports.",
+    color: "bg-vora-cyan/20 text-vora-cyan",
+  },
+  {
+    icon: Users,
+    audience: "For Everyone",
+    description: "Simplify presentation-making with top-tier AI assistance at your fingertips.",
+    color: "bg-pink-blush/30 text-pink-blush",
+  },
 ];
 
 const TrustedBySection = () => {
@@ -55,230 +52,184 @@ const TrustedBySection = () => {
     offset: ["start end", "end start"],
   });
 
-  const y1 = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [50, -50]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [-30, 30]);
-  const backgroundOpacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.3, 1, 1, 0.3]);
+  const y1 = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [30, -30]);
+  const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   return (
     <section 
       ref={containerRef}
       id="why-vora"
-      className="py-32 lg:py-40 relative overflow-hidden"
+      className="py-24 lg:py-32 relative overflow-hidden min-h-screen"
     >
-      {/* Cinematic Gradient Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-vora-navy via-[#1a1a3e] to-[#0d1b2a]" />
-      
-      {/* Animated Ambient Gradients - Coral/Pink/Blue/Violet */}
+      {/* Background Image */}
       <motion.div 
-        style={{ y: y1, opacity: backgroundOpacity }}
-        className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full blur-[120px]"
-        animate={{ 
-          background: [
-            "radial-gradient(circle, rgba(255,127,102,0.4) 0%, transparent 70%)",
-            "radial-gradient(circle, rgba(248,200,195,0.4) 0%, transparent 70%)",
-            "radial-gradient(circle, rgba(255,127,102,0.4) 0%, transparent 70%)",
-          ],
-        }}
-        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        style={{ scale: imageScale }}
+        className="absolute inset-0 w-full h-full"
+      >
+        <img
+          src={whyVoraBg}
+          alt="Human and AI collaboration"
+          className="w-full h-full object-cover object-center"
+        />
+        {/* Gradient Overlays for readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-vora-navy/80 via-vora-navy/60 to-vora-navy/90" />
+        <div className="absolute inset-0 bg-gradient-to-r from-vora-navy/50 via-transparent to-vora-navy/50" />
+      </motion.div>
+
+      {/* Parallax Ambient Glows */}
+      <motion.div 
+        style={{ y: y1 }}
+        className="absolute top-20 left-0 w-96 h-96 bg-vora-coral/20 rounded-full blur-[100px]" 
       />
       <motion.div 
         style={{ y: y2 }}
-        className="absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full blur-[100px]"
-        animate={{ 
-          background: [
-            "radial-gradient(circle, rgba(74,125,199,0.35) 0%, transparent 70%)",
-            "radial-gradient(circle, rgba(138,94,174,0.35) 0%, transparent 70%)",
-            "radial-gradient(circle, rgba(74,125,199,0.35) 0%, transparent 70%)",
-          ],
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-20 right-0 w-96 h-96 bg-vora-cyan/20 rounded-full blur-[100px]" 
       />
-      <motion.div 
-        style={{ y: y3 }}
-        className="absolute bottom-0 left-0 w-[700px] h-[400px] rounded-full blur-[150px]"
-        animate={{ 
-          background: [
-            "radial-gradient(ellipse, rgba(138,94,174,0.3) 0%, transparent 60%)",
-            "radial-gradient(ellipse, rgba(255,127,102,0.25) 0%, transparent 60%)",
-            "radial-gradient(ellipse, rgba(138,94,174,0.3) 0%, transparent 60%)",
-          ],
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-      />
-
-      {/* Soft Wave Shapes */}
-      <motion.div 
-        className="absolute top-1/4 right-1/4 w-96 h-96 opacity-20"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-      >
-        <div className="w-full h-full rounded-full border border-vora-coral/30" />
-        <div className="absolute inset-4 rounded-full border border-vora-cyan/20" />
-        <div className="absolute inset-8 rounded-full border border-purple-light/20" />
-      </motion.div>
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-center mb-20"
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
         >
-          <motion.h2 
-            className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.1 }}
-          >
-            <span className="text-white">Why </span>
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6">
+            Why Vora Matters —
+            <br />
             <span className="bg-gradient-to-r from-vora-coral via-pink-blush to-vora-cyan bg-clip-text text-transparent">
-              Vora
+              Inspired by the Best
             </span>
-            <span className="text-white"> Matters</span>
-          </motion.h2>
-          
-          <motion.p 
-            className="text-lg sm:text-xl lg:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed font-light"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-          >
-            In a world where first impressions are made in seconds, Vora empowers you to 
-            <span className="text-pink-blush"> create stunning presentations</span> that captivate, 
-            persuade, and leave lasting impressions — effortlessly.
-          </motion.p>
+          </h2>
+          <p className="text-lg lg:text-xl text-white/70 max-w-3xl mx-auto leading-relaxed">
+            The world&apos;s leading consulting firms have already adopted AI-powered 
+            presentation tools to boost productivity, storytelling, and visual design.
+          </p>
         </motion.div>
 
-        {/* Value Blocks Grid */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-10 max-w-5xl mx-auto mb-24">
-          {valueBlocks.map((block, index) => (
-            <motion.div
-              key={block.title}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, delay: index * 0.15 }}
-              whileHover={{ 
-                y: -8, 
-                transition: { duration: 0.3 } 
-              }}
-              className="group relative"
-            >
-              {/* Card */}
-              <div 
-                className="relative h-full rounded-3xl p-8 lg:p-10 border border-white/10 backdrop-blur-sm overflow-hidden transition-all duration-500 group-hover:border-white/20"
+        {/* Enterprise Tools Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="mb-20"
+        >
+          <div className="grid md:grid-cols-3 gap-6">
+            {enterpriseTools.map((item, index) => (
+              <motion.div
+                key={item.company}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ y: -5 }}
+                className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-white/10 hover:border-vora-coral/30 hover:bg-white/10 transition-all duration-300"
                 style={{
-                  background: `linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)`,
-                  boxShadow: `0 20px 60px -20px ${block.glowColor}, inset 0 1px 0 rgba(255,255,255,0.1)`,
+                  boxShadow: '0 20px 40px -20px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1)',
                 }}
               >
-                {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${block.gradient} opacity-50 group-hover:opacity-70 transition-opacity duration-500`} />
-                
-                {/* Hover Glow */}
-                <motion.div 
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"
-                  style={{
-                    boxShadow: `inset 0 0 80px ${block.glowColor}`,
-                  }}
-                />
-
-                {/* Content */}
-                <div className="relative z-10">
-                  <motion.div 
-                    className={`w-16 h-16 rounded-2xl ${block.iconBg} flex items-center justify-center mb-6 backdrop-blur-sm border border-white/10`}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <block.icon className={`w-8 h-8 ${block.iconColor}`} />
-                  </motion.div>
-                  
-                  <h3 className="font-display text-2xl lg:text-3xl font-bold text-white mb-4">
-                    {block.title}
-                  </h3>
-                  
-                  <p className="text-white/60 text-lg leading-relaxed">
-                    {block.description}
-                  </p>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center border border-white/20">
+                    <span className="font-display text-xl font-bold text-white">
+                      {item.company[0]}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-display font-bold text-white">{item.company}</p>
+                    <p className="text-sm text-vora-coral font-medium">{item.tool}</p>
+                  </div>
                 </div>
+                <p className="text-sm text-white/70 leading-relaxed mb-3">
+                  {item.description}
+                </p>
+                <p className="text-xs text-vora-cyan/80 italic">
+                  {item.tagline}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
 
-                {/* Corner Accent */}
-                <div 
-                  className="absolute top-0 right-0 w-32 h-32 opacity-30 group-hover:opacity-50 transition-opacity"
-                  style={{
-                    background: `radial-gradient(circle at top right, ${block.glowColor} 0%, transparent 70%)`,
-                  }}
-                />
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Audience Section */}
+        {/* Vora Section */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="text-center"
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="bg-white/5 backdrop-blur-md rounded-3xl p-8 lg:p-12 border border-white/10 mb-16"
+          style={{
+            boxShadow: '0 30px 60px -20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1)',
+          }}
         >
-          <motion.p 
-            className="text-white/50 text-sm uppercase tracking-[0.3em] mb-8"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            Built for Everyone
-          </motion.p>
-          
-          <div className="flex flex-wrap justify-center gap-6 lg:gap-10 mb-12">
-            {audiences.map((audience, index) => (
+          <div className="text-center mb-10">
+            <motion.div
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ type: "spring", delay: 0.2 }}
+              className="w-16 h-16 mx-auto rounded-2xl bg-vora-coral/20 flex items-center justify-center mb-4 border border-vora-coral/30"
+            >
+              <Sparkles className="w-8 h-8 text-vora-coral" />
+            </motion.div>
+            <h3 className="font-display text-2xl lg:text-3xl xl:text-4xl font-bold text-white mb-4">
+              Now, with <span className="bg-gradient-to-r from-vora-coral via-pink-blush to-vora-cyan bg-clip-text text-transparent">Vora</span> — That Power is Yours
+            </h3>
+            <p className="text-white/60 max-w-2xl mx-auto text-lg">
+              Vora takes the same world-class AI presentation technology used by Deloitte, BCG, 
+              and McKinsey — and makes it accessible to students, startups, and professionals everywhere.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {voraForEveryone.map((item, index) => (
               <motion.div
-                key={audience.label}
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                key={item.audience}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -4 }}
-                className="flex flex-col items-center gap-3 group cursor-pointer"
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 hover:border-white/20 hover:bg-white/10 transition-all duration-300"
               >
-                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center group-hover:bg-white/10 group-hover:border-white/20 transition-all duration-300">
-                  <audience.icon className={`w-7 h-7 ${audience.color}`} />
-                </div>
-                <span className="text-white/70 font-medium group-hover:text-white transition-colors">
-                  {audience.label}
-                </span>
+                <motion.div 
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center mb-4`}
+                >
+                  <item.icon className="w-6 h-6" />
+                </motion.div>
+                <h4 className="font-display text-lg font-semibold text-white mb-2">
+                  {item.audience}
+                </h4>
+                <p className="text-sm text-white/60 leading-relaxed">
+                  {item.description}
+                </p>
               </motion.div>
             ))}
           </div>
 
           {/* Tagline */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4 }}
-            className="max-w-2xl mx-auto"
+            className="text-center mt-10 pt-8 border-t border-white/10"
           >
-            <p className="text-xl lg:text-2xl text-white/80 font-light leading-relaxed">
-              It&apos;s not just another AI PPT tool —
-              <br />
-              <span className="font-display font-semibold bg-gradient-to-r from-vora-coral via-pink-blush to-vora-cyan bg-clip-text text-transparent">
-                it&apos;s the future of how the world presents ideas.
-              </span>
+            <p className="text-lg font-medium text-white">
+              What global consulting giants use internally, <span className="text-vora-coral">Vora brings to you publicly.</span>
+            </p>
+            <p className="text-white/50 mt-3 text-lg">
+              It&apos;s not just another AI PPT tool — <span className="bg-gradient-to-r from-vora-coral via-pink-blush to-vora-cyan bg-clip-text text-transparent font-semibold">it&apos;s the future of how the world presents ideas.</span>
             </p>
           </motion.div>
         </motion.div>
       </div>
 
       {/* Bottom Gradient Transition */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-20" />
     </section>
   );
 };
