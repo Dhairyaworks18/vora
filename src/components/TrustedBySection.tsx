@@ -1,21 +1,51 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { Building2, GraduationCap, Briefcase, Award } from "lucide-react";
+import { Building2, GraduationCap, Briefcase, Award, Sparkles, Users, TrendingUp } from "lucide-react";
+
+const enterpriseTools = [
+  {
+    company: "Deloitte",
+    tool: "PairD",
+    description: "Helps over 75,000 employees draft slides, research data, and create client-ready presentations.",
+  },
+  {
+    company: "BCG",
+    tool: "Deckster",
+    description: "AI slides assistant trained on hundreds of templates for polished, strategic presentations in minutes.",
+  },
+  {
+    company: "McKinsey",
+    tool: "Lilli",
+    description: "Generative AI for research, content summarization, and story-driven presentation workflows.",
+  },
+];
+
+const voraForEveryone = [
+  {
+    icon: GraduationCap,
+    audience: "For Students",
+    description: "Human-like, competition-ready presentations that stand out and cannot be identified as AI-made.",
+    color: "bg-primary/10 text-primary",
+  },
+  {
+    icon: Briefcase,
+    audience: "For Corporates",
+    description: "Brand-consistent, data-rich, and polished decks for pitches, reports, and meetings.",
+    color: "bg-secondary/20 text-secondary",
+  },
+  {
+    icon: Users,
+    audience: "For Everyone",
+    description: "Simplifies the complex art of presentation-making — top-tier AI assistance at your fingertips.",
+    color: "bg-yellow-bright/20 text-yellow-gold",
+  },
+];
 
 const stats = [
   { icon: Building2, value: "500+", label: "Enterprises Trust Us" },
   { icon: GraduationCap, value: "50K+", label: "Students Empowered" },
-  { icon: Briefcase, value: "1M+", label: "Presentations Created" },
+  { icon: TrendingUp, value: "1M+", label: "Presentations Created" },
   { icon: Award, value: "94%", label: "Competition Win Rate" },
-];
-
-const companies = [
-  "Deloitte",
-  "McKinsey",
-  "BCG",
-  "Accenture",
-  "KPMG",
-  "PwC",
 ];
 
 const TrustedBySection = () => {
@@ -53,20 +83,136 @@ const TrustedBySection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+            <Briefcase className="w-4 h-4" />
+            Inspired by the Best
+          </span>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Why Vora Matters —
             <br />
-            <span className="text-gradient-blue">Inspired by the Best</span>
+            <span className="text-gradient-blue">World-Class AI, Now Yours</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            The world's leading consulting and corporate firms have already adopted AI-powered 
-            presentation tools. Deloitte uses its in-house AI assistant PairD to help over 
-            75,000 employees draft slides, research data, and create client-ready presentations.
+            The world&apos;s leading consulting and corporate firms have already adopted AI-powered 
+            presentation tools to boost productivity, storytelling, and visual design. 
+            AI is becoming the foundation of modern communication.
           </p>
         </motion.div>
 
+        {/* Enterprise Tools Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="mb-16"
+        >
+          <p className="text-center text-sm text-muted-foreground uppercase tracking-wider mb-8">
+            What Global Giants Use Internally
+          </p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {enterpriseTools.map((item, index) => (
+              <motion.div
+                key={item.company}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ y: -5 }}
+                className="bg-muted/30 rounded-2xl p-6 border border-border/50 hover:border-primary/20 transition-all"
+              >
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-background flex items-center justify-center border border-border/50">
+                    <span className="font-display text-lg font-bold text-foreground">
+                      {item.company[0]}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="font-display font-bold text-foreground">{item.company}</p>
+                    <p className="text-sm text-primary font-medium">{item.tool}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* Vora Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.6 }}
+          className="bg-gradient-to-br from-primary/5 via-background to-coral/5 rounded-3xl p-8 lg:p-12 border border-primary/20 mb-16"
+        >
+          <div className="text-center mb-10">
+            <motion.div
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ type: "spring", delay: 0.2 }}
+              className="w-16 h-16 mx-auto rounded-2xl bg-primary/20 flex items-center justify-center mb-4"
+            >
+              <Sparkles className="w-8 h-8 text-primary" />
+            </motion.div>
+            <h3 className="font-display text-2xl lg:text-3xl font-bold text-foreground mb-3">
+              Now, with <span className="text-gradient-hero">Vora</span> — That Power is Yours
+            </h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Vora takes the same world-class AI presentation technology used by Deloitte, BCG, 
+              and McKinsey — and makes it accessible to students, startups, and professionals everywhere.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {voraForEveryone.map((item, index) => (
+              <motion.div
+                key={item.audience}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                className="bg-background/80 backdrop-blur-sm rounded-xl p-6 border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all"
+              >
+                <motion.div 
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className={`w-12 h-12 rounded-xl ${item.color} flex items-center justify-center mb-4`}
+                >
+                  <item.icon className="w-6 h-6" />
+                </motion.div>
+                <h4 className="font-display text-lg font-semibold text-foreground mb-2">
+                  {item.audience}
+                </h4>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {item.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Tagline */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4 }}
+            className="text-center mt-10 pt-8 border-t border-border/50"
+          >
+            <p className="text-lg font-medium text-foreground">
+              What global consulting giants use internally, <span className="text-primary">Vora brings to you publicly.</span>
+            </p>
+            <p className="text-muted-foreground mt-2">
+              It&apos;s not just another AI PPT tool — it&apos;s the future of how the world presents ideas.
+            </p>
+          </motion.div>
+        </motion.div>
+
         {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -96,36 +242,6 @@ const TrustedBySection = () => {
             </motion.div>
           ))}
         </div>
-
-        {/* Companies Marquee */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <p className="text-sm text-muted-foreground mb-6 uppercase tracking-wider">
-            Trusted by teams at
-          </p>
-          <div className="flex flex-wrap justify-center items-center gap-8 lg:gap-12">
-            {companies.map((company, index) => (
-              <motion.div
-                key={company}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08, duration: 0.4 }}
-                whileHover={{ scale: 1.1, y: -3 }}
-                className="px-6 py-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer"
-              >
-                <span className="font-display text-xl font-semibold text-muted-foreground">
-                  {company}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
       </div>
     </section>
   );
