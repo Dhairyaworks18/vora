@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, Sparkles, BarChart3, Palette, Users, FileText } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroVisual from "@/assets/vora-hero-visual.png";
 import { useRef } from "react";
@@ -47,23 +47,20 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 text-white"
+            className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-8 text-white"
           >
-            <span className="block text-vora-coral tracking-wider">VORA</span>
+            <motion.span 
+              className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-[0.3em] mb-4 bg-gradient-to-r from-vora-coral via-vora-purple-light to-vora-cyan bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(255,127,102,0.5)]"
+              initial={{ opacity: 0, scale: 0.8, letterSpacing: "0.5em" }}
+              animate={{ opacity: 1, scale: 1, letterSpacing: "0.3em" }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+            >
+              VORA
+            </motion.span>
             Transform Ideas into
             <br />
             <span className="text-vora-coral">Stunning Presentations</span>
           </motion.h1>
-
-          {/* Subtext */}
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-lg lg:text-xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed"
-          >
-            Vora blends human creativity with advanced AI reasoning to turn raw ideas into polished, presentation-ready decks.
-          </motion.p>
 
           {/* CTA Button - Centered */}
           <motion.div 
@@ -82,101 +79,6 @@ const HeroSection = () => {
           </motion.div>
         </motion.div>
 
-        {/* Floating Cards - Positioned Around Visual */}
-        <div className="flex-1 relative mt-12">
-          {/* Left Side Cards */}
-          <motion.div
-            initial={{ opacity: 0, x: -60, y: 20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="absolute left-4 lg:left-16 top-1/4 glass-card-dark rounded-2xl p-4 shadow-xl max-w-[200px] animate-float"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-vora-coral/30 flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-vora-coral" />
-              </div>
-              <div>
-                <p className="font-semibold text-white text-sm">AI Storytelling</p>
-                <p className="text-xs text-white/60">Human-like content</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: -80, y: -20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="absolute left-8 lg:left-24 top-[55%] glass-card-dark rounded-2xl p-4 shadow-xl max-w-[180px] animate-float-delayed"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-vora-cyan/30 flex items-center justify-center">
-                <BarChart3 className="w-5 h-5 text-vora-cyan" />
-              </div>
-              <div>
-                <p className="font-semibold text-white text-sm">Smart Charts</p>
-                <p className="text-xs text-white/60">Auto-generated</p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Right Side Cards */}
-          <motion.div
-            initial={{ opacity: 0, x: 60, y: 20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="absolute right-4 lg:right-16 top-[20%] glass-card-dark rounded-2xl p-4 shadow-xl max-w-[200px] animate-float"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-vora-purple/40 flex items-center justify-center">
-                <Palette className="w-5 h-5 text-vora-purple-light" />
-              </div>
-              <div>
-                <p className="font-semibold text-white text-sm">Design Native</p>
-                <p className="text-xs text-white/60">Polished slides</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 80, y: -20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="absolute right-8 lg:right-20 top-[50%] glass-card-dark rounded-2xl p-4 shadow-xl max-w-[190px] animate-float-delayed"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-vora-coral/30 flex items-center justify-center">
-                <Users className="w-5 h-5 text-vora-coral" />
-              </div>
-              <div>
-                <p className="font-semibold text-white text-sm">Collaborative</p>
-                <p className="text-xs text-white/60">Team editing</p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Bottom Center Card - Blurred Background Style */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            whileHover={{ scale: 1.02 }}
-            className="absolute bottom-8 lg:bottom-16 left-1/2 -translate-x-1/2 glass-card-dark rounded-2xl px-6 py-4 shadow-xl"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-vora-coral to-vora-purple flex items-center justify-center">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <p className="font-semibold text-white">Export Anywhere</p>
-                <p className="text-sm text-white/60">PowerPoint • Google Slides • PDF</p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
       </div>
 
       {/* Bottom Gradient Fade */}
