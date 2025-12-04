@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sparkles } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import voraLogo from "@/assets/logo-variations/vora-wave-v1.png";
 
 const navLinks = [
   { name: "Features", href: "#features" },
@@ -45,10 +46,11 @@ const Navbar = () => {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
-            <div className="relative w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-glow-blue group-hover:scale-105 transition-transform">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-              <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-accent" />
-            </div>
+            <img 
+              src={voraLogo} 
+              alt="Vora Logo" 
+              className="h-10 w-auto group-hover:scale-105 transition-transform"
+            />
             <span className="font-display text-2xl font-bold text-foreground">
               Vora
             </span>

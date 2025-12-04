@@ -37,26 +37,29 @@ const HeroSection = () => {
 
       {/* Content Layer */}
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-20 lg:pt-40 min-h-screen flex flex-col">
-        {/* Centered Top Content - Gamma Style */}
+        {/* Centered Top Content */}
         <motion.div
           style={{ y, opacity }}
           className="text-center max-w-4xl mx-auto"
         >
-          {/* Headline */}
-          <motion.h1 
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6 text-white"
+          {/* Stylized VORA Text Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
+            className="mb-4"
           >
-            <motion.span 
-              className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-[0.3em] mb-4 bg-gradient-to-r from-vora-coral via-vora-purple-light to-vora-cyan bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(255,127,102,0.5)]"
-              initial={{ opacity: 0, scale: 0.8, letterSpacing: "0.5em" }}
-              animate={{ opacity: 1, scale: 1, letterSpacing: "0.3em" }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
-            >
+            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-display font-bold tracking-[0.3em] text-white drop-shadow-[0_0_40px_rgba(255,127,102,0.8)]" style={{ textShadow: '0 0 60px rgba(255,127,102,0.6), 0 0 120px rgba(255,127,102,0.4)' }}>
               VORA
-            </motion.span>
+            </span>
+          </motion.div>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold leading-tight mb-6 text-white/90"
+          >
             Transform Ideas into
             <br />
             Stunning Presentations
@@ -66,7 +69,7 @@ const HeroSection = () => {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
           >
             <Button 
               variant="hero" 
