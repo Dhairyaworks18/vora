@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { Sparkles, GraduationCap, Briefcase, Users } from "lucide-react";
-import whyVoraBg from "@/assets/why-vora-bg.png";
+import heroBg from "@/assets/hero-bg.png";
 
 const enterpriseTools = [
   {
@@ -68,7 +68,7 @@ const TrustedBySection = () => {
         className="absolute inset-0 w-full h-full"
       >
         <img
-          src={whyVoraBg}
+          src={heroBg}
           alt="Human and AI collaboration"
           className="w-full h-full object-cover object-center"
         />
