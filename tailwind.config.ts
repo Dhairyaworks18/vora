@@ -61,7 +61,28 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Custom Vora palette
+        // Custom Vora palette - sampled from hero image
+        "vora-navy": {
+          DEFAULT: "hsl(var(--vora-navy))",
+          light: "hsl(var(--vora-navy-light))",
+        },
+        "vora-coral": {
+          DEFAULT: "hsl(var(--vora-coral))",
+          light: "hsl(var(--vora-coral-light))",
+          dark: "hsl(var(--vora-coral-dark))",
+        },
+        "vora-purple": {
+          DEFAULT: "hsl(var(--vora-purple))",
+          light: "hsl(var(--vora-purple-light))",
+        },
+        "vora-blue": {
+          DEFAULT: "hsl(var(--vora-blue))",
+          light: "hsl(var(--vora-blue-light))",
+        },
+        "vora-cyan": "hsl(var(--vora-cyan))",
+        "vora-peach": "hsl(var(--vora-peach))",
+        "vora-sunset": "hsl(var(--vora-sunset))",
+        // Legacy tokens
         coral: {
           DEFAULT: "hsl(var(--coral))",
           light: "hsl(var(--coral-light))",
