@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { Building2, GraduationCap, Briefcase, Award } from "lucide-react";
 
 const stats = [
@@ -18,9 +19,29 @@ const companies = [
 ];
 
 const TrustedBySection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [30, -30]);
+
   return (
-    <section className="py-24 lg:py-32 relative overflow-hidden">
-      {/* Background */}
+    <section 
+      ref={containerRef}
+      className="py-24 lg:py-32 relative overflow-hidden"
+    >
+      {/* Parallax Background */}
+      <motion.div 
+        style={{ y: y1 }}
+        className="absolute top-0 left-0 w-96 h-96 bg-purple-deep/5 rounded-full blur-3xl" 
+      />
+      <motion.div 
+        style={{ y: y2 }}
+        className="absolute bottom-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl" 
+      />
       <div className="absolute inset-0 bg-gradient-to-r from-purple-deep/5 via-background to-primary/5" />
 
       <div className="container mx-auto px-4 relative z-10">
@@ -28,7 +49,8 @@ const TrustedBySection = () => {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
@@ -48,18 +70,28 @@ const TrustedBySection = () => {
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="text-center bg-background rounded-2xl p-6 border border-border/50 hover:border-primary/30 transition-colors"
+              initial={{ opacity: 0, y: 50, scale: 0.9 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              className="text-center bg-background rounded-2xl p-6 border border-border/50 hover:border-primary/30 hover:shadow-xl transition-all"
             >
-              <div className="w-14 h-14 mx-auto rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+              <motion.div 
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                className="w-14 h-14 mx-auto rounded-xl bg-primary/10 flex items-center justify-center mb-4"
+              >
                 <stat.icon className="w-7 h-7 text-primary" />
-              </div>
-              <p className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-1">
+              </motion.div>
+              <motion.p 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 + 0.3 }}
+                className="font-display text-3xl lg:text-4xl font-bold text-foreground mb-1"
+              >
                 {stat.value}
-              </p>
+              </motion.p>
               <p className="text-sm text-muted-foreground">{stat.label}</p>
             </motion.div>
           ))}
@@ -70,6 +102,7 @@ const TrustedBySection = () => {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className="text-center"
         >
           <p className="text-sm text-muted-foreground mb-6 uppercase tracking-wider">
@@ -79,11 +112,12 @@ const TrustedBySection = () => {
             {companies.map((company, index) => (
               <motion.div
                 key={company}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="px-6 py-3 bg-muted/50 rounded-lg"
+                transition={{ delay: index * 0.08, duration: 0.4 }}
+                whileHover={{ scale: 1.1, y: -3 }}
+                className="px-6 py-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer"
               >
                 <span className="font-display text-xl font-semibold text-muted-foreground">
                   {company}

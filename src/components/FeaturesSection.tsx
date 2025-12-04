@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { 
   Palette, 
   Brain, 
@@ -62,18 +63,37 @@ const features = [
 ];
 
 const FeaturesSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const backgroundY2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
+
   return (
-    <section id="features" className="py-24 lg:py-32 relative overflow-hidden bg-gradient-to-b from-background via-pink-blush/20 to-background">
-      {/* Background Elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-coral/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl" />
+    <section 
+      ref={containerRef}
+      id="features" 
+      className="py-24 lg:py-32 relative overflow-hidden bg-gradient-to-b from-background via-pink-blush/20 to-background"
+    >
+      {/* Parallax Background Elements */}
+      <motion.div 
+        style={{ y: backgroundY }}
+        className="absolute top-0 right-0 w-96 h-96 bg-coral/20 rounded-full blur-3xl" 
+      />
+      <motion.div 
+        style={{ y: backgroundY2 }}
+        className="absolute bottom-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl" 
+      />
 
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16 lg:mb-20"
         >
@@ -96,16 +116,20 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: index * 0.08 }}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
               className="group"
             >
-              <div className="h-full bg-background rounded-2xl p-6 border border-border/50 hover:border-primary/30 hover:shadow-lg transition-all duration-300">
-                <div className={`w-14 h-14 rounded-xl ${feature.color} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
+              <div className="h-full bg-background rounded-2xl p-6 border border-border/50 hover:border-primary/30 hover:shadow-xl transition-all duration-300">
+                <motion.div 
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className={`w-14 h-14 rounded-xl ${feature.color} flex items-center justify-center mb-5 transition-transform`}
+                >
                   <feature.icon className="w-7 h-7" />
-                </div>
+                </motion.div>
                 <h3 className="font-display text-xl font-semibold text-foreground mb-3">
                   {feature.title}
                 </h3>

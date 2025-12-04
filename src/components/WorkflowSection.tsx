@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 import { Upload, Wand2, Palette, Download, ArrowRight } from "lucide-react";
 
 const steps = [
@@ -33,16 +34,31 @@ const steps = [
 ];
 
 const WorkflowSection = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [50, -50]);
+
   return (
-    <section className="py-24 lg:py-32 bg-muted/30 relative overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
+    <section 
+      ref={containerRef}
+      className="py-24 lg:py-32 bg-muted/30 relative overflow-hidden"
+    >
+      <motion.div 
+        style={{ y: backgroundY }}
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" 
+      />
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <span className="inline-block px-4 py-2 rounded-full bg-yellow-bright/20 text-yellow-gold text-sm font-medium mb-4">
@@ -58,26 +74,44 @@ const WorkflowSection = () => {
         {/* Steps */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 relative">
           {/* Connection Line (Desktop) */}
-          <div className="hidden lg:block absolute top-20 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-primary via-secondary to-yellow-bright opacity-30" />
+          <motion.div 
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="hidden lg:block absolute top-20 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-primary via-secondary to-yellow-bright opacity-30 origin-left" 
+          />
 
           {steps.map((step, index) => (
             <motion.div
               key={step.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.15 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ delay: index * 0.15, duration: 0.5 }}
               className="relative"
             >
-              <div className="bg-background rounded-2xl p-6 border border-border/50 h-full hover:border-primary/30 hover:shadow-lg transition-all group">
+              <motion.div 
+                whileHover={{ y: -8, transition: { duration: 0.2 } }}
+                className="bg-background rounded-2xl p-6 border border-border/50 h-full hover:border-primary/30 hover:shadow-xl transition-all group"
+              >
                 {/* Step Number & Icon */}
                 <div className="flex items-center justify-between mb-6">
-                  <span className="text-5xl font-display font-bold text-muted/50 group-hover:text-muted transition-colors">
+                  <motion.span 
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 0.5 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.15 + 0.3 }}
+                    className="text-5xl font-display font-bold text-muted/50 group-hover:text-muted transition-colors"
+                  >
                     {step.step}
-                  </span>
-                  <div className={`w-14 h-14 rounded-xl ${step.color} flex items-center justify-center shadow-md`}>
+                  </motion.span>
+                  <motion.div 
+                    whileHover={{ scale: 1.1, rotate: 10 }}
+                    className={`w-14 h-14 rounded-xl ${step.color} flex items-center justify-center shadow-md`}
+                  >
                     <step.icon className="w-7 h-7 text-background" />
-                  </div>
+                  </motion.div>
                 </div>
 
                 <h3 className="font-display text-xl font-semibold text-foreground mb-3">
@@ -86,13 +120,19 @@ const WorkflowSection = () => {
                 <p className="text-muted-foreground">
                   {step.description}
                 </p>
-              </div>
+              </motion.div>
 
               {/* Arrow (not on last item) */}
               {index < steps.length - 1 && (
-                <div className="hidden lg:flex absolute top-20 -right-3 w-6 h-6 bg-background rounded-full items-center justify-center border border-border z-10">
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 + 0.4 }}
+                  className="hidden lg:flex absolute top-20 -right-3 w-6 h-6 bg-background rounded-full items-center justify-center border border-border z-10"
+                >
                   <ArrowRight className="w-3 h-3 text-muted-foreground" />
-                </div>
+                </motion.div>
               )}
             </motion.div>
           ))}
