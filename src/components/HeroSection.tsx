@@ -49,9 +49,10 @@ const HeroSection = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 text-white"
           >
-            Where Human Vision
+            <span className="block text-vora-coral tracking-wider">VORA</span>
+            Transform Ideas into
             <br />
-            <span className="text-vora-coral">Meets AI Intelligence</span>
+            <span className="text-vora-coral">Stunning Presentations</span>
           </motion.h1>
 
           {/* Subtext */}
