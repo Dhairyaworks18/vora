@@ -47,7 +47,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-8 text-white"
+            className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6 text-white"
           >
             <motion.span 
               className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl tracking-[0.3em] mb-4 bg-gradient-to-r from-vora-coral via-vora-purple-light to-vora-cyan bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(255,127,102,0.5)]"
@@ -59,7 +59,7 @@ const HeroSection = () => {
             </motion.span>
             Transform Ideas into
             <br />
-            <span className="text-vora-coral">Stunning Presentations</span>
+            Stunning Presentations
           </motion.h1>
 
           {/* CTA Button - Centered */}
@@ -71,7 +71,7 @@ const HeroSection = () => {
             <Button 
               variant="hero" 
               size="xl"
-              className="bg-white/90 text-vora-navy hover:bg-white shadow-lg shadow-vora-navy/20"
+              className="bg-vora-coral/90 text-white hover:bg-vora-coral shadow-[0_0_30px_rgba(255,127,102,0.6)] hover:shadow-[0_0_40px_rgba(255,127,102,0.8)] transition-all duration-300"
             >
               Start Creating with Vora
               <ArrowRight className="w-5 h-5" />
