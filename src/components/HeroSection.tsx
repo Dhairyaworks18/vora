@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroVisual from "@/assets/vora-hero-visual.png";
+import heroBg from "@/assets/hero-bg.png";
 import { useRef } from "react";
 
 const HeroSection = () => {
@@ -27,8 +27,8 @@ const HeroSection = () => {
         className="absolute inset-0 w-full h-full"
       >
         <img
-          src={heroVisual}
-          alt="Vora AI - Where Human Vision Meets AI Intelligence"
+          src={heroBg}
+          alt="Human creativity meets AI intelligence"
           className="w-full h-full object-cover object-center"
         />
         {/* Gradient Overlay for text readability */}
