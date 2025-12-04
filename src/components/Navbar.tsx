@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,38 @@ const navLinks = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const scrollToSection = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace("#", "");
+    const element = document.getElementById(targetId);
+    
+    if (element) {
+      const navbarHeight = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
+    }
+    
+    setIsOpen(false);
+  }, []);
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
-          <a href="/" className="flex items-center gap-2 group">
+          <a 
+            href="/" 
+            className="flex items-center gap-2 group"
+            onClick={(e) => {
+              e.preventDefault();
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
             <div className="relative w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-glow-blue group-hover:scale-105 transition-transform">
               <Sparkles className="w-5 h-5 text-primary-foreground" />
               <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-cyan-accent" />
@@ -34,6 +60,7 @@ const Navbar = () => {
               <a
                 key={link.name}
                 href={link.href}
+                onClick={(e) => scrollToSection(e, link.href)}
                 className="text-muted-foreground hover:text-foreground font-medium transition-colors relative group"
               >
                 {link.name}
@@ -77,7 +104,7 @@ const Navbar = () => {
                   key={link.name}
                   href={link.href}
                   className="text-foreground font-medium py-2"
-                  onClick={() => setIsOpen(false)}
+                  onClick={(e) => scrollToSection(e, link.href)}
                 >
                   {link.name}
                 </a>
