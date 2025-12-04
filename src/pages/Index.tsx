@@ -38,13 +38,13 @@ const Index = () => {
       <main className="relative overflow-hidden">
         <Navbar />
         <HeroSection />
+        <TrustedBySection />
         <FeaturesSection />
         <ProblemsSection />
         <CompetitionModeSection />
         <DataVisualizationSection />
         <DualModesSection />
         <WorkflowSection />
-        <TrustedBySection />
         <PricingSection />
         <CTASection />
         <Footer />

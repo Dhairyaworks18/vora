@@ -6,17 +6,20 @@ const enterpriseTools = [
   {
     company: "Deloitte",
     tool: "PairD",
-    description: "Helps over 75,000 employees draft slides, research data, and create client-ready presentations.",
+    description: "AI assistant helping over 75,000 employees draft slides, research data, and create client-ready presentations.",
+    tagline: "AI is becoming the foundation of modern communication",
   },
   {
-    company: "BCG",
+    company: "Boston Consulting Group",
     tool: "Deckster",
-    description: "AI slides assistant trained on hundreds of templates for polished, strategic presentations in minutes.",
+    description: "AI slides assistant trained on hundreds of templates to build polished and strategic presentations in minutes.",
+    tagline: "Improving speed and consistency across projects",
   },
   {
-    company: "McKinsey",
+    company: "McKinsey & Company",
     tool: "Lilli",
-    description: "Generative AI for research, content summarization, and story-driven presentation workflows.",
+    description: "Generative AI system for research, content summarization, and presentation workflows.",
+    tagline: "Creating data-backed, story-driven decks faster than ever",
   },
 ];
 
@@ -24,19 +27,19 @@ const voraForEveryone = [
   {
     icon: GraduationCap,
     audience: "For Students",
-    description: "Human-like, competition-ready presentations that stand out and cannot be identified as AI-made.",
+    description: "Generate human-like, competition-ready presentations that stand out.",
     color: "bg-primary/10 text-primary",
   },
   {
     icon: Briefcase,
     audience: "For Corporates",
-    description: "Brand-consistent, data-rich, and polished decks for pitches, reports, and meetings.",
+    description: "Produce brand-consistent, data-rich, polished decks for pitches and reports.",
     color: "bg-secondary/20 text-secondary",
   },
   {
     icon: Users,
     audience: "For Everyone",
-    description: "Simplifies the complex art of presentation-making — top-tier AI assistance at your fingertips.",
+    description: "Simplify presentation-making with top-tier AI assistance at your fingertips.",
     color: "bg-yellow-bright/20 text-yellow-gold",
   },
 ];
@@ -90,12 +93,11 @@ const TrustedBySection = () => {
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
             Why Vora Matters —
             <br />
-            <span className="text-gradient-blue">World-Class AI, Now Yours</span>
+            <span className="text-gradient-blue">Inspired by the Best</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            The world&apos;s leading consulting and corporate firms have already adopted AI-powered 
-            presentation tools to boost productivity, storytelling, and visual design. 
-            AI is becoming the foundation of modern communication.
+            The world&apos;s leading consulting firms have already adopted AI-powered 
+            presentation tools to boost productivity, storytelling, and visual design.
           </p>
         </motion.div>
 
@@ -132,8 +134,11 @@ const TrustedBySection = () => {
                     <p className="text-sm text-primary font-medium">{item.tool}</p>
                   </div>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                   {item.description}
+                </p>
+                <p className="text-xs text-primary/80 italic">
+                  {item.tagline}
                 </p>
               </motion.div>
             ))}
