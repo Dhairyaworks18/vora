@@ -44,12 +44,18 @@ const HeroSection = () => {
         >
           {/* Stylized VORA Text Logo */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.8, letterSpacing: "0.5em" }}
+            animate={{ opacity: 1, scale: 1, letterSpacing: "0.3em" }}
             transition={{ duration: 1.2, ease: "easeOut" }}
             className="mb-4"
           >
-            <span className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-display font-bold tracking-[0.3em] text-white drop-shadow-[0_0_40px_rgba(255,127,102,0.8)]" style={{ textShadow: '0 0 60px rgba(255,127,102,0.6), 0 0 120px rgba(255,127,102,0.4)' }}>
+            <span 
+              className="block text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-display font-bold tracking-[0.3em] bg-gradient-to-r from-vora-coral via-[#FFD700] via-[#F5B5A8] to-vora-cyan bg-clip-text text-transparent"
+              style={{ 
+                textShadow: '0 0 60px rgba(255,127,102,0.5), 0 0 100px rgba(255,215,0,0.3)',
+                filter: 'drop-shadow(0 0 30px rgba(255,127,102,0.4))'
+              }}
+            >
               VORA
             </span>
           </motion.div>

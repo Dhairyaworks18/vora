@@ -2,7 +2,6 @@ import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import voraLogo from "@/assets/logo-variations/vora-wave-v1.png";
 
 const navLinks = [
   { name: "Features", href: "#features" },
@@ -37,22 +36,17 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
-          {/* Logo */}
+          {/* Stylized VORA Text */}
           <a 
             href="/" 
-            className="flex items-center gap-2 group"
+            className="group"
             onClick={(e) => {
               e.preventDefault();
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
-            <img 
-              src={voraLogo} 
-              alt="Vora Logo" 
-              className="h-10 w-auto group-hover:scale-105 transition-transform"
-            />
-            <span className="font-display text-2xl font-bold text-foreground">
-              Vora
+            <span className="font-display text-2xl font-bold tracking-wider bg-gradient-to-r from-vora-coral via-[#F5B5A8] to-[#4A7DC7] bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
+              VORA
             </span>
           </a>
 
