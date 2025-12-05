@@ -272,10 +272,13 @@ const TrustedBySection = () => {
             style={{ color: '#2d2a4a' }}
           >
             Now, with <span 
-              className="bg-clip-text text-transparent px-1"
+              className="relative inline-block px-2"
               style={{ 
-                backgroundImage: 'linear-gradient(135deg, #f5a06a 0%, #de8aa0 50%, #9a68ad 100%)',
-                textShadow: '0 2px 20px rgba(222,138,160,0.4)'
+                color: '#ffffff',
+                background: 'linear-gradient(135deg, #e85d75 0%, #c94d8a 50%, #8a3d9e 100%)',
+                borderRadius: '8px',
+                padding: '2px 12px',
+                boxShadow: '0 4px 15px rgba(200,80,130,0.4)'
               }}
             >Vora</span> — That Power is Yours
           </h3>
