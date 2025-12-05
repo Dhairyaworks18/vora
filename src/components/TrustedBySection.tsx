@@ -66,11 +66,11 @@ const TrustedBySection = () => {
               <div 
                 className="rounded-3xl p-8 lg:p-10 h-full"
                 style={{
-                  background: 'linear-gradient(180deg, rgba(255,150,130,0.35) 0%, rgba(255,120,150,0.25) 50%, rgba(200,100,150,0.2) 100%)',
-                  backdropFilter: 'blur(20px)',
-                  WebkitBackdropFilter: 'blur(20px)',
-                  border: '1px solid rgba(255,255,255,0.25)',
-                  boxShadow: '0 25px 50px -12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2)',
+                  background: 'linear-gradient(180deg, rgba(255,140,120,0.55) 0%, rgba(255,100,140,0.45) 50%, rgba(180,80,140,0.4) 100%)',
+                  backdropFilter: 'blur(30px)',
+                  WebkitBackdropFilter: 'blur(30px)',
+                  border: '1px solid rgba(255,255,255,0.35)',
+                  boxShadow: '0 25px 50px -12px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3)',
                 }}
               >
                 {/* Icon Container */}
