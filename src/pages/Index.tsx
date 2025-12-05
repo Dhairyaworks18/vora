@@ -41,9 +41,9 @@ const Index = () => {
         <HeroSection />
         <TrustedBySection />
         <WhatMakesVoraDifferentSection />
+        <CompetitionModeSection />
         <FeaturesSection />
         <ProblemsSection />
-        <CompetitionModeSection />
         <DataVisualizationSection />
         <DualModesSection />
         <WorkflowSection />
