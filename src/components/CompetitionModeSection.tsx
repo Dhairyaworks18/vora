@@ -43,166 +43,262 @@ const features = [
   },
 ];
 
-// Animated spotlight beams
-const SpotlightBeam = ({ delay, left, width, opacity }: { delay: number; left: string; width: string; opacity: number }) => (
-  <motion.div
-    initial={{ opacity: 0 }}
-    animate={{ 
-      opacity: [0, opacity, opacity * 0.6, opacity, 0],
-    }}
-    transition={{
-      duration: 10,
-      delay,
-      repeat: Infinity,
-      ease: "easeInOut"
-    }}
-    className="absolute top-0 h-full pointer-events-none"
-    style={{
-      left,
-      width,
-      background: `linear-gradient(180deg, rgba(100, 149, 237, 0.5) 0%, rgba(100, 149, 237, 0.1) 40%, transparent 70%)`,
-      clipPath: 'polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%)',
-      filter: 'blur(8px)',
-    }}
-  />
-);
-
-// Stage presenter SVG - detailed man presenting
-const PresenterFigure = () => (
-  <svg 
-    viewBox="0 0 300 500" 
-    className="absolute bottom-0 left-[5%] md:left-[8%] lg:left-[10%] h-[70%] md:h-[75%] lg:h-[80%]"
-    style={{ 
-      filter: 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5))',
-      zIndex: 15,
-    }}
-  >
-    {/* Head */}
-    <ellipse cx="150" cy="55" rx="32" ry="35" fill="url(#skinGrad)" />
-    {/* Hair */}
-    <path d="M118 45 Q150 15 182 45 Q185 30 175 25 Q150 10 125 25 Q115 30 118 45" fill="#1a1a2e" />
-    {/* Neck */}
-    <rect x="140" y="85" width="20" height="20" fill="url(#skinGrad)" />
-    
-    {/* Body - Orange sweater */}
-    <path 
-      d="M100 105 Q150 95 200 105 L195 220 Q150 230 105 220 Z" 
-      fill="url(#sweaterGrad)" 
+// Animated spotlight beams from top
+const SpotlightBeams = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 2 }}>
+    {/* Main spotlight on presenter */}
+    <motion.div
+      animate={{ opacity: [0.4, 0.6, 0.4] }}
+      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute top-0 h-full"
+      style={{
+        left: '8%',
+        width: '160px',
+        background: `linear-gradient(180deg, rgba(147, 197, 253, 0.6) 0%, rgba(147, 197, 253, 0.2) 30%, transparent 60%)`,
+        clipPath: 'polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)',
+        filter: 'blur(12px)',
+      }}
     />
-    {/* Sweater collar */}
-    <path d="M130 105 Q150 115 170 105" stroke="#c2410c" strokeWidth="3" fill="none" />
-    
-    {/* Left arm - extended presenting gesture */}
-    <path 
-      d="M100 115 Q70 120 45 100 Q35 95 30 85 Q25 75 35 70 Q50 65 60 80 Q75 100 100 110" 
-      fill="url(#sweaterGrad)" 
+    {/* Secondary spotlight */}
+    <motion.div
+      animate={{ opacity: [0.2, 0.35, 0.2] }}
+      transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+      className="absolute top-0 h-full"
+      style={{
+        left: '20%',
+        width: '100px',
+        background: `linear-gradient(180deg, rgba(165, 180, 252, 0.5) 0%, rgba(165, 180, 252, 0.1) 35%, transparent 55%)`,
+        clipPath: 'polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%)',
+        filter: 'blur(10px)',
+      }}
     />
-    {/* Left hand */}
-    <ellipse cx="35" cy="75" rx="12" ry="10" fill="url(#skinGrad)" />
-    {/* Fingers spread */}
-    <path d="M28 70 Q22 60 25 55" stroke="url(#skinGrad)" strokeWidth="4" strokeLinecap="round" fill="none" />
-    <path d="M32 68 Q30 55 33 50" stroke="url(#skinGrad)" strokeWidth="4" strokeLinecap="round" fill="none" />
-    <path d="M38 68 Q40 55 40 50" stroke="url(#skinGrad)" strokeWidth="4" strokeLinecap="round" fill="none" />
-    <path d="M44 70 Q50 58 52 55" stroke="url(#skinGrad)" strokeWidth="4" strokeLinecap="round" fill="none" />
-    
-    {/* Right arm - holding something */}
-    <path 
-      d="M200 115 Q220 140 215 180" 
-      stroke="url(#sweaterGrad)" 
-      strokeWidth="28" 
-      strokeLinecap="round"
-      fill="none"
-    />
-    {/* Right hand */}
-    <ellipse cx="215" cy="185" rx="10" ry="12" fill="url(#skinGrad)" />
-    {/* Device/clicker in hand */}
-    <rect x="208" y="175" width="14" height="25" rx="3" fill="#1a1a2e" />
-    
-    {/* Pants */}
-    <path d="M110 218 L100 400 L130 405 L145 225" fill="url(#pantsGrad)" />
-    <path d="M155 225 L170 405 L200 400 L190 218" fill="url(#pantsGrad)" />
-    
-    {/* Shoes */}
-    <ellipse cx="115" cy="410" rx="20" ry="8" fill="#0f172a" />
-    <ellipse cx="185" cy="410" rx="20" ry="8" fill="#0f172a" />
-    
-    {/* Stage/podium blocks */}
-    <rect x="60" y="380" width="50" height="120" rx="4" fill="url(#blockGrad1)" opacity="0.8" />
-    <rect x="120" y="350" width="60" height="150" rx="4" fill="url(#blockGrad2)" opacity="0.9" />
-    <rect x="190" y="400" width="45" height="100" rx="4" fill="url(#blockGrad3)" opacity="0.7" />
-    
-    <defs>
-      <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#f4a574" />
-        <stop offset="100%" stopColor="#e8956a" />
-      </linearGradient>
-      <linearGradient id="sweaterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#fb923c" />
-        <stop offset="30%" stopColor="#f97316" />
-        <stop offset="70%" stopColor="#ea580c" />
-        <stop offset="100%" stopColor="#c2410c" />
-      </linearGradient>
-      <linearGradient id="pantsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stopColor="#1e3a5f" />
-        <stop offset="100%" stopColor="#0f172a" />
-      </linearGradient>
-      <linearGradient id="blockGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#7c3aed" />
-        <stop offset="100%" stopColor="#4c1d95" />
-      </linearGradient>
-      <linearGradient id="blockGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#f97316" />
-        <stop offset="100%" stopColor="#c2410c" />
-      </linearGradient>
-      <linearGradient id="blockGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#6366f1" />
-        <stop offset="100%" stopColor="#4338ca" />
-      </linearGradient>
-    </defs>
-  </svg>
-);
-
-// Floating geometric shapes for depth
-const FloatingShapes = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 5 }}>
-    {/* Large diagonal light streak */}
+    {/* Accent beam */}
     <motion.div
       animate={{ opacity: [0.15, 0.25, 0.15] }}
-      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-      className="absolute top-0 right-[20%] w-[300px] h-full"
+      transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+      className="absolute top-0 h-full"
       style={{
-        background: 'linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)',
+        left: '3%',
+        width: '80px',
+        background: `linear-gradient(180deg, rgba(196, 181, 253, 0.4) 0%, transparent 40%)`,
+        clipPath: 'polygon(40% 0%, 60% 0%, 100% 100%, 0% 100%)',
+        filter: 'blur(8px)',
+      }}
+    />
+  </div>
+);
+
+// Enhanced presenter figure - more detailed and realistic
+const PresenterFigure = () => (
+  <div 
+    className="absolute bottom-0 left-0 w-[45%] md:w-[40%] lg:w-[38%] h-full pointer-events-none"
+    style={{ zIndex: 10 }}
+  >
+    <svg 
+      viewBox="0 0 400 600" 
+      className="absolute bottom-0 left-[10%] h-[85%] md:h-[88%]"
+      style={{ 
+        filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.6))',
+      }}
+      preserveAspectRatio="xMidYMax meet"
+    >
+      {/* Stage/podium blocks - behind the figure */}
+      <rect x="80" y="480" width="70" height="120" rx="6" fill="url(#blockGradPurple)" opacity="0.85" />
+      <rect x="160" y="440" width="90" height="160" rx="6" fill="url(#blockGradOrange)" opacity="0.9" />
+      <rect x="265" y="500" width="60" height="100" rx="6" fill="url(#blockGradBlue)" opacity="0.75" />
+      
+      {/* Figure shadow on stage */}
+      <ellipse cx="200" cy="510" rx="50" ry="12" fill="rgba(0,0,0,0.4)" />
+      
+      {/* Left leg */}
+      <path d="M165 320 L155 490 C155 495 162 500 170 500 L175 500 C183 500 188 495 188 490 L185 335" fill="url(#pantsGrad)" />
+      {/* Right leg */}
+      <path d="M215 335 L212 490 C212 495 217 500 225 500 L230 500 C238 500 243 495 243 490 L235 320" fill="url(#pantsGrad)" />
+      
+      {/* Left shoe */}
+      <ellipse cx="172" cy="505" rx="22" ry="8" fill="#0f172a" />
+      <ellipse cx="172" cy="503" rx="18" ry="5" fill="#1e293b" />
+      {/* Right shoe */}
+      <ellipse cx="228" cy="505" rx="22" ry="8" fill="#0f172a" />
+      <ellipse cx="228" cy="503" rx="18" ry="5" fill="#1e293b" />
+      
+      {/* Body - Orange sweater */}
+      <path 
+        d="M145 160 Q200 145 255 160 L250 330 Q200 345 150 330 Z" 
+        fill="url(#sweaterGrad)" 
+      />
+      {/* Sweater shading */}
+      <path 
+        d="M150 180 Q160 200 155 250 Q150 300 155 330" 
+        stroke="rgba(154,52,18,0.3)" 
+        strokeWidth="8" 
+        fill="none"
+      />
+      <path 
+        d="M250 180 Q240 200 245 250 Q250 300 245 330" 
+        stroke="rgba(255,255,255,0.1)" 
+        strokeWidth="5" 
+        fill="none"
+      />
+      {/* Sweater collar */}
+      <path d="M170 160 Q200 175 230 160" stroke="#c2410c" strokeWidth="4" fill="none" />
+      
+      {/* Neck */}
+      <rect x="185" y="130" width="30" height="35" rx="5" fill="url(#skinGrad)" />
+      
+      {/* Head */}
+      <ellipse cx="200" cy="95" rx="42" ry="48" fill="url(#skinGrad)" />
+      {/* Ear */}
+      <ellipse cx="158" cy="100" rx="8" ry="12" fill="url(#skinGrad)" />
+      <ellipse cx="158" cy="100" rx="5" ry="8" fill="#e8956a" />
+      
+      {/* Hair - styled dark hair */}
+      <path 
+        d="M158 75 Q165 35 200 30 Q235 35 242 75 Q245 55 238 45 Q220 20 200 18 Q180 20 162 45 Q155 55 158 75" 
+        fill="#1a1a2e" 
+      />
+      <path d="M160 70 Q180 60 195 62 Q185 50 165 55 Q158 60 160 70" fill="#0f172a" />
+      
+      {/* Face features */}
+      {/* Eyes */}
+      <ellipse cx="182" cy="90" rx="6" ry="4" fill="#1a1a2e" />
+      <ellipse cx="218" cy="90" rx="6" ry="4" fill="#1a1a2e" />
+      <circle cx="184" cy="89" r="1.5" fill="white" />
+      <circle cx="220" cy="89" r="1.5" fill="white" />
+      {/* Eyebrows */}
+      <path d="M174 82 Q182 79 190 82" stroke="#1a1a2e" strokeWidth="2.5" fill="none" />
+      <path d="M210 82 Q218 79 226 82" stroke="#1a1a2e" strokeWidth="2.5" fill="none" />
+      {/* Nose */}
+      <path d="M200 95 L198 110 Q200 114 202 110 L200 95" stroke="#d4845a" strokeWidth="2" fill="none" />
+      {/* Smile */}
+      <path d="M188 120 Q200 130 212 120" stroke="#c2785a" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+      
+      {/* Left arm - extended presenting gesture */}
+      <path 
+        d="M145 170 Q110 165 75 140 Q55 125 45 105" 
+        stroke="url(#sweaterGrad)" 
+        strokeWidth="32" 
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Left hand - open palm gesture */}
+      <ellipse cx="42" cy="95" rx="18" ry="15" fill="url(#skinGrad)" />
+      {/* Fingers spread out */}
+      <path d="M32 88 Q22 75 25 65" stroke="url(#skinGrad)" strokeWidth="7" strokeLinecap="round" fill="none" />
+      <path d="M38 82 Q35 65 40 55" stroke="url(#skinGrad)" strokeWidth="7" strokeLinecap="round" fill="none" />
+      <path d="M48 80 Q52 62 55 52" stroke="url(#skinGrad)" strokeWidth="7" strokeLinecap="round" fill="none" />
+      <path d="M56 85 Q65 70 70 62" stroke="url(#skinGrad)" strokeWidth="7" strokeLinecap="round" fill="none" />
+      {/* Thumb */}
+      <path d="M28 98 Q18 105 15 100" stroke="url(#skinGrad)" strokeWidth="6" strokeLinecap="round" fill="none" />
+      
+      {/* Right arm - holding clicker */}
+      <path 
+        d="M255 170 Q275 195 270 240" 
+        stroke="url(#sweaterGrad)" 
+        strokeWidth="32" 
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Right hand */}
+      <ellipse cx="268" cy="250" rx="14" ry="16" fill="url(#skinGrad)" />
+      {/* Clicker device */}
+      <rect x="260" y="235" width="16" height="32" rx="4" fill="#1a1a2e" />
+      <rect x="264" y="240" width="8" height="4" rx="1" fill="#4ade80" />
+      
+      {/* Subtle highlight on presenter */}
+      <ellipse cx="200" cy="200" rx="60" ry="100" fill="url(#presenterGlow)" opacity="0.15" />
+      
+      <defs>
+        <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#f4a574" />
+          <stop offset="50%" stopColor="#eda06a" />
+          <stop offset="100%" stopColor="#e8956a" />
+        </linearGradient>
+        <linearGradient id="sweaterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#fb923c" />
+          <stop offset="25%" stopColor="#f97316" />
+          <stop offset="60%" stopColor="#ea580c" />
+          <stop offset="100%" stopColor="#c2410c" />
+        </linearGradient>
+        <linearGradient id="pantsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#1e3a5f" />
+          <stop offset="50%" stopColor="#172554" />
+          <stop offset="100%" stopColor="#0f172a" />
+        </linearGradient>
+        <linearGradient id="blockGradPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#7c3aed" />
+          <stop offset="100%" stopColor="#4c1d95" />
+        </linearGradient>
+        <linearGradient id="blockGradOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#f97316" />
+          <stop offset="100%" stopColor="#9a3412" />
+        </linearGradient>
+        <linearGradient id="blockGradBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#6366f1" />
+          <stop offset="100%" stopColor="#3730a3" />
+        </linearGradient>
+        <radialGradient id="presenterGlow" cx="50%" cy="30%" r="50%">
+          <stop offset="0%" stopColor="#93c5fd" />
+          <stop offset="100%" stopColor="transparent" />
+        </radialGradient>
+      </defs>
+    </svg>
+    
+    {/* Soft glow behind presenter for depth separation */}
+    <div 
+      className="absolute bottom-[10%] left-[15%] w-[250px] h-[400px] rounded-full"
+      style={{
+        background: 'radial-gradient(ellipse, rgba(147, 197, 253, 0.2) 0%, transparent 70%)',
+        filter: 'blur(40px)',
+        zIndex: -1,
+      }}
+    />
+  </div>
+);
+
+// Floating light streaks for atmosphere
+const LightStreaks = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 3 }}>
+    {/* Diagonal light rays */}
+    <motion.div
+      animate={{ opacity: [0.08, 0.15, 0.08] }}
+      transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute top-0 right-[15%] w-[400px] h-full"
+      style={{
+        background: 'linear-gradient(125deg, transparent 0%, rgba(255,255,255,0.04) 50%, transparent 100%)',
         transform: 'skewX(-15deg)',
       }}
     />
     <motion.div
-      animate={{ opacity: [0.1, 0.2, 0.1] }}
-      transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      className="absolute top-0 right-[35%] w-[200px] h-full"
+      animate={{ opacity: [0.05, 0.1, 0.05] }}
+      transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+      className="absolute top-0 right-[30%] w-[250px] h-full"
       style={{
-        background: 'linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',
+        background: 'linear-gradient(130deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%)',
         transform: 'skewX(-20deg)',
       }}
     />
     
-    {/* Small floating particles */}
-    {[...Array(8)].map((_, i) => (
+    {/* Floating particles */}
+    {[...Array(10)].map((_, i) => (
       <motion.div
         key={i}
         animate={{ 
-          y: [0, -30, 0],
-          opacity: [0.3, 0.7, 0.3],
+          y: [0, -40, 0],
+          opacity: [0.2, 0.5, 0.2],
         }}
         transition={{ 
-          duration: 5 + i, 
+          duration: 6 + i * 0.5, 
           repeat: Infinity, 
           ease: "easeInOut",
-          delay: i * 0.5,
+          delay: i * 0.7,
         }}
-        className="absolute w-1 h-1 rounded-full bg-white/50"
+        className="absolute w-1 h-1 rounded-full"
         style={{
-          left: `${20 + i * 8}%`,
-          top: `${40 + (i % 3) * 20}%`,
+          left: `${15 + i * 7}%`,
+          top: `${30 + (i % 4) * 15}%`,
+          background: 'rgba(255, 255, 255, 0.6)',
+          boxShadow: '0 0 4px rgba(255, 255, 255, 0.4)',
         }}
       />
     ))}
@@ -215,67 +311,68 @@ const CompetitionModeSection = () => {
       id="competition" 
       className="relative py-20 lg:py-28 overflow-hidden min-h-screen flex items-center"
     >
-      {/* Code-generated background - replicating the gradient style */}
+      {/* Code-generated background */}
       <div className="absolute inset-0">
-        {/* Base gradient - deep blue to purple to orange */}
+        {/* Base gradient - matching the reference image */}
         <div 
           className="absolute inset-0"
           style={{
             background: `
-              linear-gradient(145deg, 
+              linear-gradient(155deg, 
                 #1a1a4e 0%, 
-                #2d2a6e 12%,
-                #3d3a8e 22%,
-                #4a45a8 32%,
-                #5b4fb8 42%,
-                #7c5cc8 52%,
-                #9b6bb8 60%,
-                #b87a98 68%,
-                #d58968 76%,
-                #e89858 84%,
-                #f5a848 92%,
-                #ffb838 100%
+                #252570 10%,
+                #3535a0 20%,
+                #4545b8 30%,
+                #5858c8 40%,
+                #7060c0 48%,
+                #9068b0 55%,
+                #b07898 62%,
+                #d08870 70%,
+                #e89850 78%,
+                #f5a840 86%,
+                #ffb830 95%,
+                #ffc020 100%
               )
             `,
           }}
         />
         
-        {/* Radial overlay for depth */}
+        {/* Radial overlays for depth and lighting */}
         <div 
           className="absolute inset-0"
           style={{
             background: `
-              radial-gradient(ellipse 120% 80% at 15% 50%, rgba(30, 58, 138, 0.6) 0%, transparent 50%),
-              radial-gradient(ellipse 80% 60% at 85% 80%, rgba(249, 115, 22, 0.4) 0%, transparent 40%),
-              radial-gradient(ellipse 60% 40% at 50% 10%, rgba(99, 102, 241, 0.3) 0%, transparent 50%)
+              radial-gradient(ellipse 100% 80% at 20% 60%, rgba(30, 64, 175, 0.5) 0%, transparent 50%),
+              radial-gradient(ellipse 70% 50% at 80% 70%, rgba(251, 146, 60, 0.35) 0%, transparent 45%),
+              radial-gradient(ellipse 50% 30% at 50% 0%, rgba(124, 58, 237, 0.25) 0%, transparent 50%)
             `,
           }}
         />
         
-        {/* Spotlight beams from top */}
-        <SpotlightBeam delay={0} left="5%" width="120px" opacity={0.3} />
-        <SpotlightBeam delay={1.5} left="18%" width="80px" opacity={0.2} />
-        <SpotlightBeam delay={3} left="12%" width="100px" opacity={0.25} />
+        {/* Spotlight beams */}
+        <SpotlightBeams />
         
-        {/* Floating shapes */}
-        <FloatingShapes />
+        {/* Light streaks and particles */}
+        <LightStreaks />
         
         {/* Presenter figure */}
         <PresenterFigure />
         
-        {/* Subtle vignette for cinematic feel */}
+        {/* Cinematic vignette */}
         <div 
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse 100% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.3) 100%)',
+            background: 'radial-gradient(ellipse 110% 100% at 50% 50%, transparent 35%, rgba(0,0,0,0.35) 100%)',
+            zIndex: 4,
           }}
         />
         
-        {/* Right side dark overlay for card readability */}
+        {/* Right side overlay for card readability */}
         <div 
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'linear-gradient(90deg, transparent 0%, transparent 35%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 70%, rgba(0,0,0,0.5) 100%)',
+            background: 'linear-gradient(90deg, transparent 0%, transparent 40%, rgba(0,0,0,0.15) 55%, rgba(0,0,0,0.35) 75%, rgba(0,0,0,0.45) 100%)',
+            zIndex: 5,
           }}
         />
       </div>
@@ -284,21 +381,21 @@ const CompetitionModeSection = () => {
       <div className="container mx-auto px-4 relative z-20">
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-end">
           {/* Right side content - header and cards */}
-          <div className="lg:w-[60%] xl:w-[55%]">
+          <div className="lg:w-[58%] xl:w-[55%]">
             {/* Header */}
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="mb-12 lg:mb-16"
+              className="mb-10 lg:mb-14"
             >
               <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-5"
                 style={{
                   background: 'rgba(255, 255, 255, 0.1)',
                   backdropFilter: 'blur(10px)',
@@ -309,7 +406,7 @@ const CompetitionModeSection = () => {
                 <span className="text-sm font-medium text-white/90">Signature Feature</span>
               </motion.div>
 
-              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+              <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 drop-shadow-lg">
                 Competition Mode
               </h2>
 
@@ -318,8 +415,8 @@ const CompetitionModeSection = () => {
               </p>
             </motion.div>
 
-            {/* Feature Cards Grid - 2x3 on right side */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 lg:gap-6">
+            {/* Feature Cards Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-5">
               {features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
@@ -327,11 +424,11 @@ const CompetitionModeSection = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-30px" }}
                   transition={{ delay: index * 0.08, duration: 0.5 }}
-                  whileHover={{ y: -6, scale: 1.02 }}
+                  whileHover={{ y: -5, scale: 1.02 }}
                   className="group"
                 >
                   <div 
-                    className="relative p-5 lg:p-6 rounded-2xl h-full transition-all duration-300"
+                    className="relative p-5 rounded-2xl h-full transition-all duration-300"
                     style={{
                       background: 'rgba(255, 255, 255, 0.08)',
                       backdropFilter: 'blur(24px)',
@@ -343,15 +440,15 @@ const CompetitionModeSection = () => {
                     <div 
                       className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                       style={{
-                        background: 'radial-gradient(circle at 50% 0%, rgba(249, 115, 22, 0.2) 0%, transparent 60%)',
+                        background: 'radial-gradient(circle at 50% 0%, rgba(251, 146, 60, 0.2) 0%, transparent 60%)',
                       }}
                     />
                     
                     <div 
-                      className="w-11 h-11 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110"
+                      className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110"
                       style={{
-                        background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.35) 0%, rgba(251, 146, 60, 0.2) 100%)',
-                        border: '1px solid rgba(249, 115, 22, 0.3)',
+                        background: 'linear-gradient(135deg, rgba(251, 146, 60, 0.35) 0%, rgba(251, 146, 60, 0.15) 100%)',
+                        border: '1px solid rgba(251, 146, 60, 0.3)',
                       }}
                     >
                       <feature.icon className="w-5 h-5 text-amber-400" />
@@ -374,10 +471,10 @@ const CompetitionModeSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3, duration: 0.6 }}
-              className="mt-12 lg:mt-14"
+              className="mt-10 lg:mt-12"
             >
               <div 
-                className="relative p-6 lg:p-8 rounded-2xl overflow-hidden"
+                className="relative p-6 lg:p-7 rounded-2xl overflow-hidden"
                 style={{
                   background: 'rgba(255, 255, 255, 0.06)',
                   backdropFilter: 'blur(24px)',
@@ -387,10 +484,10 @@ const CompetitionModeSection = () => {
               >
                 {/* Accent glow */}
                 <div 
-                  className="absolute -top-16 left-1/2 -translate-x-1/2 w-80 h-32 rounded-full pointer-events-none"
+                  className="absolute -top-12 left-1/2 -translate-x-1/2 w-64 h-24 rounded-full pointer-events-none"
                   style={{
-                    background: 'radial-gradient(ellipse, rgba(249, 115, 22, 0.25) 0%, transparent 70%)',
-                    filter: 'blur(30px)',
+                    background: 'radial-gradient(ellipse, rgba(251, 146, 60, 0.25) 0%, transparent 70%)',
+                    filter: 'blur(25px)',
                   }}
                 />
                 
@@ -402,7 +499,7 @@ const CompetitionModeSection = () => {
                     </span>
                   </div>
                   
-                  <p className="text-base lg:text-lg text-white/90 font-medium leading-relaxed mb-6">
+                  <p className="text-base lg:text-lg text-white/90 font-medium leading-relaxed mb-5">
                     "Competition Mode ensures your slides are authentic, original, and indistinguishable from 
                     human-crafted presentations — giving you the edge you need to win."
                   </p>
