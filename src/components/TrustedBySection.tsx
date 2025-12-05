@@ -1,4 +1,5 @@
 import { GraduationCap, Briefcase, Users, Building2, BarChart3, FileText } from "lucide-react";
+import whyVoraBg from "@/assets/why-vora-bg.png";
 
 const enterpriseCards = [
   {
@@ -24,101 +25,16 @@ const TrustedBySection = () => {
       id="why-vora"
       className="relative overflow-hidden"
     >
-      {/* Gradient Background - Matching reference image */}
-      <div 
-        className="absolute inset-0"
-        style={{
-          background: `
-            linear-gradient(180deg, 
-              hsl(25 75% 65%) 0%, 
-              hsl(350 60% 65%) 20%,
-              hsl(280 50% 50%) 45%,
-              hsl(240 55% 45%) 70%,
-              hsl(220 60% 35%) 100%
-            )
-          `,
-        }}
-      />
-      
-      {/* Subtle overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-black/10" />
-
-      {/* Decorative Visual Elements - Background Layer */}
-      {/* Top Left Floating Orb */}
-      <div 
-        className="absolute top-20 left-10 w-64 h-64 rounded-full opacity-30 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(255,200,150,0.6) 0%, rgba(255,150,120,0.3) 40%, transparent 70%)',
-          filter: 'blur(40px)',
-        }}
-      />
-      
-      {/* Top Right Floating Orb */}
-      <div 
-        className="absolute top-32 right-16 w-48 h-48 rounded-full opacity-25 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(255,180,200,0.7) 0%, rgba(200,100,180,0.3) 50%, transparent 70%)',
-          filter: 'blur(35px)',
-        }}
-      />
-
-      {/* Middle Left Glow */}
-      <div 
-        className="absolute top-1/3 -left-20 w-80 h-80 rounded-full opacity-20 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(150,100,200,0.5) 0%, rgba(100,80,180,0.2) 50%, transparent 70%)',
-          filter: 'blur(50px)',
-        }}
-      />
-
-      {/* Middle Right Glow */}
-      <div 
-        className="absolute top-1/2 -right-10 w-72 h-72 rounded-full opacity-25 pointer-events-none"
-        style={{
-          background: 'radial-gradient(circle, rgba(255,120,150,0.5) 0%, rgba(200,80,150,0.2) 50%, transparent 70%)',
-          filter: 'blur(45px)',
-        }}
-      />
-
-      {/* Bottom Center Large Glow */}
-      <div 
-        className="absolute bottom-20 left-1/2 -translate-x-1/2 w-[500px] h-[300px] rounded-full opacity-15 pointer-events-none"
-        style={{
-          background: 'radial-gradient(ellipse, rgba(100,120,200,0.5) 0%, rgba(80,80,180,0.2) 50%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
-
-      {/* Subtle Grid Pattern Overlay */}
-      <div 
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
-          `,
-          backgroundSize: '60px 60px',
-        }}
-      />
-
-      {/* Decorative Rings - Top Section */}
-      <div 
-        className="absolute top-40 left-1/4 w-32 h-32 rounded-full border border-white/10 pointer-events-none"
-      />
-      <div 
-        className="absolute top-36 left-1/4 w-40 h-40 rounded-full border border-white/5 pointer-events-none"
-      />
-
-      {/* Decorative Rings - Right Side */}
-      <div 
-        className="absolute top-1/2 right-1/4 w-24 h-24 rounded-full border border-white/10 pointer-events-none hidden lg:block"
-      />
-
-      {/* Small Floating Dots */}
-      <div className="absolute top-1/4 left-[15%] w-2 h-2 rounded-full bg-white/20 pointer-events-none" />
-      <div className="absolute top-1/3 right-[20%] w-3 h-3 rounded-full bg-white/15 pointer-events-none" />
-      <div className="absolute bottom-1/3 left-[25%] w-2 h-2 rounded-full bg-white/20 pointer-events-none" />
-      <div className="absolute bottom-1/4 right-[30%] w-2 h-2 rounded-full bg-white/15 pointer-events-none" />
+      {/* Full Background Image - Like Hero Section */}
+      <div className="absolute inset-0 w-full h-full">
+        <img
+          src={whyVoraBg}
+          alt="Why Vora Matters background"
+          className="w-full h-full object-cover object-center"
+        />
+        {/* Gradient Overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-vora-navy/40 via-vora-navy/20 to-vora-navy/60" />
+      </div>
 
       <div className="container mx-auto px-4 relative z-10 py-20 lg:py-28">
         {/* Section Header */}
