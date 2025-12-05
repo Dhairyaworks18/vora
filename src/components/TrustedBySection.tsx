@@ -122,16 +122,16 @@ const TrustedBySection = () => {
 
         {/* Concentric Circles on the Right */}
         <div className="absolute right-[5%] top-1/2 -translate-y-1/3 w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px]">
-          {/* Outer circle */}
+          {/* Outer circle - slow rotation */}
           <div 
-            className="absolute inset-0 rounded-full"
+            className="absolute inset-0 rounded-full animate-[spin_40s_linear_infinite]"
             style={{
               border: '2px solid rgba(200, 130, 170, 0.4)',
             }}
           />
-          {/* Middle circle */}
+          {/* Middle circle - reverse rotation */}
           <div 
-            className="absolute rounded-full"
+            className="absolute rounded-full animate-[spin_30s_linear_infinite_reverse]"
             style={{
               top: '15%',
               left: '15%',
@@ -140,9 +140,9 @@ const TrustedBySection = () => {
               border: '2px solid rgba(180, 100, 150, 0.5)',
             }}
           />
-          {/* Inner circle */}
+          {/* Inner circle - slow pulse */}
           <div 
-            className="absolute rounded-full"
+            className="absolute rounded-full animate-[pulse_4s_ease-in-out_infinite]"
             style={{
               top: '30%',
               left: '30%',
@@ -151,9 +151,9 @@ const TrustedBySection = () => {
               border: '2px solid rgba(160, 80, 140, 0.6)',
             }}
           />
-          {/* Innermost circle */}
+          {/* Innermost circle - gentle pulse with delay */}
           <div 
-            className="absolute rounded-full"
+            className="absolute rounded-full animate-[pulse_3s_ease-in-out_infinite_0.5s]"
             style={{
               top: '42%',
               left: '42%',
