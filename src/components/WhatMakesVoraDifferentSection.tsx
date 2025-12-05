@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Palette, 
@@ -9,17 +9,18 @@ import {
   Users 
 } from 'lucide-react';
 
-// Colors extracted from reference image
+// Colors extracted from reference image - cyan, blue, purple, magenta, coral, orange, yellow
 const COLORS = {
   cyan: '#4DD9E8',
   blue: '#3B82F6',
+  deepBlue: '#5B6BF5',
   purple: '#8B5CF6',
   magenta: '#EC4899',
   pink: '#F472B6',
   orange: '#F97316',
   yellow: '#FBBF24',
   coral: '#FB7185',
-  orbit: '#9CA3AF',
+  orbit: 'rgba(156, 163, 175, 0.5)',
   background: '#FFFBF5',
 };
 
@@ -80,130 +81,269 @@ const features = [
   },
 ];
 
-// Animated orbital dot component
-const OrbitingDot = ({ 
-  radius, 
-  duration, 
-  delay, 
-  size, 
-  color,
-  mouseOffset 
-}: { 
-  radius: number; 
-  duration: number; 
-  delay: number; 
-  size: number; 
-  color: string;
-  mouseOffset: { x: number; y: number };
-}) => {
-  const [angle, setAngle] = useState(delay * Math.PI * 2);
+// Smooth morphing blob using Canvas for better performance
+const AnimatedBlobCanvas = ({ mouseOffset }: { mouseOffset: { x: number; y: number } }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const timeRef = useRef(0);
+  const animationRef = useRef<number>();
   
   useEffect(() => {
-    let animationId: number;
-    let startTime: number | null = null;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
     
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const elapsed = timestamp - startTime;
-      const newAngle = delay * Math.PI * 2 + (elapsed / 1000) * (Math.PI * 2 / duration);
-      setAngle(newAngle);
-      animationId = requestAnimationFrame(animate);
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    const size = 600;
+    canvas.width = size;
+    canvas.height = size;
+    
+    const centerX = size / 2;
+    const centerY = size / 2;
+    
+    // Create gradient
+    const createGradient = () => {
+      const gradient = ctx.createLinearGradient(100, 100, 500, 500);
+      gradient.addColorStop(0, COLORS.cyan);
+      gradient.addColorStop(0.3, COLORS.deepBlue);
+      gradient.addColorStop(0.5, COLORS.purple);
+      gradient.addColorStop(0.7, COLORS.magenta);
+      gradient.addColorStop(0.85, COLORS.coral);
+      gradient.addColorStop(1, COLORS.yellow);
+      return gradient;
     };
     
-    animationId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationId);
-  }, [duration, delay]);
-  
-  const x = Math.cos(angle) * radius + mouseOffset.x * 0.02;
-  const y = Math.sin(angle) * radius + mouseOffset.y * 0.02;
+    const generateBlobPoints = (t: number, numPoints: number = 6) => {
+      const points: { x: number; y: number }[] = [];
+      const baseRadius = 180;
+      
+      for (let i = 0; i < numPoints; i++) {
+        const angle = (i / numPoints) * Math.PI * 2;
+        // Smoother, more organic waves
+        const wave1 = Math.sin(angle * 2 + t * 0.4) * 35;
+        const wave2 = Math.cos(angle * 3 + t * 0.3) * 25;
+        const wave3 = Math.sin(angle + t * 0.5) * 20;
+        const radius = baseRadius + wave1 + wave2 + wave3;
+        
+        const x = centerX + Math.cos(angle) * radius + mouseOffset.x * 0.08;
+        const y = centerY + Math.sin(angle) * radius + mouseOffset.y * 0.08;
+        points.push({ x, y });
+      }
+      
+      return points;
+    };
+    
+    const drawSmoothBlob = (points: { x: number; y: number }[]) => {
+      ctx.beginPath();
+      
+      // Use bezier curves for smooth shape
+      const len = points.length;
+      for (let i = 0; i < len; i++) {
+        const curr = points[i];
+        const next = points[(i + 1) % len];
+        const nextNext = points[(i + 2) % len];
+        
+        const cp1x = curr.x + (next.x - points[(i - 1 + len) % len].x) / 4;
+        const cp1y = curr.y + (next.y - points[(i - 1 + len) % len].y) / 4;
+        const cp2x = next.x - (nextNext.x - curr.x) / 4;
+        const cp2y = next.y - (nextNext.y - curr.y) / 4;
+        
+        if (i === 0) {
+          ctx.moveTo(curr.x, curr.y);
+        }
+        ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, next.x, next.y);
+      }
+      
+      ctx.closePath();
+    };
+    
+    const animate = () => {
+      timeRef.current += 0.012;
+      
+      ctx.clearRect(0, 0, size, size);
+      
+      // Draw soft glow behind blob
+      const points = generateBlobPoints(timeRef.current);
+      
+      ctx.save();
+      ctx.filter = 'blur(30px)';
+      ctx.globalAlpha = 0.4;
+      drawSmoothBlob(points);
+      ctx.fillStyle = createGradient();
+      ctx.fill();
+      ctx.restore();
+      
+      // Draw main blob with sharper edges
+      ctx.save();
+      ctx.filter = 'blur(2px)';
+      drawSmoothBlob(points);
+      ctx.fillStyle = createGradient();
+      ctx.fill();
+      ctx.restore();
+      
+      // Draw highlight layer
+      ctx.save();
+      ctx.globalAlpha = 0.3;
+      const highlightPoints = generateBlobPoints(timeRef.current + 0.5).map(p => ({
+        x: p.x - 15,
+        y: p.y - 15,
+      }));
+      drawSmoothBlob(highlightPoints);
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.fill();
+      ctx.restore();
+      
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    
+    animate();
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [mouseOffset.x, mouseOffset.y]);
   
   return (
-    <circle
-      cx={250 + x}
-      cy={250 + y}
-      r={size}
-      fill={color}
-      style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+    <canvas 
+      ref={canvasRef} 
+      className="absolute"
+      style={{ 
+        width: '100%', 
+        height: '100%',
+        maxWidth: '600px',
+        maxHeight: '600px',
+      }}
     />
   );
 };
 
-// Morphing blob component using SVG
-const MorphingBlob = ({ mouseOffset }: { mouseOffset: { x: number; y: number } }) => {
-  const [pathData, setPathData] = useState('');
-  const timeRef = useRef(0);
+// Orbital system SVG overlay
+const OrbitalSystem = ({ mouseOffset }: { mouseOffset: { x: number; y: number } }) => {
+  const [time, setTime] = useState(0);
   
   useEffect(() => {
     let animationId: number;
+    let startTime = performance.now();
     
-    const generateBlobPath = (t: number) => {
-      const points = 8;
-      const baseRadius = 120;
-      const path: string[] = [];
-      
-      for (let i = 0; i <= points; i++) {
-        const angle = (i / points) * Math.PI * 2;
-        const wave1 = Math.sin(angle * 3 + t * 0.5) * 25;
-        const wave2 = Math.cos(angle * 2 + t * 0.7) * 20;
-        const wave3 = Math.sin(angle * 4 + t * 0.3) * 15;
-        const radius = baseRadius + wave1 + wave2 + wave3;
-        
-        const x = 250 + Math.cos(angle) * radius + mouseOffset.x * 0.05;
-        const y = 250 + Math.sin(angle) * radius + mouseOffset.y * 0.05;
-        
-        if (i === 0) {
-          path.push(`M ${x} ${y}`);
-        } else {
-          const prevAngle = ((i - 1) / points) * Math.PI * 2;
-          const prevWave1 = Math.sin(prevAngle * 3 + t * 0.5) * 25;
-          const prevWave2 = Math.cos(prevAngle * 2 + t * 0.7) * 20;
-          const prevWave3 = Math.sin(prevAngle * 4 + t * 0.3) * 15;
-          const prevRadius = baseRadius + prevWave1 + prevWave2 + prevWave3;
-          const prevX = 250 + Math.cos(prevAngle) * prevRadius + mouseOffset.x * 0.05;
-          const prevY = 250 + Math.sin(prevAngle) * prevRadius + mouseOffset.y * 0.05;
-          
-          const cp1x = prevX + (x - prevX) * 0.5 + Math.cos(prevAngle + Math.PI / 2) * 30;
-          const cp1y = prevY + (y - prevY) * 0.5 + Math.sin(prevAngle + Math.PI / 2) * 30;
-          
-          path.push(`Q ${cp1x} ${cp1y} ${x} ${y}`);
-        }
-      }
-      
-      return path.join(' ') + ' Z';
-    };
-    
-    const animate = () => {
-      timeRef.current += 0.016;
-      setPathData(generateBlobPath(timeRef.current));
+    const animate = (timestamp: number) => {
+      setTime((timestamp - startTime) / 1000);
       animationId = requestAnimationFrame(animate);
     };
     
     animationId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(animationId);
-  }, [mouseOffset.x, mouseOffset.y]);
+  }, []);
+  
+  // Define orbits matching reference image
+  const orbits = useMemo(() => [
+    { rx: 280, ry: 160, rotation: -25, dashed: false },
+    { rx: 320, ry: 180, rotation: 35, dashed: false },
+    { rx: 250, ry: 140, rotation: 75, dashed: true },
+  ], []);
+  
+  // Define orbital dots
+  const dots = useMemo(() => [
+    { orbit: 0, angle: 0, size: 8, color: COLORS.coral, speed: 0.08 },
+    { orbit: 0, angle: Math.PI, size: 6, color: COLORS.deepBlue, speed: 0.08 },
+    { orbit: 1, angle: Math.PI / 3, size: 14, color: COLORS.purple, speed: 0.05 },
+    { orbit: 1, angle: Math.PI * 1.3, size: 6, color: COLORS.cyan, speed: 0.05 },
+    { orbit: 2, angle: Math.PI / 2, size: 10, color: COLORS.orange, speed: 0.06 },
+    { orbit: 2, angle: Math.PI * 1.7, size: 5, color: COLORS.magenta, speed: 0.06 },
+  ], []);
+  
+  const getDotPosition = (dot: typeof dots[0]) => {
+    const orbit = orbits[dot.orbit];
+    const angle = dot.angle + time * dot.speed;
+    const radians = (orbit.rotation * Math.PI) / 180;
+    
+    // Position on ellipse
+    const x = orbit.rx * Math.cos(angle);
+    const y = orbit.ry * Math.sin(angle);
+    
+    // Rotate position
+    const rotatedX = x * Math.cos(radians) - y * Math.sin(radians);
+    const rotatedY = x * Math.sin(radians) + y * Math.cos(radians);
+    
+    return {
+      x: 350 + rotatedX + mouseOffset.x * 0.03,
+      y: 350 + rotatedY + mouseOffset.y * 0.03,
+    };
+  };
   
   return (
-    <defs>
-      <linearGradient id="blobGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor={COLORS.cyan} />
-        <stop offset="25%" stopColor={COLORS.blue} />
-        <stop offset="50%" stopColor={COLORS.purple} />
-        <stop offset="75%" stopColor={COLORS.magenta} />
-        <stop offset="100%" stopColor={COLORS.yellow} />
-      </linearGradient>
-      <filter id="blobShadow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur in="SourceAlpha" stdDeviation="10" />
-        <feOffset dx="0" dy="5" result="offsetblur" />
-        <feComponentTransfer>
-          <feFuncA type="linear" slope="0.3" />
-        </feComponentTransfer>
-        <feMerge>
-          <feMergeNode />
-          <feMergeNode in="SourceGraphic" />
-        </feMerge>
-      </filter>
-      <path id="blobPath" d={pathData} />
-    </defs>
+    <svg 
+      viewBox="0 0 700 700" 
+      className="absolute w-full h-full"
+      style={{ 
+        maxWidth: '700px',
+        maxHeight: '700px',
+      }}
+    >
+      {/* Orbital ellipses */}
+      {orbits.map((orbit, i) => (
+        <ellipse
+          key={i}
+          cx="350"
+          cy="350"
+          rx={orbit.rx}
+          ry={orbit.ry}
+          fill="none"
+          stroke={COLORS.orbit}
+          strokeWidth="1"
+          strokeDasharray={orbit.dashed ? "4 8" : "none"}
+          style={{
+            transform: `rotate(${orbit.rotation}deg)`,
+            transformOrigin: '350px 350px',
+          }}
+        />
+      ))}
+      
+      {/* Orbiting dots */}
+      {dots.map((dot, i) => {
+        const pos = getDotPosition(dot);
+        return (
+          <circle
+            key={i}
+            cx={pos.x}
+            cy={pos.y}
+            r={dot.size}
+            fill={dot.color}
+            style={{
+              filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))',
+            }}
+          />
+        );
+      })}
+      
+      {/* Decorative star */}
+      <g style={{ transform: `translate(${mouseOffset.x * 0.1}px, ${mouseOffset.y * 0.1}px)` }}>
+        <path 
+          d="M85 250 L90 260 L102 260 L93 268 L96 280 L85 272 L74 280 L77 268 L68 260 L80 260 Z" 
+          fill={COLORS.cyan}
+        />
+      </g>
+      
+      {/* Decorative triangles */}
+      <polygon 
+        points="620,380 632,405 608,405" 
+        fill="none" 
+        stroke={COLORS.orbit} 
+        strokeWidth="1.5"
+      />
+      <polygon 
+        points="80,450 92,475 68,475" 
+        fill="none" 
+        stroke={COLORS.orbit} 
+        strokeWidth="1.5"
+      />
+      
+      {/* Additional small dots for depth */}
+      <circle cx="150" cy="320" r="3" fill={COLORS.coral} opacity="0.6" />
+      <circle cx="580" cy="280" r="4" fill={COLORS.cyan} opacity="0.5" />
+      <circle cx="520" cy="480" r="3" fill={COLORS.purple} opacity="0.5" />
+    </svg>
   );
 };
 
@@ -218,8 +358,8 @@ const WhatMakesVoraDifferentSection = () => {
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
       setMouseOffset({
-        x: (e.clientX - centerX) * 0.1,
-        y: (e.clientY - centerY) * 0.1,
+        x: (e.clientX - centerX) * 0.15,
+        y: (e.clientY - centerY) * 0.15,
       });
     };
     
@@ -227,108 +367,37 @@ const WhatMakesVoraDifferentSection = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
   
-  const orbitDots = [
-    { radius: 180, duration: 20, delay: 0, size: 8, color: COLORS.coral },
-    { radius: 180, duration: 20, delay: 0.5, size: 6, color: COLORS.blue },
-    { radius: 150, duration: 15, delay: 0.2, size: 10, color: COLORS.purple },
-    { radius: 150, duration: 15, delay: 0.7, size: 5, color: COLORS.cyan },
-    { radius: 200, duration: 25, delay: 0.3, size: 12, color: COLORS.orange },
-    { radius: 200, duration: 25, delay: 0.8, size: 7, color: COLORS.magenta },
-    { radius: 170, duration: 18, delay: 0.4, size: 6, color: COLORS.pink },
-    { radius: 170, duration: 18, delay: 0.9, size: 9, color: COLORS.yellow },
-  ];
-  
   return (
     <section 
       ref={sectionRef}
-      className="relative py-24 lg:py-32 overflow-hidden"
+      className="relative py-20 lg:py-28 overflow-hidden"
       style={{ backgroundColor: COLORS.background }}
     >
-      {/* Animated Background */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <svg 
-          viewBox="0 0 500 500" 
-          className="w-[600px] h-[600px] md:w-[800px] md:h-[800px] lg:w-[1000px] lg:h-[1000px] opacity-60"
-          style={{ 
-            transform: `translate(${mouseOffset.x * 0.3}px, ${mouseOffset.y * 0.3}px)`,
-            transition: 'transform 0.1s ease-out'
-          }}
-        >
-          <MorphingBlob mouseOffset={mouseOffset} />
-          
-          {/* Orbital rings */}
-          <ellipse 
-            cx="250" cy="250" rx="180" ry="100" 
-            fill="none" 
-            stroke={COLORS.orbit} 
-            strokeWidth="1" 
-            strokeDasharray="4 4"
-            style={{ 
-              transform: `rotate(-20deg)`,
-              transformOrigin: 'center'
-            }}
-          />
-          <ellipse 
-            cx="250" cy="250" rx="200" ry="120" 
-            fill="none" 
-            stroke={COLORS.orbit} 
-            strokeWidth="1"
-            style={{ 
-              transform: `rotate(30deg)`,
-              transformOrigin: 'center'
-            }}
-          />
-          <ellipse 
-            cx="250" cy="250" rx="170" ry="90" 
-            fill="none" 
-            stroke={COLORS.orbit} 
-            strokeWidth="1" 
-            strokeDasharray="2 6"
-            style={{ 
-              transform: `rotate(70deg)`,
-              transformOrigin: 'center'
-            }}
-          />
-          
-          {/* Central morphing blob */}
-          <use 
-            href="#blobPath" 
-            fill="url(#blobGradient)" 
-            filter="url(#blobShadow)"
-          />
-          
-          {/* Orbiting dots */}
-          {orbitDots.map((dot, index) => (
-            <OrbitingDot key={index} {...dot} mouseOffset={mouseOffset} />
-          ))}
-          
-          {/* Static decorative elements */}
-          <path 
-            d="M80 200 L85 210 L95 210 L87 217 L90 227 L80 220 L70 227 L73 217 L65 210 L75 210 Z" 
-            fill={COLORS.cyan}
-            style={{ 
-              transform: `translate(${mouseOffset.x * 0.1}px, ${mouseOffset.y * 0.1}px)`,
-            }}
-          />
-          <polygon 
-            points="420,300 430,320 410,320" 
-            fill="none" 
-            stroke={COLORS.orbit} 
-            strokeWidth="1.5"
-          />
-          <polygon 
-            points="70,350 80,370 60,370" 
-            fill="none" 
-            stroke={COLORS.orbit} 
-            strokeWidth="1.5"
-          />
-        </svg>
+      {/* Animated Background - Centered and prominent */}
+      <div 
+        className="absolute left-1/2 -translate-x-1/2 pointer-events-none flex items-center justify-center"
+        style={{ 
+          top: '80px',
+          width: '700px',
+          height: '700px',
+          transform: `translateX(-50%) translate(${mouseOffset.x * 0.2}px, ${mouseOffset.y * 0.2}px)`,
+          transition: 'transform 0.15s ease-out',
+        }}
+      >
+        {/* Blob Canvas */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <AnimatedBlobCanvas mouseOffset={mouseOffset} />
+        </div>
+        
+        {/* Orbital System */}
+        <OrbitalSystem mouseOffset={mouseOffset} />
       </div>
       
       {/* Content */}
       <div className="container mx-auto px-4 relative z-10">
+        {/* Header - sits above the blob */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -357,27 +426,33 @@ const WhatMakesVoraDifferentSection = () => {
           </p>
         </motion.div>
         
-        {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {/* Spacer to let blob show */}
+        <div className="h-[280px] md:h-[320px] lg:h-[360px]" />
+        
+        {/* Feature Cards - 2 columns with wide gaps */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-5xl mx-auto">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
-              className="group relative rounded-2xl p-6 backdrop-blur-md border transition-all duration-300 hover:scale-[1.02] hover:shadow-xl"
+              className="group relative rounded-2xl p-6 backdrop-blur-sm border transition-all duration-300 hover:scale-[1.02]"
               style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.85)',
-                borderColor: 'rgba(200, 200, 220, 0.3)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
+                backgroundColor: 'rgba(255, 255, 255, 0.92)',
+                borderColor: 'rgba(200, 200, 220, 0.4)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04)',
               }}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
+              whileHover={{
+                boxShadow: '0 16px 48px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.06)',
+              }}
             >
               {/* Gradient accent on hover */}
               <div 
                 className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                 style={{
-                  background: `linear-gradient(135deg, ${COLORS.cyan}10 0%, ${COLORS.magenta}10 100%)`,
+                  background: `linear-gradient(135deg, ${COLORS.cyan}08 0%, ${COLORS.magenta}08 100%)`,
                 }}
               />
               
@@ -385,7 +460,7 @@ const WhatMakesVoraDifferentSection = () => {
                 <div 
                   className="w-12 h-12 rounded-xl flex items-center justify-center mb-4"
                   style={{
-                    background: `linear-gradient(135deg, ${COLORS.cyan}20 0%, ${COLORS.purple}20 100%)`,
+                    background: `linear-gradient(135deg, ${COLORS.cyan}25 0%, ${COLORS.purple}25 100%)`,
                   }}
                 >
                   <feature.icon 
