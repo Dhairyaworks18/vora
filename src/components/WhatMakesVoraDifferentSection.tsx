@@ -82,7 +82,7 @@ const features = [
 ];
 
 // Smooth morphing blob using Canvas for better performance
-const AnimatedBlobCanvas = ({ mouseOffset }: { mouseOffset: { x: number; y: number } }) => {
+const AnimatedBlobCanvas = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const timeRef = useRef(0);
   const animationRef = useRef<number>();
@@ -125,8 +125,8 @@ const AnimatedBlobCanvas = ({ mouseOffset }: { mouseOffset: { x: number; y: numb
         const wave3 = Math.sin(angle + t * 0.5) * 20;
         const radius = baseRadius + wave1 + wave2 + wave3;
         
-        const x = centerX + Math.cos(angle) * radius + mouseOffset.x * 0.08;
-        const y = centerY + Math.sin(angle) * radius + mouseOffset.y * 0.08;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
         points.push({ x, y });
       }
       
@@ -203,7 +203,7 @@ const AnimatedBlobCanvas = ({ mouseOffset }: { mouseOffset: { x: number; y: numb
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [mouseOffset.x, mouseOffset.y]);
+  }, []);
   
   return (
     <canvas 
@@ -220,7 +220,7 @@ const AnimatedBlobCanvas = ({ mouseOffset }: { mouseOffset: { x: number; y: numb
 };
 
 // Orbital system SVG overlay
-const OrbitalSystem = ({ mouseOffset }: { mouseOffset: { x: number; y: number } }) => {
+const OrbitalSystem = () => {
   const [time, setTime] = useState(0);
   
   useEffect(() => {
@@ -267,8 +267,8 @@ const OrbitalSystem = ({ mouseOffset }: { mouseOffset: { x: number; y: number } 
     const rotatedY = x * Math.sin(radians) + y * Math.cos(radians);
     
     return {
-      x: 350 + rotatedX + mouseOffset.x * 0.03,
-      y: 350 + rotatedY + mouseOffset.y * 0.03,
+      x: 350 + rotatedX,
+      y: 350 + rotatedY,
     };
   };
   
@@ -318,12 +318,10 @@ const OrbitalSystem = ({ mouseOffset }: { mouseOffset: { x: number; y: number } 
       })}
       
       {/* Decorative star */}
-      <g style={{ transform: `translate(${mouseOffset.x * 0.1}px, ${mouseOffset.y * 0.1}px)` }}>
-        <path 
-          d="M85 250 L90 260 L102 260 L93 268 L96 280 L85 272 L74 280 L77 268 L68 260 L80 260 Z" 
-          fill={COLORS.cyan}
-        />
-      </g>
+      <path 
+        d="M85 250 L90 260 L102 260 L93 268 L96 280 L85 272 L74 280 L77 268 L68 260 L80 260 Z" 
+        fill={COLORS.cyan}
+      />
       
       {/* Decorative triangles */}
       <polygon 
@@ -348,28 +346,8 @@ const OrbitalSystem = ({ mouseOffset }: { mouseOffset: { x: number; y: number } 
 };
 
 const WhatMakesVoraDifferentSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
-  
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!sectionRef.current) return;
-      const rect = sectionRef.current.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      setMouseOffset({
-        x: (e.clientX - centerX) * 0.15,
-        y: (e.clientY - centerY) * 0.15,
-      });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-  
   return (
     <section 
-      ref={sectionRef}
       className="relative py-20 lg:py-28 overflow-hidden"
       style={{ backgroundColor: COLORS.background }}
     >
@@ -380,17 +358,15 @@ const WhatMakesVoraDifferentSection = () => {
           top: '80px',
           width: '700px',
           height: '700px',
-          transform: `translateX(-50%) translate(${mouseOffset.x * 0.2}px, ${mouseOffset.y * 0.2}px)`,
-          transition: 'transform 0.15s ease-out',
         }}
       >
         {/* Blob Canvas */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <AnimatedBlobCanvas mouseOffset={mouseOffset} />
+          <AnimatedBlobCanvas />
         </div>
         
         {/* Orbital System */}
-        <OrbitalSystem mouseOffset={mouseOffset} />
+        <OrbitalSystem />
       </div>
       
       {/* Content */}
