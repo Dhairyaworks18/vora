@@ -35,88 +35,115 @@ const TrustedBySection = () => {
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Coral/Orange Gradient */}
-            <linearGradient id="coralGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f4a574" stopOpacity="0.85" />
-              <stop offset="50%" stopColor="#f7b88c" stopOpacity="0.75" />
-              <stop offset="100%" stopColor="#f9c9a5" stopOpacity="0.6" />
+            {/* Coral/Orange Gradient - warmer, more vibrant */}
+            <linearGradient id="coralGradient" x1="0%" y1="0%" x2="80%" y2="100%">
+              <stop offset="0%" stopColor="#f5a06a" stopOpacity="0.9" />
+              <stop offset="40%" stopColor="#f7b08a" stopOpacity="0.85" />
+              <stop offset="100%" stopColor="#f9c4a8" stopOpacity="0.7" />
             </linearGradient>
             
-            {/* Pink Gradient */}
-            <linearGradient id="pinkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#e8a4b8" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#d98ba3" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="#c97590" stopOpacity="0.6" />
+            {/* Pink/Rose Gradient - softer blend */}
+            <linearGradient id="pinkGradient" x1="0%" y1="30%" x2="100%" y2="70%">
+              <stop offset="0%" stopColor="#e9a0b5" stopOpacity="0.85" />
+              <stop offset="50%" stopColor="#de8aa0" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#d07590" stopOpacity="0.7" />
             </linearGradient>
             
-            {/* Purple Gradient */}
-            <linearGradient id="purpleGradient" x1="0%" y1="100%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#a678b8" stopOpacity="0.75" />
-              <stop offset="50%" stopColor="#b88fc4" stopOpacity="0.65" />
-              <stop offset="100%" stopColor="#c9a5d0" stopOpacity="0.5" />
+            {/* Purple/Violet Gradient - deeper tones */}
+            <linearGradient id="purpleGradient" x1="0%" y1="100%" x2="80%" y2="0%">
+              <stop offset="0%" stopColor="#9a68ad" stopOpacity="0.85" />
+              <stop offset="50%" stopColor="#b080c0" stopOpacity="0.75" />
+              <stop offset="100%" stopColor="#c8a0d5" stopOpacity="0.6" />
             </linearGradient>
 
-            {/* Orange-Peach Gradient for second layer */}
-            <linearGradient id="peachGradient" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#f5b48a" stopOpacity="0.7" />
-              <stop offset="100%" stopColor="#f9d4b8" stopOpacity="0.5" />
+            {/* Peach/Apricot overlay gradient */}
+            <linearGradient id="peachGradient" x1="100%" y1="0%" x2="20%" y2="100%">
+              <stop offset="0%" stopColor="#f8b080" stopOpacity="0.75" />
+              <stop offset="60%" stopColor="#fac8a5" stopOpacity="0.6" />
+              <stop offset="100%" stopColor="#fcddc5" stopOpacity="0.4" />
+            </linearGradient>
+
+            {/* Soft pink-orange blend */}
+            <linearGradient id="blendGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f0a090" stopOpacity="0.7" />
+              <stop offset="100%" stopColor="#e090a5" stopOpacity="0.6" />
             </linearGradient>
           </defs>
 
-          {/* Top Coral/Orange Blob - largest, top layer */}
+          {/* Main Coral/Orange Blob - organic flowing shape */}
           <path
-            d="M-100,50 
-               C50,20 200,80 350,60 
-               C500,40 600,100 750,90 
-               C900,80 1000,40 1150,70 
-               C1300,100 1400,50 1550,80 
-               L1550,350 
-               C1400,380 1250,320 1100,350 
-               C950,380 800,340 650,370 
-               C500,400 350,350 200,380 
-               C50,410 -50,360 -100,390 
+            d="M-50,20 
+               Q100,-20 250,40 
+               T500,30 
+               Q650,20 800,60 
+               T1100,50 
+               Q1300,40 1500,80 
+               L1500,280 
+               Q1350,350 1150,300 
+               T850,340 
+               Q650,380 450,320 
+               T150,380 
+               Q0,400 -50,350 
                Z"
             fill="url(#coralGradient)"
           />
 
-          {/* Middle Pink Blob */}
+          {/* Secondary Orange blob - overlapping right */}
           <path
-            d="M-100,200 
-               C100,160 250,240 400,200 
-               C550,160 700,250 850,220 
-               C1000,190 1150,270 1300,230 
-               L1300,500 
-               C1150,540 1000,480 850,520 
-               C700,560 550,500 400,540 
-               C250,580 100,520 -100,560 
+            d="M400,60 
+               Q600,20 850,80 
+               T1200,50 
+               Q1400,30 1550,90 
+               L1550,380 
+               Q1400,450 1150,380 
+               T800,420 
+               Q600,460 400,380 
+               Z"
+            fill="url(#peachGradient)"
+          />
+
+          {/* Pink wave blob - middle layer */}
+          <path
+            d="M-100,180 
+               Q50,120 200,180 
+               T450,150 
+               Q600,120 750,200 
+               T1050,160 
+               Q1200,130 1350,200 
+               L1350,480 
+               Q1150,550 950,480 
+               T600,530 
+               Q400,570 200,500 
+               T-100,550 
                Z"
             fill="url(#pinkGradient)"
           />
 
-          {/* Bottom Purple Blob */}
+          {/* Purple blob - bottom organic shape */}
           <path
-            d="M-100,350 
-               C100,300 200,400 350,350 
-               C500,300 600,420 750,380 
-               C900,340 1000,450 1100,400 
-               L1100,650 
-               C1000,700 850,640 700,690 
-               C550,740 400,680 250,730 
-               C100,780 -50,720 -100,770 
+            d="M-100,320 
+               Q100,250 280,340 
+               T550,280 
+               Q700,240 850,340 
+               T1100,300 
+               L1100,600 
+               Q900,680 700,600 
+               T350,660 
+               Q150,700 -100,640 
                Z"
             fill="url(#purpleGradient)"
           />
 
-          {/* Secondary Orange/Peach Blob - overlapping right side */}
+          {/* Soft blend overlay for depth */}
           <path
-            d="M600,100 
-               C750,60 900,150 1050,100 
-               C1200,50 1350,140 1500,90 
-               L1500,450 
-               C1350,500 1200,440 1050,490 
-               C900,540 750,480 600,520 
+            d="M200,200 
+               Q400,150 600,220 
+               T950,180 
+               L950,400 
+               Q750,460 550,380 
+               T200,420 
                Z"
-            fill="url(#peachGradient)"
+            fill="url(#blendGradient)"
           />
         </svg>
 
