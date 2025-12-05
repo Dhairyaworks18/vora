@@ -7,6 +7,7 @@ import ProblemsSection from "@/components/ProblemsSection";
 import DataVisualizationSection from "@/components/DataVisualizationSection";
 import DualModesSection from "@/components/DualModesSection";
 import TrustedBySection from "@/components/TrustedBySection";
+import WhatMakesVoraDifferentSection from "@/components/WhatMakesVoraDifferentSection";
 import WorkflowSection from "@/components/WorkflowSection";
 import PricingSection from "@/components/PricingSection";
 import CTASection from "@/components/CTASection";
@@ -39,6 +40,7 @@ const Index = () => {
         <Navbar />
         <HeroSection />
         <TrustedBySection />
+        <WhatMakesVoraDifferentSection />
         <FeaturesSection />
         <ProblemsSection />
         <CompetitionModeSection />
