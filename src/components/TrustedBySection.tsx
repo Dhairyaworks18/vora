@@ -1,5 +1,5 @@
 import { GraduationCap, Briefcase, Users, Building2, BarChart3, FileText } from "lucide-react";
-import whyVoraBg from "@/assets/why-vora-bg.png";
+import whyVoraBg from "@/assets/why-vora-bg-new.png";
 
 const enterpriseCards = [
   {
