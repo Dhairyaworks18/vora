@@ -206,7 +206,10 @@ const TrustedBySection = () => {
           <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold mb-8 tracking-tight"
             style={{ color: '#2d2a4a' }}
           >
-            Why Vora Matters
+            Why <span 
+              className="bg-clip-text text-transparent"
+              style={{ backgroundImage: 'linear-gradient(135deg, #f5a06a 0%, #de8aa0 50%, #9a68ad 100%)' }}
+            >Vora</span> Matters
           </h2>
           <p className="text-lg lg:text-xl max-w-4xl mx-auto leading-relaxed font-light"
             style={{ color: '#4a4560' }}
@@ -268,7 +271,13 @@ const TrustedBySection = () => {
           <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight"
             style={{ color: '#2d2a4a' }}
           >
-            Now, with <span style={{ color: '#a678b8' }}>Vora</span> — That Power is Yours
+            Now, with <span 
+              className="bg-clip-text text-transparent px-1"
+              style={{ 
+                backgroundImage: 'linear-gradient(135deg, #f5a06a 0%, #de8aa0 50%, #9a68ad 100%)',
+                textShadow: '0 2px 20px rgba(222,138,160,0.4)'
+              }}
+            >Vora</span> — That Power is Yours
           </h3>
         </div>
 
