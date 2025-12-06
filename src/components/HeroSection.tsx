@@ -83,10 +83,10 @@ const HeroSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Two shooting stars only, strictly in upper sky area (above robot/human)
+  // Two shooting stars, 7-second interval, one at a time
   const shootingStars = [
-    { delay: 1, duration: 2.5, top: '3%', startX: '15%', size: 'normal' as const },
-    { delay: 8, duration: 3, top: '6%', startX: '45%', size: 'small' as const },
+    { delay: 0, duration: 2.5, top: '4%', startX: '20%', size: 'normal' as const },
+    { delay: 10, duration: 2.5, top: '5%', startX: '40%', size: 'normal' as const },
   ];
 
   return (
