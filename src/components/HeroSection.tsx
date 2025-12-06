@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.png";
 import { useRef } from "react";
@@ -71,11 +71,12 @@ const HeroSection = () => {
             Stunning Presentations
           </motion.h1>
 
-          {/* CTA Button - Centered */}
+          {/* CTA Buttons - Centered */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Button 
               variant="hero" 
@@ -84,6 +85,14 @@ const HeroSection = () => {
             >
               Start Creating with Vora
               <ArrowRight className="w-5 h-5" />
+            </Button>
+            <Button 
+              variant="outline" 
+              size="xl"
+              className="border-white/30 text-white bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:border-white/50 transition-all duration-300"
+            >
+              <Play className="w-5 h-5 mr-2" />
+              Demo Video
             </Button>
           </motion.div>
         </motion.div>
