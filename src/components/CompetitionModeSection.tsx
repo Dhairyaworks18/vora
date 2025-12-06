@@ -179,30 +179,84 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      {/* Torch light beam shining toward cards */}
+      {/* Primary torch light beam shining toward cards */}
       <motion.div
         className="absolute pointer-events-none"
         style={{
-          right: '-20%',
-          top: '20%',
-          width: '400px',
-          height: '500px',
-          background: `conic-gradient(from -30deg at 0% 50%, 
+          right: '-30%',
+          top: '10%',
+          width: '600px',
+          height: '600px',
+          background: `conic-gradient(from -25deg at 0% 50%, 
             transparent 0deg, 
-            rgba(251, 191, 36, 0.15) 15deg, 
-            rgba(251, 191, 36, 0.25) 30deg, 
-            rgba(251, 191, 36, 0.15) 45deg,
+            rgba(251, 191, 36, 0.12) 10deg, 
+            rgba(251, 191, 36, 0.35) 25deg, 
+            rgba(251, 146, 60, 0.4) 35deg,
+            rgba(251, 191, 36, 0.35) 45deg,
+            rgba(251, 191, 36, 0.12) 55deg,
+            transparent 65deg
+          )`,
+          filter: 'blur(25px)',
+          transformOrigin: '0% 50%',
+        }}
+        animate={{
+          opacity: [0.7, 1, 0.7],
+          rotate: [-3, 3, -3],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      
+      {/* Secondary intense light core */}
+      <motion.div
+        className="absolute pointer-events-none"
+        style={{
+          right: '-15%',
+          top: '18%',
+          width: '350px',
+          height: '400px',
+          background: `conic-gradient(from -20deg at 0% 50%, 
+            transparent 0deg, 
+            rgba(255, 247, 237, 0.2) 15deg, 
+            rgba(251, 191, 36, 0.5) 30deg, 
+            rgba(255, 247, 237, 0.2) 45deg,
             transparent 60deg
           )`,
-          filter: 'blur(20px)',
+          filter: 'blur(15px)',
           transformOrigin: '0% 50%',
         }}
         animate={{
           opacity: [0.6, 0.9, 0.6],
-          rotate: [-5, 5, -5],
+          rotate: [-2, 2, -2],
         }}
         transition={{
-          duration: 4,
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.5,
+        }}
+      />
+      
+      {/* Torch source glow */}
+      <motion.div
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          right: '8%',
+          top: '22%',
+          width: '80px',
+          height: '80px',
+          background: 'radial-gradient(circle, rgba(255, 247, 237, 0.9) 0%, rgba(251, 191, 36, 0.6) 40%, rgba(249, 115, 22, 0.3) 70%, transparent 100%)',
+          filter: 'blur(12px)',
+        }}
+        animate={{
+          scale: [1, 1.3, 1],
+          opacity: [0.8, 1, 0.8],
+        }}
+        transition={{
+          duration: 0.8,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -439,18 +493,38 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
             <rect x="290" y="220" width="12" height="45" rx="4" fill="url(#torchGradient)" />
             <rect x="288" y="215" width="16" height="8" rx="3" fill="#6a5a4a" />
             
+            {/* Large outer glow */}
+            <motion.ellipse
+              cx="296"
+              cy="180"
+              rx="50"
+              ry="60"
+              fill="url(#torchGlow)"
+              opacity="0.5"
+              animate={{
+                rx: [45, 55, 45],
+                ry: [55, 65, 55],
+                opacity: [0.4, 0.6, 0.4],
+              }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            
             {/* Torch flame glow */}
             <motion.ellipse
               cx="296"
-              cy="195"
-              rx="25"
-              ry="30"
+              cy="185"
+              rx="30"
+              ry="40"
               fill="url(#torchGlow)"
               filter="url(#flameGlow)"
               animate={{
-                rx: [22, 28, 22],
-                ry: [28, 35, 28],
-                opacity: [0.7, 1, 0.7],
+                rx: [28, 35, 28],
+                ry: [35, 45, 35],
+                opacity: [0.8, 1, 0.8],
               }}
               transition={{
                 duration: 0.5,
@@ -462,8 +536,8 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
             {/* Torch flame */}
             <motion.g
               animate={{
-                scaleY: [1, 1.15, 1],
-                scaleX: [1, 0.9, 1],
+                scaleY: [1, 1.2, 1],
+                scaleX: [1, 0.85, 1],
               }}
               transition={{
                 duration: 0.3,
@@ -474,13 +548,13 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
             >
               {/* Outer flame */}
               <motion.path
-                d="M296 215 Q285 190 290 170 Q296 155 296 155 Q296 155 302 170 Q307 190 296 215 Z"
+                d="M296 215 Q280 185 287 160 Q296 140 296 140 Q296 140 305 160 Q312 185 296 215 Z"
                 fill="url(#flameGradient)"
                 animate={{
                   d: [
-                    "M296 215 Q285 190 290 170 Q296 155 296 155 Q296 155 302 170 Q307 190 296 215 Z",
-                    "M296 215 Q283 188 288 165 Q296 148 296 148 Q296 148 304 165 Q309 188 296 215 Z",
-                    "M296 215 Q285 190 290 170 Q296 155 296 155 Q296 155 302 170 Q307 190 296 215 Z",
+                    "M296 215 Q280 185 287 160 Q296 140 296 140 Q296 140 305 160 Q312 185 296 215 Z",
+                    "M296 215 Q278 180 285 150 Q296 130 296 130 Q296 130 307 150 Q314 180 296 215 Z",
+                    "M296 215 Q280 185 287 160 Q296 140 296 140 Q296 140 305 160 Q312 185 296 215 Z",
                   ]
                 }}
                 transition={{
@@ -489,16 +563,29 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
                   ease: "easeInOut",
                 }}
               />
-              {/* Inner flame */}
+              {/* Middle flame layer */}
+              <motion.path
+                d="M296 210 Q285 188 290 168 Q296 155 296 155 Q296 155 302 168 Q307 188 296 210 Z"
+                fill="#fbbf24"
+                animate={{
+                  opacity: [0.9, 1, 0.9],
+                }}
+                transition={{
+                  duration: 0.3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+              {/* Inner flame - bright core */}
               <motion.ellipse
                 cx="296"
-                cy="195"
-                rx="6"
-                ry="12"
+                cy="185"
+                rx="8"
+                ry="18"
                 fill="#fff7ed"
                 animate={{
-                  ry: [10, 14, 10],
-                  opacity: [0.9, 1, 0.9],
+                  ry: [16, 22, 16],
+                  opacity: [0.95, 1, 0.95],
                 }}
                 transition={{
                   duration: 0.25,
@@ -506,7 +593,42 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
                   ease: "easeInOut",
                 }}
               />
+              {/* Bright white center */}
+              <motion.ellipse
+                cx="296"
+                cy="190"
+                rx="4"
+                ry="10"
+                fill="#ffffff"
+                animate={{
+                  ry: [8, 12, 8],
+                  opacity: [0.9, 1, 0.9],
+                }}
+                transition={{
+                  duration: 0.2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
             </motion.g>
+            
+            {/* Flame tip sparks */}
+            <motion.circle
+              cx="296"
+              cy="145"
+              r="3"
+              fill="#fff7ed"
+              animate={{
+                y: [-5, -15, -5],
+                opacity: [0, 1, 0],
+                scale: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 0.8,
+                repeat: Infinity,
+                ease: "easeOut",
+              }}
+            />
           </g>
           
           {/* Grip fingers around torch */}
