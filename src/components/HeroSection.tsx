@@ -4,27 +4,23 @@ import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.png";
 import { useRef } from "react";
 
-// CSS-based Shooting Star for ultra-smooth animation (Gamma-style)
+// Single shooting star with proper sequencing (one at a time, 7s delay between)
 const ShootingStar = ({ 
-  delay, 
-  duration, 
+  index,
+  totalCycleDuration,
+  animationDuration,
   top, 
   startX,
-  size = 'normal' 
 }: { 
-  delay: number; 
-  duration: number; 
+  index: number;
+  totalCycleDuration: number;
+  animationDuration: number;
   top: string; 
   startX: string;
-  size?: 'small' | 'normal' | 'large';
 }) => {
-  const sizeConfig = {
-    small: { width: '80px', headSize: '2px', tailHeight: '1px' },
-    normal: { width: '120px', headSize: '3px', tailHeight: '1.5px' },
-    large: { width: '180px', headSize: '4px', tailHeight: '2px' },
-  };
-  
-  const config = sizeConfig[size];
+  // Each star appears at a specific offset in the cycle
+  // Star 0: starts at 0s, Star 1: starts at (animationDuration + 7s)
+  const starDelay = index * (animationDuration + 7);
   
   return (
     <div
@@ -32,18 +28,18 @@ const ShootingStar = ({
       style={{
         top,
         left: startX,
-        width: config.width,
-        height: config.headSize,
+        width: '120px',
+        height: '3px',
         transform: 'rotate(45deg)',
-        animation: `shootingStarMove ${duration}s linear ${delay}s infinite`,
+        animation: `shootingStarSequence ${totalCycleDuration}s linear ${starDelay}s infinite`,
       }}
     >
-      {/* The shooting star - head + tail combined */}
+      {/* Star head */}
       <div
         className="absolute right-0 top-0 rounded-full bg-white"
         style={{
-          width: config.headSize,
-          height: config.headSize,
+          width: '3px',
+          height: '3px',
           boxShadow: `0 0 6px 2px rgba(255,255,255,0.9), 0 0 12px 4px rgba(255,255,255,0.4)`,
         }}
       />
@@ -52,7 +48,7 @@ const ShootingStar = ({
         className="absolute right-0 top-1/2 -translate-y-1/2"
         style={{
           width: '100%',
-          height: config.tailHeight,
+          height: '1.5px',
           background: 'linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 10%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0.1) 70%, transparent 100%)',
           borderRadius: '100px',
         }}
@@ -62,7 +58,7 @@ const ShootingStar = ({
         className="absolute right-0 top-1/2 -translate-y-1/2 opacity-50"
         style={{
           width: '100%',
-          height: `calc(${config.tailHeight} * 3)`,
+          height: '4.5px',
           background: 'linear-gradient(to left, rgba(200,220,255,0.6) 0%, rgba(200,220,255,0.2) 30%, transparent 100%)',
           filter: 'blur(2px)',
           borderRadius: '100px',
@@ -83,10 +79,15 @@ const HeroSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Two shooting stars, 7-second interval, one at a time
+  // Shooting star timing: 2s animation + 7s wait = 9s per star, 18s total cycle
+  const animationDuration = 2;
+  const delayBetweenStars = 7;
+  const totalCycleDuration = 2 * (animationDuration + delayBetweenStars); // 18s
+  
+  // Two stars in safe sky zones (top 3-7%, avoiding human/robot in center)
   const shootingStars = [
-    { delay: 0, duration: 2.5, top: '4%', startX: '20%', size: 'normal' as const },
-    { delay: 10, duration: 2.5, top: '5%', startX: '40%', size: 'normal' as const },
+    { top: '4%', startX: '15%' },
+    { top: '6%', startX: '55%' },
   ];
 
   return (
@@ -109,10 +110,17 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-vora-navy/60 via-transparent to-vora-navy/80" />
       </motion.div>
 
-      {/* Shooting Stars Layer */}
+      {/* Shooting Stars Layer - one at a time with 7s delay */}
       <div className="absolute inset-0 z-[5] overflow-hidden pointer-events-none">
         {shootingStars.map((star, index) => (
-          <ShootingStar key={index} {...star} />
+          <ShootingStar 
+            key={index} 
+            index={index}
+            totalCycleDuration={totalCycleDuration}
+            animationDuration={animationDuration}
+            top={star.top}
+            startX={star.startX}
+          />
         ))}
       </div>
 

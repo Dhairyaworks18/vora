@@ -266,3 +266,25 @@
     transform: rotate(45deg) translateX(calc(100vw + 200px));
   }
 }
+
+/* Sequenced shooting star - appears for ~11% of cycle (2s out of 18s), then hidden */
+@keyframes shootingStarSequence {
+  0% {
+    opacity: 0;
+    transform: rotate(45deg) translateX(0);
+  }
+  1% {
+    opacity: 1;
+  }
+  8% {
+    opacity: 1;
+  }
+  11% {
+    opacity: 0;
+    transform: rotate(45deg) translateX(calc(100vw + 200px));
+  }
+  11.1%, 100% {
+    opacity: 0;
+    transform: rotate(45deg) translateX(0);
+  }
+}
