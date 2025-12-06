@@ -4,6 +4,43 @@ import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.png";
 import { useRef } from "react";
 
+// Shooting Star Component
+const ShootingStar = ({ delay, duration, top, left, angle }: { 
+  delay: number; 
+  duration: number; 
+  top: string; 
+  left: string; 
+  angle: number;
+}) => (
+  <motion.div
+    className="absolute pointer-events-none"
+    style={{ top, left, rotate: `${angle}deg` }}
+    initial={{ opacity: 0, x: 0, y: 0 }}
+    animate={{ 
+      opacity: [0, 1, 1, 0],
+      x: [0, 150, 300],
+      y: [0, 75, 150],
+    }}
+    transition={{
+      duration,
+      delay,
+      repeat: Infinity,
+      repeatDelay: Math.random() * 8 + 4,
+      ease: "easeOut"
+    }}
+  >
+    <div className="relative">
+      {/* Star head */}
+      <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_4px_rgba(255,255,255,0.8)]" />
+      {/* Star tail */}
+      <div 
+        className="absolute top-1/2 right-full -translate-y-1/2 w-20 h-[2px] bg-gradient-to-l from-white via-white/60 to-transparent"
+        style={{ filter: 'blur(0.5px)' }}
+      />
+    </div>
+  </motion.div>
+);
+
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -14,6 +51,16 @@ const HeroSection = () => {
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+
+  // Shooting stars configuration
+  const shootingStars = [
+    { delay: 0, duration: 1.5, top: '15%', left: '10%', angle: 35 },
+    { delay: 3, duration: 1.2, top: '25%', left: '60%', angle: 40 },
+    { delay: 6, duration: 1.8, top: '10%', left: '75%', angle: 30 },
+    { delay: 9, duration: 1.4, top: '20%', left: '30%', angle: 38 },
+    { delay: 12, duration: 1.6, top: '8%', left: '85%', angle: 42 },
+    { delay: 15, duration: 1.3, top: '18%', left: '45%', angle: 33 },
+  ];
 
   return (
     <section 
@@ -34,6 +81,13 @@ const HeroSection = () => {
         {/* Gradient Overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-b from-vora-navy/60 via-transparent to-vora-navy/80" />
       </motion.div>
+
+      {/* Shooting Stars Layer */}
+      <div className="absolute inset-0 z-[5] overflow-hidden pointer-events-none">
+        {shootingStars.map((star, index) => (
+          <ShootingStar key={index} {...star} />
+        ))}
+      </div>
 
       {/* Content Layer */}
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-20 lg:pt-40 min-h-screen flex flex-col">
