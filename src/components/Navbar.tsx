@@ -1,20 +1,47 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const navLinks = [
-  { name: "Features", href: "#features" },
-  { name: "Solutions", href: "#solutions" },
-  { name: "Competition Mode", href: "#competition" },
-  { name: "Pricing", href: "#pricing" },
+  { name: "Features", href: "#features", isPage: false },
+  { name: "Solutions", href: "#solutions", isPage: false },
+  { name: "Competition Mode", href: "#competition", isPage: false },
+  { name: "Pricing", href: "/pricing", isPage: true },
 ];
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const scrollToSection = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string, isPage: boolean) => {
     e.preventDefault();
+    setIsOpen(false);
+    
+    if (isPage) {
+      navigate(href);
+      return;
+    }
+    
+    // If we're not on the homepage, navigate there first
+    if (location.pathname !== "/") {
+      navigate("/");
+      // Wait for navigation then scroll
+      setTimeout(() => {
+        const targetId = href.replace("#", "");
+        const element = document.getElementById(targetId);
+        if (element) {
+          const navbarHeight = 80;
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+      }, 100);
+      return;
+    }
+    
     const targetId = href.replace("#", "");
     const element = document.getElementById(targetId);
     
@@ -28,9 +55,7 @@ const Navbar = () => {
         behavior: "smooth"
       });
     }
-    
-    setIsOpen(false);
-  }, []);
+  }, [navigate, location.pathname]);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -56,7 +81,7 @@ const Navbar = () => {
               <a
                 key={link.name}
                 href={link.href}
-                onClick={(e) => scrollToSection(e, link.href)}
+                onClick={(e) => handleNavClick(e, link.href, link.isPage)}
                 className="text-muted-foreground hover:text-foreground font-medium transition-colors relative group"
               >
                 {link.name}
@@ -100,7 +125,7 @@ const Navbar = () => {
                   key={link.name}
                   href={link.href}
                   className="text-foreground font-medium py-2"
-                  onClick={(e) => scrollToSection(e, link.href)}
+                  onClick={(e) => handleNavClick(e, link.href, link.isPage)}
                 >
                   {link.name}
                 </a>
