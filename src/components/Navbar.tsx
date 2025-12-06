@@ -22,6 +22,8 @@ const Navbar = () => {
     
     if (isPage) {
       navigate(href);
+      // Force scroll to top for page routes
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "instant" }), 0);
       return;
     }
     
@@ -67,7 +69,12 @@ const Navbar = () => {
             className="group"
             onClick={(e) => {
               e.preventDefault();
-              window.scrollTo({ top: 0, behavior: "smooth" });
+              if (location.pathname !== "/") {
+                navigate("/");
+                setTimeout(() => window.scrollTo({ top: 0, behavior: "instant" }), 0);
+              } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
             }}
           >
             <span className="font-display text-2xl font-bold tracking-wider bg-gradient-to-r from-vora-coral via-[#F5B5A8] to-[#4A7DC7] bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
