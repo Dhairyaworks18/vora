@@ -381,12 +381,12 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
           <circle cx="22" cy="285" r="4" fill="rgba(255,255,255,0.1)" />
         </motion.g>
         
-        {/* RIGHT ARM - Holding Torch */}
+        {/* RIGHT ARM */}
         <motion.g
           animate={isPresenting || isLookingAtCards ? { 
-            rotate: [20, 30, 20],
+            rotate: [0, 10, 0],
           } : { 
-            rotate: [20, 23, 20]
+            rotate: [0, 3, 0]
           }}
           transition={{ 
             duration: isPresenting ? 2 : 3.5, 
@@ -399,154 +399,15 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
           {/* Upper arm */}
           <rect x="205" y="270" width="50" height="20" rx="10" fill="url(#armGradient)" />
           {/* Forearm */}
-          <rect x="240" y="255" width="35" height="18" rx="9" fill="url(#armGradient)" />
+          <rect x="235" y="280" width="35" height="18" rx="9" fill="url(#armGradient)" />
           {/* Hand */}
-          <circle cx="280" cy="248" r="14" fill="#4a4a6a" />
-          <circle cx="280" cy="246" r="10" fill="#5a5a7a" />
-          
-          {/* TORCH */}
-          <g>
-            {/* Torch handle */}
-            <rect x="290" y="220" width="12" height="45" rx="4" fill="url(#torchGradient)" />
-            <rect x="288" y="215" width="16" height="8" rx="3" fill="#6a5a4a" />
-            
-            {/* Large outer glow */}
-            <motion.ellipse
-              cx="296"
-              cy="180"
-              rx="50"
-              ry="60"
-              fill="url(#torchGlow)"
-              opacity="0.5"
-              animate={{
-                rx: [45, 55, 45],
-                ry: [55, 65, 55],
-                opacity: [0.4, 0.6, 0.4],
-              }}
-              transition={{
-                duration: 1,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-            
-            {/* Torch flame glow */}
-            <motion.ellipse
-              cx="296"
-              cy="185"
-              rx="30"
-              ry="40"
-              fill="url(#torchGlow)"
-              filter="url(#flameGlow)"
-              animate={{
-                rx: [28, 35, 28],
-                ry: [35, 45, 35],
-                opacity: [0.8, 1, 0.8],
-              }}
-              transition={{
-                duration: 0.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-            
-            {/* Torch flame */}
-            <motion.g
-              animate={{
-                scaleY: [1, 1.2, 1],
-                scaleX: [1, 0.85, 1],
-              }}
-              transition={{
-                duration: 0.3,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              style={{ transformOrigin: '296px 215px' }}
-            >
-              {/* Outer flame */}
-              <motion.path
-                d="M296 215 Q280 185 287 160 Q296 140 296 140 Q296 140 305 160 Q312 185 296 215 Z"
-                fill="url(#flameGradient)"
-                animate={{
-                  d: [
-                    "M296 215 Q280 185 287 160 Q296 140 296 140 Q296 140 305 160 Q312 185 296 215 Z",
-                    "M296 215 Q278 180 285 150 Q296 130 296 130 Q296 130 307 150 Q314 180 296 215 Z",
-                    "M296 215 Q280 185 287 160 Q296 140 296 140 Q296 140 305 160 Q312 185 296 215 Z",
-                  ]
-                }}
-                transition={{
-                  duration: 0.4,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              {/* Middle flame layer */}
-              <motion.path
-                d="M296 210 Q285 188 290 168 Q296 155 296 155 Q296 155 302 168 Q307 188 296 210 Z"
-                fill="#fbbf24"
-                animate={{
-                  opacity: [0.9, 1, 0.9],
-                }}
-                transition={{
-                  duration: 0.3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              {/* Inner flame - bright core */}
-              <motion.ellipse
-                cx="296"
-                cy="185"
-                rx="8"
-                ry="18"
-                fill="#fff7ed"
-                animate={{
-                  ry: [16, 22, 16],
-                  opacity: [0.95, 1, 0.95],
-                }}
-                transition={{
-                  duration: 0.25,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-              {/* Bright white center */}
-              <motion.ellipse
-                cx="296"
-                cy="190"
-                rx="4"
-                ry="10"
-                fill="#ffffff"
-                animate={{
-                  ry: [8, 12, 8],
-                  opacity: [0.9, 1, 0.9],
-                }}
-                transition={{
-                  duration: 0.2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
-            </motion.g>
-            
-            {/* Flame tip sparks */}
-            <motion.circle
-              cx="296"
-              cy="145"
-              r="3"
-              fill="#fff7ed"
-              animate={{
-                y: [-5, -15, -5],
-                opacity: [0, 1, 0],
-                scale: [0.5, 1, 0.5],
-              }}
-              transition={{
-                duration: 0.8,
-                repeat: Infinity,
-                ease: "easeOut",
-              }}
-            />
-          </g>
+          <circle cx="275" cy="290" r="14" fill="#4a4a6a" />
+          <circle cx="275" cy="288" r="10" fill="#5a5a7a" />
+          {/* Fingers */}
+          <ellipse cx="268" cy="298" rx="4" ry="6" fill="#5a5a7a" />
+          <ellipse cx="275" cy="302" rx="4" ry="6" fill="#5a5a7a" />
+          <ellipse cx="282" cy="298" rx="4" ry="6" fill="#5a5a7a" />
+          <circle cx="272" cy="285" r="4" fill="rgba(255,255,255,0.1)" />
           
           {/* Grip fingers around torch */}
           <ellipse cx="285" cy="235" rx="4" ry="6" fill="#5a5a7a" />
