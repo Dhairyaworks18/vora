@@ -915,7 +915,93 @@ const CompetitionModeSection = () => {
         }}
       />
       
-      <div className="container mx-auto px-4 relative" style={{ zIndex: 10 }}>
+      {/* Torch light beams - positioned BEFORE content so they appear behind cards but visible */}
+      <motion.div
+        className="absolute pointer-events-none"
+        style={{
+          left: '20%',
+          top: '30%',
+          width: '1000px',
+          height: '800px',
+          background: `conic-gradient(from -30deg at 0% 50%, 
+            transparent 0deg, 
+            rgba(251, 191, 36, 0.08) 8deg, 
+            rgba(251, 191, 36, 0.25) 20deg, 
+            rgba(251, 146, 60, 0.35) 32deg,
+            rgba(251, 191, 36, 0.25) 44deg,
+            rgba(251, 191, 36, 0.08) 56deg,
+            transparent 65deg
+          )`,
+          filter: 'blur(30px)',
+          transformOrigin: '0% 50%',
+          zIndex: 5,
+        }}
+        animate={{
+          opacity: [0.7, 1, 0.7],
+          rotate: [-4, 4, -4],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      
+      {/* Secondary intense light beam */}
+      <motion.div
+        className="absolute pointer-events-none"
+        style={{
+          left: '25%',
+          top: '35%',
+          width: '700px',
+          height: '600px',
+          background: `conic-gradient(from -25deg at 0% 50%, 
+            transparent 0deg, 
+            rgba(255, 247, 237, 0.15) 12deg, 
+            rgba(251, 191, 36, 0.45) 28deg, 
+            rgba(255, 247, 237, 0.15) 44deg,
+            transparent 58deg
+          )`,
+          filter: 'blur(20px)',
+          transformOrigin: '0% 50%',
+          zIndex: 5,
+        }}
+        animate={{
+          opacity: [0.6, 0.95, 0.6],
+          rotate: [-3, 3, -3],
+        }}
+        transition={{
+          duration: 2.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.3,
+        }}
+      />
+      
+      {/* Torch source glow */}
+      <motion.div
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          left: '28%',
+          top: '38%',
+          width: '200px',
+          height: '200px',
+          background: 'radial-gradient(circle, rgba(255, 247, 237, 1) 0%, rgba(251, 191, 36, 0.8) 30%, rgba(249, 115, 22, 0.4) 60%, transparent 100%)',
+          filter: 'blur(15px)',
+          zIndex: 5,
+        }}
+        animate={{
+          scale: [1, 1.4, 1],
+          opacity: [0.9, 1, 0.9],
+        }}
+        transition={{
+          duration: 0.7,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      <div className="container mx-auto px-4 relative" style={{ zIndex: 2 }}>
         {/* Section Header */}
         <motion.div 
           className="text-center mb-12 md:mb-16"
@@ -1077,91 +1163,6 @@ const CompetitionModeSection = () => {
         </motion.div>
       </div>
       
-      {/* Torch light beams - positioned at section level to overlay cards */}
-      <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          left: '25%',
-          top: '35%',
-          width: '900px',
-          height: '700px',
-          background: `conic-gradient(from -30deg at 0% 50%, 
-            transparent 0deg, 
-            rgba(251, 191, 36, 0.06) 8deg, 
-            rgba(251, 191, 36, 0.18) 20deg, 
-            rgba(251, 146, 60, 0.25) 32deg,
-            rgba(251, 191, 36, 0.18) 44deg,
-            rgba(251, 191, 36, 0.06) 56deg,
-            transparent 65deg
-          )`,
-          filter: 'blur(40px)',
-          transformOrigin: '0% 50%',
-          zIndex: 20,
-        }}
-        animate={{
-          opacity: [0.6, 0.9, 0.6],
-          rotate: [-4, 4, -4],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      
-      {/* Secondary intense light beam */}
-      <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          left: '30%',
-          top: '40%',
-          width: '600px',
-          height: '500px',
-          background: `conic-gradient(from -25deg at 0% 50%, 
-            transparent 0deg, 
-            rgba(255, 247, 237, 0.1) 12deg, 
-            rgba(251, 191, 36, 0.35) 28deg, 
-            rgba(255, 247, 237, 0.1) 44deg,
-            transparent 58deg
-          )`,
-          filter: 'blur(25px)',
-          transformOrigin: '0% 50%',
-          zIndex: 20,
-        }}
-        animate={{
-          opacity: [0.5, 0.8, 0.5],
-          rotate: [-3, 3, -3],
-        }}
-        transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 0.3,
-        }}
-      />
-      
-      {/* Torch source glow - positioned near the character's torch */}
-      <motion.div
-        className="absolute pointer-events-none rounded-full"
-        style={{
-          left: '32%',
-          top: '42%',
-          width: '150px',
-          height: '150px',
-          background: 'radial-gradient(circle, rgba(255, 247, 237, 0.9) 0%, rgba(251, 191, 36, 0.6) 30%, rgba(249, 115, 22, 0.3) 60%, transparent 100%)',
-          filter: 'blur(20px)',
-          zIndex: 20,
-        }}
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.8, 1, 0.8],
-        }}
-        transition={{
-          duration: 0.7,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
     </section>
   );
 };
