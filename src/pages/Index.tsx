@@ -3,14 +3,8 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import CompetitionModeSection from "@/components/CompetitionModeSection";
-import ProblemsSection from "@/components/ProblemsSection";
-import DataVisualizationSection from "@/components/DataVisualizationSection";
-import DualModesSection from "@/components/DualModesSection";
 import TrustedBySection from "@/components/TrustedBySection";
 import WhatMakesVoraDifferentSection from "@/components/WhatMakesVoraDifferentSection";
-import WorkflowSection from "@/components/WorkflowSection";
-
-import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -43,12 +37,6 @@ const Index = () => {
         <WhatMakesVoraDifferentSection />
         <CompetitionModeSection />
         <FeaturesSection />
-        <ProblemsSection />
-        <DataVisualizationSection />
-        <DualModesSection />
-        <WorkflowSection />
-        
-        <CTASection />
         <Footer />
       </main>
     </>
