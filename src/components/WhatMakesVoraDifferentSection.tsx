@@ -348,6 +348,7 @@ const OrbitalSystem = () => {
 const WhatMakesVoraDifferentSection = () => {
   return (
     <section 
+      id="what-makes-vora-different"
       className="relative py-20 lg:py-28 overflow-hidden"
       style={{ backgroundColor: COLORS.background }}
     >

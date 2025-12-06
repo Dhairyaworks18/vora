@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { name: "Features", href: "#features", isPage: false },
-  { name: "Solutions", href: "#solutions", isPage: false },
+  { name: "Solutions", href: "#what-makes-vora-different", isPage: false },
   { name: "Competition Mode", href: "#competition", isPage: false },
   { name: "Pricing", href: "/pricing", isPage: true },
 ];
