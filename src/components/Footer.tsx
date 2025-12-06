@@ -1,4 +1,4 @@
-import { Sparkles, Mail, Twitter, Linkedin, Github } from "lucide-react";
+import { Mail, Twitter, Linkedin, Github } from "lucide-react";
 
 const footerLinks = {
   product: [
@@ -33,11 +33,10 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-12">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-2">
-            <a href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-                <Sparkles className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <span className="font-display text-2xl font-bold">Vora</span>
+            <a href="/" className="group mb-4 inline-block">
+              <span className="font-display text-2xl font-bold tracking-wider bg-gradient-to-r from-vora-coral via-[#F5B5A8] to-[#4A7DC7] bg-clip-text text-transparent group-hover:opacity-80 transition-opacity">
+                VORA
+              </span>
             </a>
             <p className="text-background/60 mb-6 max-w-xs">
               Turn your ideas into stunning, human-like presentations built for 
