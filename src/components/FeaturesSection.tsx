@@ -1,64 +1,50 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { 
-  Palette, 
-  Brain, 
   BarChart3, 
-  Users, 
-  Layers, 
+  Sliders, 
+  Palette, 
   Globe, 
-  Wand2,
-  FileCheck
+  BookOpen, 
+  ShieldCheck
 } from "lucide-react";
 
 const features = [
   {
-    icon: Brain,
-    title: "Human-Like Content",
-    description: "AI that writes naturally, with varied tone and authentic phrasing that doesn't feel robotic.",
+    icon: BarChart3,
+    title: "AI Graph Engine",
+    description: "Auto-generate bar, line, pie, funnel charts with smart labels and natural commentary.",
+    color: "bg-yellow-bright/20 text-yellow-gold",
+  },
+  {
+    icon: Sliders,
+    title: "Dual Editing Modes",
+    description: "Quick Mode for instant presentations, Studio Mode for advanced editing and control.",
     color: "bg-primary/10 text-primary",
   },
   {
     icon: Palette,
-    title: "Unique Designs",
-    description: "Multiple design engines — Minimalist, Corporate, Creative, Pitch, and Competition styles.",
-    color: "bg-secondary/20 text-secondary",
-  },
-  {
-    icon: BarChart3,
-    title: "Smart Data Visuals",
-    description: "AI auto-generates charts, graphs, and insights from your CSV, Excel, or plain text data.",
-    color: "bg-yellow-bright/20 text-yellow-gold",
-  },
-  {
-    icon: Wand2,
-    title: "Storytelling Mode",
-    description: "Build narrative arcs — Problem → Solution → Impact — for compelling presentations.",
-    color: "bg-purple-light/20 text-purple-deep",
-  },
-  {
-    icon: Layers,
-    title: "Adaptive Layouts",
-    description: "Randomized, refined slide structures that keep every deck looking fresh and original.",
+    title: "Smart Brand Kits",
+    description: "Consistent professional identity across all slides for enterprise users.",
     color: "bg-coral/20 text-coral-dark",
-  },
-  {
-    icon: FileCheck,
-    title: "Fidelity Export",
-    description: "What you see is what you get. Perfect exports to PPTX, PDF, or interactive HTML.",
-    color: "bg-cyan-accent/20 text-cyan-accent",
-  },
-  {
-    icon: Users,
-    title: "Collaboration Tools",
-    description: "Built-in team features with version control and real-time editing capabilities.",
-    color: "bg-primary/10 text-primary",
   },
   {
     icon: Globe,
     title: "Multilingual Support",
-    description: "Create presentations in multiple languages for global audiences.",
+    description: "Create presentations in multiple languages with AI translation.",
     color: "bg-secondary/20 text-secondary",
+  },
+  {
+    icon: BookOpen,
+    title: "Storyline Generator",
+    description: "AI-powered narrative flows that create impactful presentation arcs.",
+    color: "bg-purple-light/20 text-purple-deep",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Fact-Check & Sources",
+    description: "AI verifies content and adds source links to improve credibility.",
+    color: "bg-cyan-accent/20 text-cyan-accent",
   },
 ];
 
@@ -101,18 +87,18 @@ const FeaturesSection = () => {
             Powerful Features
           </span>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
-            Everything You Need to
+            Powerful Features for
             <br />
-            <span className="text-gradient-blue">Create Stunning Decks</span>
+            <span className="text-gradient-blue">Every Need</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Vora combines AI intelligence with human creativity to deliver presentations 
-            that captivate your audience and win competitions.
+            From data visualization to storytelling, Vora has everything you need 
+            to create exceptional presentations.
           </p>
         </motion.div>
 
         {/* Features Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
