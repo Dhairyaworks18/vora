@@ -644,6 +644,7 @@ const CompetitionModeSection = () => {
   
   return (
     <section 
+      id="competition"
       ref={sectionRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
