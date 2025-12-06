@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet-async";
 import { Check, Sparkles, Zap, Crown, ArrowRight } from "lucide-react";
@@ -56,6 +57,11 @@ const plans = [
 ];
 
 const Pricing = () => {
+  // Force scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, []);
+
   return (
     <>
       <Helmet>
