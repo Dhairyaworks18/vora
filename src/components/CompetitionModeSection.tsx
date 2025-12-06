@@ -43,10 +43,10 @@ const features = [
 ];
 
 // Animated AI TV Character Component
-const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }) => {
+const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: number | null; mousePosition: { x: number; y: number } }) => {
   const [isBlinking, setIsBlinking] = useState(false);
   const [isPresenting, setIsPresenting] = useState(false);
-  const [eyeReaction, setEyeReaction] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   // Blinking animation
   useEffect(() => {
@@ -68,35 +68,101 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
     return () => clearInterval(presentInterval);
   }, []);
   
-  // Eye reaction when card is hovered
-  useEffect(() => {
-    if (hoveredCardIndex !== null) {
-      setEyeReaction(true);
-    } else {
-      setEyeReaction(false);
-    }
-  }, [hoveredCardIndex]);
-  
-  // Calculate eye position based on hovered card
+  // Calculate eye position based on cursor position
   const getEyeOffset = () => {
-    if (hoveredCardIndex === null) return { x: 0, y: 0 };
-    const row = Math.floor(hoveredCardIndex / 2);
-    const col = hoveredCardIndex % 2;
-    return { 
-      x: 3 + col * 2, 
-      y: -2 + row * 2 
-    };
+    // If cursor is being tracked, follow cursor
+    if (mousePosition.x !== 0 || mousePosition.y !== 0) {
+      // Normalize mouse position to eye movement range (-8 to 8 for x, -6 to 6 for y)
+      const maxOffsetX = 8;
+      const maxOffsetY = 6;
+      
+      // Center is around (150, 140) in SVG coordinates, map mouse to this
+      const eyeX = Math.max(-maxOffsetX, Math.min(maxOffsetX, (mousePosition.x - 0.3) * maxOffsetX * 2));
+      const eyeY = Math.max(-maxOffsetY, Math.min(maxOffsetY, (mousePosition.y - 0.5) * maxOffsetY * 2));
+      
+      return { x: eyeX, y: eyeY };
+    }
+    
+    // If hovering on a card, look at that card
+    if (hoveredCardIndex !== null) {
+      const row = Math.floor(hoveredCardIndex / 2);
+      const col = hoveredCardIndex % 2;
+      return { 
+        x: 5 + col * 2, 
+        y: -2 + row * 3 
+      };
+    }
+    
+    return { x: 2, y: 0 }; // Default: looking slightly toward cards
   };
   
   const eyeOffset = getEyeOffset();
+  const isLookingAtCards = mousePosition.x > 0.5 || hoveredCardIndex !== null;
   
   return (
     <motion.div
+      ref={containerRef}
       className="relative w-full h-full flex items-end justify-center pb-8 md:pb-12"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
+      {/* Torch light beam shining toward cards */}
+      <motion.div
+        className="absolute pointer-events-none"
+        style={{
+          right: '-20%',
+          top: '20%',
+          width: '400px',
+          height: '500px',
+          background: `conic-gradient(from -30deg at 0% 50%, 
+            transparent 0deg, 
+            rgba(251, 191, 36, 0.15) 15deg, 
+            rgba(251, 191, 36, 0.25) 30deg, 
+            rgba(251, 191, 36, 0.15) 45deg,
+            transparent 60deg
+          )`,
+          filter: 'blur(20px)',
+          transformOrigin: '0% 50%',
+        }}
+        animate={{
+          opacity: [0.6, 0.9, 0.6],
+          rotate: [-5, 5, -5],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      
+      {/* Torch glow particles */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full pointer-events-none"
+          style={{
+            right: `${-10 + i * 15}%`,
+            top: `${30 + (i % 3) * 15}%`,
+            width: `${4 + Math.random() * 6}px`,
+            height: `${4 + Math.random() * 6}px`,
+            background: 'rgba(251, 191, 36, 0.6)',
+            filter: 'blur(2px)',
+          }}
+          animate={{
+            opacity: [0, 0.8, 0],
+            x: [0, 50 + i * 10],
+            y: [0, -20 + i * 5],
+          }}
+          transition={{
+            duration: 2 + Math.random() * 2,
+            repeat: Infinity,
+            delay: i * 0.3,
+            ease: "easeOut",
+          }}
+        />
+      ))}
+      
       {/* AI TV Character SVG */}
       <motion.svg
         viewBox="0 0 300 400"
@@ -146,6 +212,28 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
             <stop offset="100%" stopColor="#2d2d4a" />
           </linearGradient>
           
+          {/* Torch gradient */}
+          <linearGradient id="torchGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#5a4a3a" />
+            <stop offset="50%" stopColor="#4a3a2a" />
+            <stop offset="100%" stopColor="#3a2a1a" />
+          </linearGradient>
+          
+          {/* Torch flame gradient */}
+          <radialGradient id="flameGradient" cx="50%" cy="70%" r="80%">
+            <stop offset="0%" stopColor="#fff7ed" />
+            <stop offset="30%" stopColor="#fbbf24" />
+            <stop offset="60%" stopColor="#f97316" />
+            <stop offset="100%" stopColor="#ea580c" />
+          </radialGradient>
+          
+          {/* Torch glow */}
+          <radialGradient id="torchGlow" cx="50%" cy="50%" r="100%">
+            <stop offset="0%" stopColor="rgba(251, 191, 36, 0.8)" />
+            <stop offset="50%" stopColor="rgba(251, 146, 60, 0.4)" />
+            <stop offset="100%" stopColor="transparent" />
+          </radialGradient>
+          
           {/* Eye glow filter */}
           <filter id="eyeGlow" x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur stdDeviation="4" result="blur" />
@@ -158,6 +246,15 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
           {/* Outer glow filter */}
           <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="8" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          
+          {/* Flame glow filter */}
+          <filter id="flameGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="6" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -191,7 +288,6 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
         >
           <ellipse cx="105" cy="375" rx="22" ry="12" fill="url(#footGradient)" />
           <ellipse cx="105" cy="372" rx="18" ry="8" fill="#5a5a7a" />
-          {/* Foot highlight */}
           <ellipse cx="100" cy="370" rx="8" ry="4" fill="rgba(255,255,255,0.1)" />
         </motion.g>
         
@@ -210,7 +306,6 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
         >
           <ellipse cx="195" cy="375" rx="22" ry="12" fill="url(#footGradient)" />
           <ellipse cx="195" cy="372" rx="18" ry="8" fill="#5a5a7a" />
-          {/* Foot highlight */}
           <ellipse cx="190" cy="370" rx="8" ry="4" fill="rgba(255,255,255,0.1)" />
         </motion.g>
         
@@ -231,9 +326,7 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
           style={{ transformOrigin: '150px 320px' }}
         >
           <rect x="85" y="260" width="130" height="100" rx="25" fill="url(#bodyGradient)" />
-          {/* Body highlight */}
           <rect x="90" y="265" width="60" height="90" rx="20" fill="rgba(255,255,255,0.03)" />
-          {/* Body edge glow */}
           <rect x="85" y="260" width="130" height="100" rx="25" fill="none" stroke="rgba(147, 197, 253, 0.15)" strokeWidth="1" />
         </motion.g>
         
@@ -266,23 +359,18 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
           <ellipse cx="18" cy="298" rx="4" ry="6" fill="#5a5a7a" />
           <ellipse cx="25" cy="302" rx="4" ry="6" fill="#5a5a7a" />
           <ellipse cx="32" cy="298" rx="4" ry="6" fill="#5a5a7a" />
-          {/* Hand highlight */}
           <circle cx="22" cy="285" r="4" fill="rgba(255,255,255,0.1)" />
         </motion.g>
         
-        {/* RIGHT ARM - Presenting gesture */}
+        {/* RIGHT ARM - Holding Torch */}
         <motion.g
-          animate={isPresenting || hoveredCardIndex !== null ? { 
-            rotate: [15, 35, 35, 15],
+          animate={isPresenting || isLookingAtCards ? { 
+            rotate: [20, 30, 20],
           } : { 
-            rotate: [15, 18, 15]
+            rotate: [20, 23, 20]
           }}
-          transition={isPresenting || hoveredCardIndex !== null ? { 
-            duration: 2,
-            times: [0, 0.3, 0.7, 1],
-            ease: "easeInOut"
-          } : { 
-            duration: 3.5, 
+          transition={{ 
+            duration: isPresenting ? 2 : 3.5, 
             repeat: Infinity, 
             ease: "easeInOut",
             delay: 0.5
@@ -292,26 +380,90 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
           {/* Upper arm */}
           <rect x="205" y="270" width="50" height="20" rx="10" fill="url(#armGradient)" />
           {/* Forearm */}
-          <rect x="235" y="260" width="35" height="18" rx="9" fill="url(#armGradient)" />
+          <rect x="240" y="255" width="35" height="18" rx="9" fill="url(#armGradient)" />
           {/* Hand */}
-          <circle cx="275" cy="255" r="14" fill="#4a4a6a" />
-          <circle cx="275" cy="253" r="10" fill="#5a5a7a" />
-          {/* Pointing finger */}
-          <motion.ellipse 
-            cx="288" 
-            cy="248" 
-            rx="6" 
-            ry="4" 
-            fill="#5a5a7a"
-            animate={isPresenting || hoveredCardIndex !== null ? {
-              rx: [6, 8, 6]
-            } : {}}
-            transition={{ duration: 0.5 }}
-          />
-          <ellipse cx="278" cy="262" rx="4" ry="5" fill="#5a5a7a" />
-          <ellipse cx="272" cy="265" rx="4" ry="5" fill="#5a5a7a" />
-          {/* Hand highlight */}
-          <circle cx="272" cy="250" r="4" fill="rgba(255,255,255,0.1)" />
+          <circle cx="280" cy="248" r="14" fill="#4a4a6a" />
+          <circle cx="280" cy="246" r="10" fill="#5a5a7a" />
+          
+          {/* TORCH */}
+          <g>
+            {/* Torch handle */}
+            <rect x="290" y="220" width="12" height="45" rx="4" fill="url(#torchGradient)" />
+            <rect x="288" y="215" width="16" height="8" rx="3" fill="#6a5a4a" />
+            
+            {/* Torch flame glow */}
+            <motion.ellipse
+              cx="296"
+              cy="195"
+              rx="25"
+              ry="30"
+              fill="url(#torchGlow)"
+              filter="url(#flameGlow)"
+              animate={{
+                rx: [22, 28, 22],
+                ry: [28, 35, 28],
+                opacity: [0.7, 1, 0.7],
+              }}
+              transition={{
+                duration: 0.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            
+            {/* Torch flame */}
+            <motion.g
+              animate={{
+                scaleY: [1, 1.15, 1],
+                scaleX: [1, 0.9, 1],
+              }}
+              transition={{
+                duration: 0.3,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              style={{ transformOrigin: '296px 215px' }}
+            >
+              {/* Outer flame */}
+              <motion.path
+                d="M296 215 Q285 190 290 170 Q296 155 296 155 Q296 155 302 170 Q307 190 296 215 Z"
+                fill="url(#flameGradient)"
+                animate={{
+                  d: [
+                    "M296 215 Q285 190 290 170 Q296 155 296 155 Q296 155 302 170 Q307 190 296 215 Z",
+                    "M296 215 Q283 188 288 165 Q296 148 296 148 Q296 148 304 165 Q309 188 296 215 Z",
+                    "M296 215 Q285 190 290 170 Q296 155 296 155 Q296 155 302 170 Q307 190 296 215 Z",
+                  ]
+                }}
+                transition={{
+                  duration: 0.4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+              {/* Inner flame */}
+              <motion.ellipse
+                cx="296"
+                cy="195"
+                rx="6"
+                ry="12"
+                fill="#fff7ed"
+                animate={{
+                  ry: [10, 14, 10],
+                  opacity: [0.9, 1, 0.9],
+                }}
+                transition={{
+                  duration: 0.25,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </motion.g>
+          </g>
+          
+          {/* Grip fingers around torch */}
+          <ellipse cx="285" cy="235" rx="4" ry="6" fill="#5a5a7a" />
+          <ellipse cx="275" cy="238" rx="4" ry="5" fill="#5a5a7a" />
         </motion.g>
         
         {/* NECK */}
@@ -319,10 +471,8 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
         
         {/* TV HEAD */}
         <motion.g
-          animate={hoveredCardIndex !== null ? { 
+          animate={isLookingAtCards ? { 
             rotate: [0, 3, 0],
-          } : eyeReaction ? {
-            rotate: [0, 2, -2, 0],
           } : {}}
           transition={{ duration: 0.5, ease: "easeOut" }}
           style={{ transformOrigin: '150px 150px' }}
@@ -362,17 +512,17 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
             fill="url(#screenReflection)"
           />
           
-          {/* EYES */}
+          {/* EYES - Follow cursor */}
           <motion.g
             animate={{ 
               x: eyeOffset.x,
               y: eyeOffset.y
             }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
           >
             {/* Left Eye */}
             <motion.g
-              animate={isBlinking ? { scaleY: 0.1 } : eyeReaction ? { scaleY: 1.15 } : { scaleY: 1 }}
+              animate={isBlinking ? { scaleY: 0.1 } : { scaleY: 1 }}
               transition={{ duration: 0.1 }}
               style={{ transformOrigin: '115px 140px' }}
             >
@@ -383,13 +533,19 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
                 ry="28"
                 fill="white"
                 filter="url(#eyeGlow)"
-                animate={hoveredCardIndex !== null ? {
-                  fill: ["#ffffff", "#e0f0ff", "#ffffff"]
+                animate={isLookingAtCards ? {
+                  fill: ["#ffffff", "#fffbeb", "#ffffff"]
                 } : {}}
                 transition={{ duration: 0.5 }}
               />
-              {/* Pupil */}
-              <ellipse cx="118" cy="142" rx="8" ry="10" fill="#1a1a2e" />
+              {/* Pupil - moves with eye */}
+              <motion.ellipse 
+                cx="118" 
+                cy="142" 
+                rx="8" 
+                ry="10" 
+                fill="#1a1a2e"
+              />
               {/* Eye sparkle */}
               <circle cx="110" cy="135" r="4" fill="rgba(255,255,255,0.8)" />
               <circle cx="122" cy="145" r="2" fill="rgba(255,255,255,0.5)" />
@@ -397,7 +553,7 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
             
             {/* Right Eye */}
             <motion.g
-              animate={isBlinking ? { scaleY: 0.1 } : eyeReaction ? { scaleY: 1.15 } : { scaleY: 1 }}
+              animate={isBlinking ? { scaleY: 0.1 } : { scaleY: 1 }}
               transition={{ duration: 0.1 }}
               style={{ transformOrigin: '185px 140px' }}
             >
@@ -408,13 +564,19 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
                 ry="28"
                 fill="white"
                 filter="url(#eyeGlow)"
-                animate={hoveredCardIndex !== null ? {
-                  fill: ["#ffffff", "#e0f0ff", "#ffffff"]
+                animate={isLookingAtCards ? {
+                  fill: ["#ffffff", "#fffbeb", "#ffffff"]
                 } : {}}
                 transition={{ duration: 0.5 }}
               />
-              {/* Pupil */}
-              <ellipse cx="188" cy="142" rx="8" ry="10" fill="#1a1a2e" />
+              {/* Pupil - moves with eye */}
+              <motion.ellipse 
+                cx="188" 
+                cy="142" 
+                rx="8" 
+                ry="10" 
+                fill="#1a1a2e"
+              />
               {/* Eye sparkle */}
               <circle cx="180" cy="135" r="4" fill="rgba(255,255,255,0.8)" />
               <circle cx="192" cy="145" r="2" fill="rgba(255,255,255,0.5)" />
@@ -454,6 +616,26 @@ const AITVCharacter = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }
         style={{
           background: 'radial-gradient(ellipse, rgba(147, 197, 253, 0.3) 0%, transparent 70%)',
           filter: 'blur(15px)',
+        }}
+      />
+      
+      {/* Torch light reflection on ground */}
+      <motion.div 
+        className="absolute bottom-2 rounded-full pointer-events-none"
+        style={{
+          right: '10%',
+          width: '150px',
+          height: '30px',
+          background: 'radial-gradient(ellipse, rgba(251, 191, 36, 0.4) 0%, transparent 70%)',
+          filter: 'blur(10px)',
+        }}
+        animate={{
+          opacity: [0.4, 0.7, 0.4],
+        }}
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          ease: "easeInOut",
         }}
       />
       
@@ -533,9 +715,27 @@ const LightStreaks = () => (
 
 const CompetitionModeSection = () => {
   const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  // Track mouse position within the section
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setMousePosition({ x, y });
+  };
+  
+  const handleMouseLeave = () => {
+    setMousePosition({ x: 0, y: 0 });
+  };
   
   return (
     <section 
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       className="relative min-h-screen py-16 md:py-24 overflow-hidden"
       style={{
         background: `
@@ -627,7 +827,7 @@ const CompetitionModeSection = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <AITVCharacter hoveredCardIndex={hoveredCardIndex} />
+            <AITVCharacter hoveredCardIndex={hoveredCardIndex} mousePosition={mousePosition} />
           </motion.div>
           
           {/* Feature Cards - Right Side */}
