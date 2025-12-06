@@ -248,3 +248,21 @@
     background-position: 0% 50%;
   }
 }
+
+/* Shooting Star Animation - Ultra smooth linear movement */
+@keyframes shootingStarMove {
+  0% {
+    opacity: 0;
+    transform: rotate(45deg) translateX(0);
+  }
+  5% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(45deg) translateX(calc(100vw + 200px));
+  }
+}

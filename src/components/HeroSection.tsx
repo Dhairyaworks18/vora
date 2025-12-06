@@ -4,77 +4,71 @@ import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.png";
 import { useRef } from "react";
 
-// Shooting Star Component - Ultra smooth continuous motion
-const ShootingStar = ({ delay, duration, top, left, angle, size = 'normal' }: { 
+// CSS-based Shooting Star for ultra-smooth animation (Gamma-style)
+const ShootingStar = ({ 
+  delay, 
+  duration, 
+  top, 
+  startX,
+  size = 'normal' 
+}: { 
   delay: number; 
   duration: number; 
   top: string; 
-  left: string; 
-  angle: number;
+  startX: string;
   size?: 'small' | 'normal' | 'large';
 }) => {
   const sizeConfig = {
-    small: { head: 'w-1 h-1', tail: 'w-12', glow: '0_0_6px_2px_rgba(255,255,255,0.7)' },
-    normal: { head: 'w-1.5 h-1.5', tail: 'w-20', glow: '0_0_8px_3px_rgba(255,255,255,0.8)' },
-    large: { head: 'w-2 h-2', tail: 'w-28', glow: '0_0_12px_4px_rgba(255,255,255,0.9)' },
+    small: { width: '80px', headSize: '2px', tailHeight: '1px' },
+    normal: { width: '120px', headSize: '3px', tailHeight: '1.5px' },
+    large: { width: '180px', headSize: '4px', tailHeight: '2px' },
   };
   
   const config = sizeConfig[size];
   
   return (
-    <motion.div
+    <div
       className="absolute pointer-events-none"
-      style={{ 
-        top, 
-        left, 
-        rotate: `${angle}deg`,
-      }}
-      initial={{ 
-        opacity: 0, 
-        x: -50,
-        y: -25,
-        scale: 0.5
-      }}
-      animate={{ 
-        opacity: [0, 1, 1, 1, 0],
-        x: [-50, 0, 200, 400, 500],
-        y: [-25, 0, 100, 200, 250],
-        scale: [0.5, 1, 1, 0.8, 0.3]
-      }}
-      transition={{
-        duration,
-        delay,
-        repeat: Infinity,
-        repeatDelay: Math.random() * 6 + 3,
-        ease: [0.25, 0.1, 0.25, 1], // Smooth cubic bezier
-        times: [0, 0.1, 0.5, 0.85, 1] // Natural timing
+      style={{
+        top,
+        left: startX,
+        width: config.width,
+        height: config.headSize,
+        transform: 'rotate(45deg)',
+        animation: `shootingStarMove ${duration}s linear ${delay}s infinite`,
       }}
     >
-      <div className="relative">
-        {/* Glowing star head */}
-        <div 
-          className={`${config.head} rounded-full bg-white`}
-          style={{ 
-            boxShadow: config.glow,
-          }}
-        />
-        {/* Elegant gradient tail */}
-        <div 
-          className={`absolute top-1/2 right-full -translate-y-1/2 ${config.tail} h-[1.5px]`}
-          style={{ 
-            background: 'linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0.6), rgba(255,255,255,0.2), transparent)',
-          }}
-        />
-        {/* Secondary softer glow trail */}
-        <div 
-          className={`absolute top-1/2 right-full -translate-y-1/2 ${config.tail} h-[4px] opacity-40`}
-          style={{ 
-            background: 'linear-gradient(to left, rgba(255,200,180,0.8), rgba(255,200,180,0.3), transparent)',
-            filter: 'blur(2px)',
-          }}
-        />
-      </div>
-    </motion.div>
+      {/* The shooting star - head + tail combined */}
+      <div
+        className="absolute right-0 top-0 rounded-full bg-white"
+        style={{
+          width: config.headSize,
+          height: config.headSize,
+          boxShadow: `0 0 6px 2px rgba(255,255,255,0.9), 0 0 12px 4px rgba(255,255,255,0.4)`,
+        }}
+      />
+      {/* Main tail */}
+      <div
+        className="absolute right-0 top-1/2 -translate-y-1/2"
+        style={{
+          width: '100%',
+          height: config.tailHeight,
+          background: 'linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 10%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0.1) 70%, transparent 100%)',
+          borderRadius: '100px',
+        }}
+      />
+      {/* Soft glow trail */}
+      <div
+        className="absolute right-0 top-1/2 -translate-y-1/2 opacity-50"
+        style={{
+          width: '100%',
+          height: `calc(${config.tailHeight} * 3)`,
+          background: 'linear-gradient(to left, rgba(200,220,255,0.6) 0%, rgba(200,220,255,0.2) 30%, transparent 100%)',
+          filter: 'blur(2px)',
+          borderRadius: '100px',
+        }}
+      />
+    </div>
   );
 };
 
@@ -89,16 +83,16 @@ const HeroSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Shooting stars with varied sizes and timings for realism
+  // Shooting stars with staggered timings for continuous effect
   const shootingStars = [
-    { delay: 0.5, duration: 2.2, top: '12%', left: '5%', angle: 38, size: 'large' as const },
-    { delay: 4, duration: 1.8, top: '22%', left: '55%', angle: 42, size: 'normal' as const },
-    { delay: 7, duration: 2.5, top: '8%', left: '70%', angle: 35, size: 'small' as const },
-    { delay: 10, duration: 2.0, top: '18%', left: '25%', angle: 40, size: 'normal' as const },
-    { delay: 13, duration: 1.6, top: '6%', left: '80%', angle: 45, size: 'large' as const },
-    { delay: 16, duration: 2.3, top: '15%', left: '40%', angle: 36, size: 'small' as const },
-    { delay: 19, duration: 1.9, top: '10%', left: '15%', angle: 43, size: 'normal' as const },
-    { delay: 22, duration: 2.1, top: '20%', left: '65%', angle: 38, size: 'small' as const },
+    { delay: 0, duration: 3, top: '8%', startX: '-5%', size: 'large' as const },
+    { delay: 2.5, duration: 2.5, top: '15%', startX: '20%', size: 'normal' as const },
+    { delay: 5, duration: 3.5, top: '5%', startX: '45%', size: 'small' as const },
+    { delay: 7, duration: 2.8, top: '20%', startX: '10%', size: 'normal' as const },
+    { delay: 9.5, duration: 3.2, top: '12%', startX: '60%', size: 'large' as const },
+    { delay: 12, duration: 2.6, top: '18%', startX: '35%', size: 'small' as const },
+    { delay: 14, duration: 3, top: '7%', startX: '75%', size: 'normal' as const },
+    { delay: 16.5, duration: 2.9, top: '22%', startX: '5%', size: 'small' as const },
   ];
 
   return (
