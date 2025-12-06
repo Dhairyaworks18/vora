@@ -42,35 +42,30 @@ const features = [
   },
 ];
 
-// Animated Owl Character Component
-const OwlCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: number | null; mousePosition: { x: number; y: number } }) => {
+// Animated Owl Character Component - Cute Black Owl
+const OwlCharacter = ({ hoveredCardIndex, mousePosition, eyePositions }: { 
+  hoveredCardIndex: number | null; 
+  mousePosition: { x: number; y: number };
+  eyePositions: React.MutableRefObject<{ left: { x: number; y: number }; right: { x: number; y: number } }>;
+}) => {
   const [isBlinking, setIsBlinking] = useState(false);
-  const [eyeBeamPulse, setEyeBeamPulse] = useState(0);
+  const owlRef = useRef<SVGSVGElement>(null);
   
-  // Blinking animation
+  // Blinking animation - more expressive
   useEffect(() => {
     const blinkInterval = setInterval(() => {
       setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 150);
-    }, 3000 + Math.random() * 2000);
+      setTimeout(() => setIsBlinking(false), 120);
+    }, 2500 + Math.random() * 2000);
     
     return () => clearInterval(blinkInterval);
   }, []);
   
-  // Eye beam pulse cycle
-  useEffect(() => {
-    const pulseInterval = setInterval(() => {
-      setEyeBeamPulse(prev => (prev + 1) % 3);
-    }, 2000);
-    
-    return () => clearInterval(pulseInterval);
-  }, []);
-  
-  // Calculate eye position based on cursor position
+  // Calculate eye position based on cursor or hovered card
   const getEyeOffset = () => {
     if (mousePosition.x !== 0 || mousePosition.y !== 0) {
-      const maxOffsetX = 6;
-      const maxOffsetY = 4;
+      const maxOffsetX = 5;
+      const maxOffsetY = 3;
       const eyeX = Math.max(-maxOffsetX, Math.min(maxOffsetX, (mousePosition.x - 0.3) * maxOffsetX * 2));
       const eyeY = Math.max(-maxOffsetY, Math.min(maxOffsetY, (mousePosition.y - 0.5) * maxOffsetY * 2));
       return { x: eyeX, y: eyeY };
@@ -79,14 +74,36 @@ const OwlCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: n
     if (hoveredCardIndex !== null) {
       const row = Math.floor(hoveredCardIndex / 2);
       const col = hoveredCardIndex % 2;
-      return { x: 4 + col * 2, y: -1 + row * 2 };
+      return { x: 3 + col * 2, y: -1 + row * 1.5 };
     }
     
-    return { x: 3, y: 0 };
+    return { x: 2, y: 0 };
   };
   
   const eyeOffset = getEyeOffset();
-  const isLookingAtCards = mousePosition.x > 0.5 || hoveredCardIndex !== null;
+  const isLookingAtCards = mousePosition.x > 0.4 || hoveredCardIndex !== null;
+  
+  // Update eye positions for beam calculation
+  useEffect(() => {
+    if (owlRef.current) {
+      const svg = owlRef.current;
+      const rect = svg.getBoundingClientRect();
+      const svgWidth = rect.width;
+      const svgHeight = rect.height;
+      
+      // Eye centers in viewBox coordinates (120, 115) and (180, 115) scaled to actual size
+      const scale = svgWidth / 300;
+      const leftEyeX = rect.left + (120 + eyeOffset.x) * scale;
+      const leftEyeY = rect.top + (115 + eyeOffset.y) * scale;
+      const rightEyeX = rect.left + (180 + eyeOffset.x) * scale;
+      const rightEyeY = rect.top + (115 + eyeOffset.y) * scale;
+      
+      eyePositions.current = {
+        left: { x: leftEyeX, y: leftEyeY },
+        right: { x: rightEyeX, y: rightEyeY }
+      };
+    }
+  }, [eyeOffset, eyePositions]);
   
   return (
     <motion.div
@@ -95,12 +112,13 @@ const OwlCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: n
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      {/* Owl Character SVG */}
+      {/* Owl Character SVG - Cute Black Owl */}
       <motion.svg
+        ref={owlRef}
         viewBox="0 0 300 380"
-        className="w-[220px] md:w-[280px] lg:w-[320px] h-auto"
+        className="w-[200px] md:w-[260px] lg:w-[300px] h-auto"
         animate={{ 
-          y: [0, -6, 0],
+          y: [0, -5, 0],
         }}
         transition={{ 
           duration: 3.5, 
@@ -108,82 +126,74 @@ const OwlCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: n
           ease: "easeInOut" 
         }}
         style={{
-          filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.5))',
+          filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.6))',
         }}
       >
         <defs>
-          {/* Body gradient - warm brown tones */}
-          <linearGradient id="owlBodyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#a67c52" />
-            <stop offset="40%" stopColor="#8b6645" />
-            <stop offset="100%" stopColor="#6b4e35" />
+          {/* Black body gradient with subtle purple/blue highlights */}
+          <linearGradient id="blackOwlBodyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#2a2a3a" />
+            <stop offset="30%" stopColor="#1a1a28" />
+            <stop offset="60%" stopColor="#121218" />
+            <stop offset="100%" stopColor="#0a0a10" />
           </linearGradient>
           
-          {/* Face mask gradient - white/cream */}
-          <radialGradient id="owlFaceGradient" cx="50%" cy="40%" r="60%">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="70%" stopColor="#f5f0e6" />
-            <stop offset="100%" stopColor="#e8dfd0" />
-          </radialGradient>
-          
-          {/* Belly gradient */}
-          <radialGradient id="owlBellyGradient" cx="50%" cy="30%" r="70%">
-            <stop offset="0%" stopColor="#ffffff" />
-            <stop offset="80%" stopColor="#f0ebe3" />
-            <stop offset="100%" stopColor="#e0d8cc" />
-          </radialGradient>
-          
-          {/* Wing gradient */}
-          <linearGradient id="owlWingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#9a7048" />
-            <stop offset="50%" stopColor="#7a5a3a" />
-            <stop offset="100%" stopColor="#5a4028" />
+          {/* Feather highlight gradient */}
+          <linearGradient id="featherHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#4a4a6a" />
+            <stop offset="100%" stopColor="#2a2a3a" />
           </linearGradient>
           
-          {/* Eye glow */}
-          <radialGradient id="eyeGlowGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#fbbf24" />
-            <stop offset="60%" stopColor="#f59e0b" />
+          {/* Belly/chest gradient - darker with subtle warmth */}
+          <radialGradient id="blackOwlBellyGradient" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stopColor="#3a3a4a" />
+            <stop offset="50%" stopColor="#252530" />
+            <stop offset="100%" stopColor="#1a1a22" />
+          </radialGradient>
+          
+          {/* Face mask - heart shape with soft cream tint */}
+          <radialGradient id="blackOwlFaceGradient" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stopColor="#f5f0e8" />
+            <stop offset="60%" stopColor="#e8e0d4" />
+            <stop offset="100%" stopColor="#d5cfc5" />
+          </radialGradient>
+          
+          {/* Eye glow - warm amber with magical feel */}
+          <radialGradient id="owlEyeGlowGradient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#fcd34d" />
+            <stop offset="50%" stopColor="#fbbf24" />
+            <stop offset="100%" stopColor="#f59e0b" />
+          </radialGradient>
+          
+          {/* Iris gradient - rich amber/gold */}
+          <radialGradient id="owlIrisGradient" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stopColor="#fef3c7" />
+            <stop offset="30%" stopColor="#fcd34d" />
+            <stop offset="70%" stopColor="#f59e0b" />
             <stop offset="100%" stopColor="#d97706" />
           </radialGradient>
-          
-          {/* Eye iris gradient */}
-          <radialGradient id="irisGradient" cx="40%" cy="40%" r="60%">
-            <stop offset="0%" stopColor="#fcd34d" />
-            <stop offset="50%" stopColor="#f59e0b" />
-            <stop offset="100%" stopColor="#b45309" />
-          </radialGradient>
-          
-          {/* Eye beam gradient */}
-          <linearGradient id="eyeBeamGradient" x1="0%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stopColor="rgba(251, 191, 36, 0.9)" />
-            <stop offset="30%" stopColor="rgba(251, 191, 36, 0.5)" />
-            <stop offset="60%" stopColor="rgba(251, 191, 36, 0.2)" />
-            <stop offset="100%" stopColor="rgba(251, 191, 36, 0)" />
-          </linearGradient>
           
           {/* Beak gradient */}
-          <linearGradient id="beakGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#f59e0b" />
-            <stop offset="100%" stopColor="#d97706" />
+          <linearGradient id="owlBeakGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#374151" />
+            <stop offset="100%" stopColor="#1f2937" />
           </linearGradient>
           
           {/* Feet gradient */}
-          <linearGradient id="feetGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#fbbf24" />
-            <stop offset="100%" stopColor="#d97706" />
+          <linearGradient id="owlFeetGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#4b5563" />
+            <stop offset="100%" stopColor="#374151" />
+          </linearGradient>
+          
+          {/* Wing gradient */}
+          <linearGradient id="blackWingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#1f1f2f" />
+            <stop offset="50%" stopColor="#15151f" />
+            <stop offset="100%" stopColor="#0a0a12" />
           </linearGradient>
           
           {/* Glow filters */}
-          <filter id="owlEyeGlow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="6" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          
-          <filter id="beamGlow" x="-50%" y="-200%" width="200%" height="500%">
+          <filter id="eyeGlowFilter" x="-100%" y="-100%" width="300%" height="300%">
             <feGaussianBlur stdDeviation="8" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
@@ -191,226 +201,251 @@ const OwlCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: n
             </feMerge>
           </filter>
           
-          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="2" dy="4" stdDeviation="3" floodOpacity="0.3" />
+          <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
         </defs>
         
         {/* Shadow under owl */}
-        <ellipse cx="150" cy="365" rx="55" ry="10" fill="rgba(0,0,0,0.35)" />
+        <ellipse cx="150" cy="365" rx="50" ry="8" fill="rgba(0,0,0,0.4)" />
         
         {/* FEET */}
         <motion.g
-          animate={{ y: [0, 2, 0] }}
+          animate={{ y: [0, 1.5, 0] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
         >
           {/* Left foot */}
           <g>
-            <ellipse cx="115" cy="355" rx="18" ry="6" fill="url(#feetGradient)" />
-            <ellipse cx="102" cy="358" rx="6" ry="4" fill="url(#feetGradient)" />
-            <ellipse cx="115" cy="360" rx="6" ry="4" fill="url(#feetGradient)" />
-            <ellipse cx="128" cy="358" rx="6" ry="4" fill="url(#feetGradient)" />
+            <ellipse cx="118" cy="355" rx="16" ry="5" fill="url(#owlFeetGradient)" />
+            <ellipse cx="106" cy="357" rx="5" ry="3.5" fill="url(#owlFeetGradient)" />
+            <ellipse cx="118" cy="359" rx="5" ry="3.5" fill="url(#owlFeetGradient)" />
+            <ellipse cx="130" cy="357" rx="5" ry="3.5" fill="url(#owlFeetGradient)" />
           </g>
           {/* Right foot */}
           <g>
-            <ellipse cx="185" cy="355" rx="18" ry="6" fill="url(#feetGradient)" />
-            <ellipse cx="172" cy="358" rx="6" ry="4" fill="url(#feetGradient)" />
-            <ellipse cx="185" cy="360" rx="6" ry="4" fill="url(#feetGradient)" />
-            <ellipse cx="198" cy="358" rx="6" ry="4" fill="url(#feetGradient)" />
+            <ellipse cx="182" cy="355" rx="16" ry="5" fill="url(#owlFeetGradient)" />
+            <ellipse cx="170" cy="357" rx="5" ry="3.5" fill="url(#owlFeetGradient)" />
+            <ellipse cx="182" cy="359" rx="5" ry="3.5" fill="url(#owlFeetGradient)" />
+            <ellipse cx="194" cy="357" rx="5" ry="3.5" fill="url(#owlFeetGradient)" />
           </g>
         </motion.g>
         
-        {/* BODY - Main rounded shape */}
+        {/* BODY - Cute rounded shape */}
         <motion.g
-          animate={{ scaleY: [1, 1.02, 1] }}
+          animate={{ scaleY: [1, 1.015, 1] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           style={{ transformOrigin: '150px 280px' }}
         >
           {/* Main body */}
-          <ellipse cx="150" cy="270" rx="85" ry="95" fill="url(#owlBodyGradient)" filter="url(#softShadow)" />
+          <ellipse cx="150" cy="275" rx="78" ry="90" fill="url(#blackOwlBodyGradient)" />
           
           {/* Belly patch */}
-          <ellipse cx="150" cy="290" rx="50" ry="55" fill="url(#owlBellyGradient)" />
+          <ellipse cx="150" cy="290" rx="45" ry="50" fill="url(#blackOwlBellyGradient)" />
           
-          {/* Belly feather details */}
-          <g opacity="0.4">
-            {[...Array(5)].map((_, row) => (
-              [...Array(row % 2 === 0 ? 4 : 3)].map((_, col) => (
+          {/* Feather pattern on belly - subtle V shapes */}
+          <g opacity="0.25">
+            {[...Array(4)].map((_, row) => (
+              [...Array(row % 2 === 0 ? 3 : 2)].map((_, col) => (
                 <path
                   key={`feather-${row}-${col}`}
-                  d={`M${115 + col * 20 + (row % 2 === 0 ? 0 : 10)} ${255 + row * 18} q8 8 0 14`}
-                  stroke="#c4a574"
-                  strokeWidth="1.5"
+                  d={`M${120 + col * 22 + (row % 2 === 0 ? 0 : 11)} ${265 + row * 16} l8 7 l8 -7`}
+                  stroke="#5a5a7a"
+                  strokeWidth="1.2"
                   fill="none"
+                  strokeLinecap="round"
                 />
               ))
             ))}
           </g>
+          
+          {/* Subtle body highlights */}
+          <ellipse cx="120" cy="260" rx="15" ry="25" fill="url(#featherHighlight)" opacity="0.15" />
+          <ellipse cx="180" cy="260" rx="15" ry="25" fill="url(#featherHighlight)" opacity="0.15" />
         </motion.g>
         
         {/* LEFT WING */}
         <motion.g
-          animate={isLookingAtCards ? { rotate: [0, 5, 0] } : { rotate: [0, -2, 0] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          style={{ transformOrigin: '90px 220px' }}
+          animate={isLookingAtCards ? { rotate: [0, 4, 0] } : { rotate: [0, -1.5, 0] }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          style={{ transformOrigin: '85px 220px' }}
         >
           <path
-            d="M70 180 Q40 220 50 280 Q55 300 70 310 Q80 305 85 290 Q90 260 95 230 Q95 200 80 180 Z"
-            fill="url(#owlWingGradient)"
+            d="M72 185 Q45 225 52 275 Q58 295 72 305 Q82 300 87 285 Q92 255 95 225 Q95 200 82 185 Z"
+            fill="url(#blackWingGradient)"
           />
           {/* Wing feather lines */}
-          <path d="M60 230 Q70 250 75 280" stroke="#5a4028" strokeWidth="1.5" fill="none" opacity="0.5" />
-          <path d="M68 220 Q75 240 80 270" stroke="#5a4028" strokeWidth="1.5" fill="none" opacity="0.5" />
-          <path d="M75 215 Q82 235 85 255" stroke="#5a4028" strokeWidth="1.5" fill="none" opacity="0.5" />
+          <path d="M62 230 Q70 248 74 275" stroke="#3a3a4a" strokeWidth="1.2" fill="none" opacity="0.4" />
+          <path d="M70 222 Q76 240 80 265" stroke="#3a3a4a" strokeWidth="1.2" fill="none" opacity="0.4" />
         </motion.g>
         
-        {/* RIGHT WING */}
+        {/* RIGHT WING - more animated when looking at cards */}
         <motion.g
-          animate={isLookingAtCards ? { rotate: [0, -8, -5, -8, 0] } : { rotate: [0, 2, 0] }}
-          transition={{ duration: isLookingAtCards ? 2.5 : 2.2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-          style={{ transformOrigin: '210px 220px' }}
+          animate={isLookingAtCards ? { rotate: [0, -6, -3, -6, 0] } : { rotate: [0, 1.5, 0] }}
+          transition={{ duration: isLookingAtCards ? 2.5 : 2.4, repeat: Infinity, ease: "easeInOut", delay: 0.15 }}
+          style={{ transformOrigin: '215px 220px' }}
         >
           <path
-            d="M230 180 Q260 220 250 280 Q245 300 230 310 Q220 305 215 290 Q210 260 205 230 Q205 200 220 180 Z"
-            fill="url(#owlWingGradient)"
+            d="M228 185 Q255 225 248 275 Q242 295 228 305 Q218 300 213 285 Q208 255 205 225 Q205 200 218 185 Z"
+            fill="url(#blackWingGradient)"
           />
           {/* Wing feather lines */}
-          <path d="M240 230 Q230 250 225 280" stroke="#5a4028" strokeWidth="1.5" fill="none" opacity="0.5" />
-          <path d="M232 220 Q225 240 220 270" stroke="#5a4028" strokeWidth="1.5" fill="none" opacity="0.5" />
-          <path d="M225 215 Q218 235 215 255" stroke="#5a4028" strokeWidth="1.5" fill="none" opacity="0.5" />
+          <path d="M238 230 Q230 248 226 275" stroke="#3a3a4a" strokeWidth="1.2" fill="none" opacity="0.4" />
+          <path d="M230 222 Q224 240 220 265" stroke="#3a3a4a" strokeWidth="1.2" fill="none" opacity="0.4" />
         </motion.g>
         
         {/* HEAD */}
         <motion.g
-          animate={isLookingAtCards ? { rotate: [0, 5, 3, 5, 0], x: [0, 3, 0] } : { rotate: [0, -2, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          style={{ transformOrigin: '150px 140px' }}
+          animate={isLookingAtCards ? { rotate: [0, 4, 2, 4, 0], x: [0, 2, 0] } : { rotate: [0, -1.5, 0] }}
+          transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+          style={{ transformOrigin: '150px 130px' }}
         >
-          {/* Head base */}
-          <ellipse cx="150" cy="130" rx="75" ry="70" fill="url(#owlBodyGradient)" />
+          {/* Head base - rounder for cuteness */}
+          <ellipse cx="150" cy="130" rx="70" ry="68" fill="url(#blackOwlBodyGradient)" />
           
-          {/* Ear tufts - left */}
+          {/* Ear tufts - left (smaller, cuter) */}
           <motion.path
-            d="M85 70 Q75 40 90 25 Q100 35 100 55 Q95 70 90 80"
-            fill="#8b6645"
-            animate={{ rotate: [-3, 3, -3] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            style={{ transformOrigin: '90px 60px' }}
+            d="M88 75 Q80 50 92 38 Q100 46 100 62 Q96 75 92 82"
+            fill="#1a1a28"
+            animate={{ rotate: [-2, 2, -2] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformOrigin: '92px 60px' }}
           />
-          <path d="M90 65 Q85 45 95 35" stroke="#a67c52" strokeWidth="3" fill="none" />
+          <path d="M92 68 Q88 52 95 44" stroke="#2a2a3a" strokeWidth="2.5" fill="none" />
           
           {/* Ear tufts - right */}
           <motion.path
-            d="M215 70 Q225 40 210 25 Q200 35 200 55 Q205 70 210 80"
-            fill="#8b6645"
-            animate={{ rotate: [3, -3, 3] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-            style={{ transformOrigin: '210px 60px' }}
+            d="M212 75 Q220 50 208 38 Q200 46 200 62 Q204 75 208 82"
+            fill="#1a1a28"
+            animate={{ rotate: [2, -2, 2] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+            style={{ transformOrigin: '208px 60px' }}
           />
-          <path d="M210 65 Q215 45 205 35" stroke="#a67c52" strokeWidth="3" fill="none" />
+          <path d="M208 68 Q212 52 205 44" stroke="#2a2a3a" strokeWidth="2.5" fill="none" />
           
-          {/* Face mask - heart shape */}
+          {/* Face mask - heart shape, cream colored */}
           <path
-            d="M150 185 Q90 170 85 120 Q85 80 120 75 Q140 70 150 90 Q160 70 180 75 Q215 80 215 120 Q210 170 150 185"
-            fill="url(#owlFaceGradient)"
+            d="M150 182 Q95 168 90 122 Q90 85 118 78 Q138 73 150 92 Q162 73 182 78 Q210 85 210 122 Q205 168 150 182"
+            fill="url(#blackOwlFaceGradient)"
           />
           
-          {/* Face mask border/outline pattern */}
+          {/* Face mask subtle pattern */}
           <path
-            d="M150 180 Q95 165 90 120 Q90 85 120 80 Q140 75 150 92 Q160 75 180 80 Q210 85 210 120 Q205 165 150 180"
+            d="M150 175 Q100 162 96 122 Q96 90 120 84 Q138 80 150 95 Q162 80 180 84 Q204 90 204 122 Q200 162 150 175"
             fill="none"
-            stroke="#c4a574"
-            strokeWidth="3"
-            opacity="0.6"
+            stroke="#c4b5a0"
+            strokeWidth="2"
+            opacity="0.3"
           />
           
-          {/* EYES - with glow */}
+          {/* EYES - Big and expressive */}
           <motion.g
             animate={{ x: eyeOffset.x, y: eyeOffset.y }}
-            transition={{ duration: 0.15, ease: "easeOut" }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
           >
             {/* Left eye */}
             <motion.g
-              animate={isBlinking ? { scaleY: 0.1 } : { scaleY: 1 }}
-              transition={{ duration: 0.1 }}
-              style={{ transformOrigin: '115px 115px' }}
+              animate={isBlinking ? { scaleY: 0.08 } : { scaleY: 1 }}
+              transition={{ duration: 0.08 }}
+              style={{ transformOrigin: '120px 115px' }}
             >
-              {/* Eye outer glow */}
+              {/* Eye outer glow - magical amber */}
               <motion.ellipse
-                cx="115"
+                cx="120"
                 cy="115"
-                rx="28"
-                ry="30"
-                fill="rgba(251, 191, 36, 0.3)"
-                filter="url(#owlEyeGlow)"
-                animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                rx="26"
+                ry="28"
+                fill="rgba(251, 191, 36, 0.4)"
+                filter="url(#eyeGlowFilter)"
+                animate={{ 
+                  opacity: [0.4, 0.7, 0.4], 
+                  scale: [1, 1.08, 1] 
+                }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
               />
-              {/* Eye white/outer ring */}
-              <ellipse cx="115" cy="115" rx="25" ry="27" fill="#1a1a2e" />
-              {/* Iris - golden */}
-              <ellipse cx="115" cy="115" rx="22" ry="24" fill="url(#irisGradient)" />
-              {/* Pupil */}
+              {/* Eye socket - dark ring */}
+              <ellipse cx="120" cy="115" rx="24" ry="26" fill="#0a0a12" />
+              {/* Iris - rich gold */}
+              <ellipse cx="120" cy="115" rx="21" ry="23" fill="url(#owlIrisGradient)" />
+              {/* Pupil - cute and large */}
               <motion.ellipse
-                cx="117"
-                cy="117"
-                rx="9"
-                ry="11"
-                fill="#1a1a2e"
-                animate={{ rx: [9, 7, 9], ry: [11, 9, 11] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                cx="121"
+                cy="116"
+                rx="10"
+                ry="12"
+                fill="#0a0a12"
+                animate={{ 
+                  rx: [10, 8, 10], 
+                  ry: [12, 10, 12] 
+                }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
               />
-              {/* Eye sparkles */}
-              <circle cx="108" cy="108" r="5" fill="rgba(255,255,255,0.9)" />
-              <circle cx="120" cy="120" r="2.5" fill="rgba(255,255,255,0.6)" />
+              {/* Eye sparkles - bigger for cute look */}
+              <circle cx="112" cy="108" r="6" fill="rgba(255,255,255,0.95)" />
+              <circle cx="126" cy="120" r="3" fill="rgba(255,255,255,0.7)" />
+              <circle cx="115" cy="122" r="2" fill="rgba(255,255,255,0.5)" />
             </motion.g>
             
             {/* Right eye */}
             <motion.g
-              animate={isBlinking ? { scaleY: 0.1 } : { scaleY: 1 }}
-              transition={{ duration: 0.1 }}
-              style={{ transformOrigin: '185px 115px' }}
+              animate={isBlinking ? { scaleY: 0.08 } : { scaleY: 1 }}
+              transition={{ duration: 0.08 }}
+              style={{ transformOrigin: '180px 115px' }}
             >
               {/* Eye outer glow */}
               <motion.ellipse
-                cx="185"
+                cx="180"
                 cy="115"
-                rx="28"
-                ry="30"
-                fill="rgba(251, 191, 36, 0.3)"
-                filter="url(#owlEyeGlow)"
-                animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                rx="26"
+                ry="28"
+                fill="rgba(251, 191, 36, 0.4)"
+                filter="url(#eyeGlowFilter)"
+                animate={{ 
+                  opacity: [0.4, 0.7, 0.4], 
+                  scale: [1, 1.08, 1] 
+                }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
               />
-              {/* Eye white/outer ring */}
-              <ellipse cx="185" cy="115" rx="25" ry="27" fill="#1a1a2e" />
-              {/* Iris - golden */}
-              <ellipse cx="185" cy="115" rx="22" ry="24" fill="url(#irisGradient)" />
+              {/* Eye socket */}
+              <ellipse cx="180" cy="115" rx="24" ry="26" fill="#0a0a12" />
+              {/* Iris */}
+              <ellipse cx="180" cy="115" rx="21" ry="23" fill="url(#owlIrisGradient)" />
               {/* Pupil */}
               <motion.ellipse
-                cx="187"
-                cy="117"
-                rx="9"
-                ry="11"
-                fill="#1a1a2e"
-                animate={{ rx: [9, 7, 9], ry: [11, 9, 11] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                cx="181"
+                cy="116"
+                rx="10"
+                ry="12"
+                fill="#0a0a12"
+                animate={{ 
+                  rx: [10, 8, 10], 
+                  ry: [12, 10, 12] 
+                }}
+                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
               />
               {/* Eye sparkles */}
-              <circle cx="178" cy="108" r="5" fill="rgba(255,255,255,0.9)" />
-              <circle cx="190" cy="120" r="2.5" fill="rgba(255,255,255,0.6)" />
+              <circle cx="172" cy="108" r="6" fill="rgba(255,255,255,0.95)" />
+              <circle cx="186" cy="120" r="3" fill="rgba(255,255,255,0.7)" />
+              <circle cx="175" cy="122" r="2" fill="rgba(255,255,255,0.5)" />
             </motion.g>
           </motion.g>
           
-          {/* BEAK */}
+          {/* BEAK - small and cute */}
           <motion.path
-            d="M150 145 L142 162 Q150 172 158 162 Z"
-            fill="url(#beakGradient)"
-            animate={{ scaleY: [1, 0.95, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            style={{ transformOrigin: '150px 155px' }}
+            d="M150 148 L143 162 Q150 170 157 162 Z"
+            fill="url(#owlBeakGradient)"
+            animate={{ scaleY: [1, 0.96, 1] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+            style={{ transformOrigin: '150px 158px' }}
           />
-          <path d="M150 147 L145 158" stroke="#b45309" strokeWidth="1" opacity="0.5" />
+          <path d="M150 150 L146 159" stroke="#1f2937" strokeWidth="0.8" opacity="0.4" />
+          
+          {/* Cheek blush - cute detail */}
+          <ellipse cx="100" cy="135" rx="10" ry="6" fill="#fca5a5" opacity="0.15" />
+          <ellipse cx="200" cy="135" rx="10" ry="6" fill="#fca5a5" opacity="0.15" />
         </motion.g>
       </motion.svg>
       
@@ -418,14 +453,14 @@ const OwlCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: n
       <motion.div 
         className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full pointer-events-none"
         style={{
-          width: '180px',
-          height: '35px',
-          background: 'radial-gradient(ellipse, rgba(251, 191, 36, 0.4) 0%, rgba(245, 158, 11, 0.2) 50%, transparent 80%)',
-          filter: 'blur(10px)',
+          width: '160px',
+          height: '30px',
+          background: 'radial-gradient(ellipse, rgba(251, 191, 36, 0.35) 0%, rgba(245, 158, 11, 0.15) 50%, transparent 80%)',
+          filter: 'blur(8px)',
         }}
         animate={{
-          opacity: [0.4, 0.7, 0.4],
-          scaleX: [0.95, 1.08, 0.95],
+          opacity: [0.35, 0.6, 0.35],
+          scaleX: [0.95, 1.05, 0.95],
         }}
         transition={{
           duration: 2.5,
@@ -437,170 +472,201 @@ const OwlCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: n
   );
 };
 
-// Eye beam light effect from owl's eyes toward cards
-const EyeBeamEffect = ({ hoveredCardIndex }: { hoveredCardIndex: number | null }) => (
-  <div className="absolute pointer-events-none overflow-hidden" style={{ zIndex: 1, inset: 0 }}>
-    {/* Main beam from eyes toward cards area */}
-    <motion.div
-      className="absolute"
-      style={{
-        left: '20%',
-        top: '40%',
-        width: '550px',
-        height: '350px',
-        background: `linear-gradient(70deg, 
-          rgba(251, 191, 36, 0.35) 0%,
-          rgba(251, 191, 36, 0.15) 20%,
-          rgba(245, 158, 11, 0.08) 40%,
-          rgba(251, 191, 36, 0.03) 65%,
-          transparent 100%
-        )`,
-        clipPath: 'polygon(0% 35%, 0% 65%, 100% 80%, 100% 20%)',
-        filter: 'blur(18px)',
-        transformOrigin: '0% 50%',
-      }}
-      animate={{
-        opacity: [0.4, 0.7, 0.4],
-        scaleY: [0.97, 1.03, 0.97],
-      }}
-      transition={{
-        duration: 3,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-    
-    {/* Inner concentrated beam core */}
-    <motion.div
-      className="absolute"
-      style={{
-        left: '20%',
-        top: '42%',
-        width: '400px',
-        height: '200px',
-        background: `linear-gradient(70deg, 
-          rgba(255, 247, 237, 0.3) 0%,
-          rgba(251, 191, 36, 0.18) 25%,
-          rgba(251, 191, 36, 0.06) 55%,
-          transparent 100%
-        )`,
-        clipPath: 'polygon(0% 40%, 0% 60%, 100% 68%, 100% 32%)',
-        filter: 'blur(10px)',
-        transformOrigin: '0% 50%',
-      }}
-      animate={{
-        opacity: [0.35, 0.6, 0.35],
-        scaleY: [0.98, 1.02, 0.98],
-      }}
-      transition={{
-        duration: 2.5,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: 0.2,
-      }}
-    />
-    
-    {/* Shimmer particles within beam */}
-    {[...Array(5)].map((_, i) => (
+// Eye beam light effect - precisely from owl's eyes toward cards
+const EyeBeamEffect = ({ hoveredCardIndex, sectionRef }: { 
+  hoveredCardIndex: number | null;
+  sectionRef: React.RefObject<HTMLElement>;
+}) => {
+  return (
+    <div className="absolute pointer-events-none overflow-hidden" style={{ zIndex: 1, inset: 0 }}>
+      {/* Dual curved beams from each eye */}
+      <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none">
+        <defs>
+          {/* Beam gradient - golden amber */}
+          <linearGradient id="beamGradientLeft" x1="0%" y1="50%" x2="100%" y2="50%">
+            <stop offset="0%" stopColor="rgba(251, 191, 36, 0.7)" />
+            <stop offset="15%" stopColor="rgba(251, 191, 36, 0.4)" />
+            <stop offset="40%" stopColor="rgba(251, 191, 36, 0.15)" />
+            <stop offset="70%" stopColor="rgba(251, 191, 36, 0.05)" />
+            <stop offset="100%" stopColor="rgba(251, 191, 36, 0)" />
+          </linearGradient>
+          <linearGradient id="beamGradientRight" x1="0%" y1="50%" x2="100%" y2="50%">
+            <stop offset="0%" stopColor="rgba(245, 158, 11, 0.6)" />
+            <stop offset="15%" stopColor="rgba(245, 158, 11, 0.35)" />
+            <stop offset="40%" stopColor="rgba(245, 158, 11, 0.12)" />
+            <stop offset="70%" stopColor="rgba(245, 158, 11, 0.04)" />
+            <stop offset="100%" stopColor="rgba(245, 158, 11, 0)" />
+          </linearGradient>
+          <filter id="beamBlur" x="-50%" y="-100%" width="200%" height="300%">
+            <feGaussianBlur stdDeviation="12" />
+          </filter>
+          <filter id="coreBeamBlur" x="-50%" y="-100%" width="200%" height="300%">
+            <feGaussianBlur stdDeviation="6" />
+          </filter>
+        </defs>
+        
+        {/* Left eye beam - curved path */}
+        <motion.path
+          d="M 18% 42% Q 35% 38%, 55% 35% T 95% 40%"
+          stroke="url(#beamGradientLeft)"
+          strokeWidth="80"
+          fill="none"
+          filter="url(#beamBlur)"
+          animate={{
+            opacity: [0.4, 0.65, 0.4],
+            strokeWidth: [75, 85, 75],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
+        
+        {/* Right eye beam - slightly different curve */}
+        <motion.path
+          d="M 20% 44% Q 38% 48%, 58% 52% T 95% 58%"
+          stroke="url(#beamGradientRight)"
+          strokeWidth="70"
+          fill="none"
+          filter="url(#beamBlur)"
+          animate={{
+            opacity: [0.35, 0.55, 0.35],
+            strokeWidth: [65, 78, 65],
+          }}
+          transition={{
+            duration: 3.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.3,
+          }}
+        />
+        
+        {/* Core beam - brighter center line */}
+        <motion.path
+          d="M 18% 43% Q 36% 42%, 56% 45% T 92% 48%"
+          stroke="rgba(255, 247, 237, 0.35)"
+          strokeWidth="25"
+          fill="none"
+          filter="url(#coreBeamBlur)"
+          animate={{
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 2.5,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.15,
+          }}
+        />
+      </svg>
+      
+      {/* Eye glow source - left eye (precisely positioned) */}
       <motion.div
-        key={`shimmer-${i}`}
         className="absolute rounded-full"
         style={{
-          left: `${22 + i * 12}%`,
-          top: `${44 + Math.sin(i) * 8}%`,
-          width: '8px',
-          height: '8px',
-          background: 'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(251, 191, 36, 0.5) 50%, transparent 100%)',
-          filter: 'blur(2px)',
+          left: '16%',
+          top: '40%',
+          width: '45px',
+          height: '45px',
+          background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(251, 191, 36, 0.7) 30%, rgba(245, 158, 11, 0.3) 60%, transparent 100%)',
+          filter: 'blur(4px)',
+          transform: 'translate(-50%, -50%)',
         }}
         animate={{
-          opacity: [0, 0.8, 0],
-          x: [0, 80 + i * 20, 160 + i * 20],
-          scale: [0.5, 1, 0.3],
+          scale: [1, 1.2, 1],
+          opacity: [0.7, 1, 0.7],
         }}
         transition={{
-          duration: 2.5 + i * 0.3,
+          duration: 1.8,
           repeat: Infinity,
-          delay: i * 0.5,
           ease: "easeInOut",
         }}
       />
-    ))}
-    
-    {/* Eye glow source points */}
-    <motion.div
-      className="absolute rounded-full"
-      style={{
-        left: '17%',
-        top: '38%',
-        width: '50px',
-        height: '50px',
-        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(251, 191, 36, 0.8) 35%, rgba(245, 158, 11, 0.4) 60%, transparent 100%)',
-        filter: 'blur(5px)',
-      }}
-      animate={{
-        scale: [1, 1.25, 1],
-        opacity: [0.7, 1, 0.7],
-      }}
-      transition={{
-        duration: 1.5,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-    
-    {/* Secondary eye glow */}
-    <motion.div
-      className="absolute rounded-full"
-      style={{
-        left: '19%',
-        top: '40%',
-        width: '40px',
-        height: '40px',
-        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(251, 191, 36, 0.7) 40%, transparent 100%)',
-        filter: 'blur(4px)',
-      }}
-      animate={{
-        scale: [1, 1.2, 1],
-        opacity: [0.6, 0.9, 0.6],
-      }}
-      transition={{
-        duration: 1.5,
-        repeat: Infinity,
-        ease: "easeInOut",
-        delay: 0.3,
-      }}
-    />
-    
-    {/* Enhanced beam on hover */}
-    <motion.div
-      className="absolute"
-      style={{
-        left: '20%',
-        top: '41%',
-        width: '500px',
-        height: '280px',
-        background: `linear-gradient(70deg, 
-          rgba(251, 191, 36, 0.5) 0%,
-          rgba(251, 191, 36, 0.25) 25%,
-          rgba(245, 158, 11, 0.1) 50%,
-          transparent 100%
-        )`,
-        clipPath: 'polygon(0% 38%, 0% 62%, 100% 75%, 100% 25%)',
-        filter: 'blur(15px)',
-        transformOrigin: '0% 50%',
-      }}
-      animate={{
-        opacity: hoveredCardIndex !== null ? [0.5, 0.8, 0.5] : 0,
-      }}
-      transition={{
-        duration: 0.8,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-  </div>
-);
+      
+      {/* Eye glow source - right eye */}
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          left: '19%',
+          top: '42%',
+          width: '40px',
+          height: '40px',
+          background: 'radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(245, 158, 11, 0.65) 35%, rgba(251, 191, 36, 0.25) 65%, transparent 100%)',
+          filter: 'blur(4px)',
+          transform: 'translate(-50%, -50%)',
+        }}
+        animate={{
+          scale: [1, 1.15, 1],
+          opacity: [0.65, 0.95, 0.65],
+        }}
+        transition={{
+          duration: 1.8,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.25,
+        }}
+      />
+      
+      {/* Shimmer particles traveling along beam */}
+      {[...Array(6)].map((_, i) => (
+        <motion.div
+          key={`shimmer-${i}`}
+          className="absolute rounded-full"
+          style={{
+            left: '18%',
+            top: '42%',
+            width: '10px',
+            height: '10px',
+            background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(251, 191, 36, 0.6) 50%, transparent 100%)',
+            filter: 'blur(2px)',
+          }}
+          animate={{
+            opacity: [0, 0.9, 0.7, 0],
+            x: [0, 150 + i * 50, 350 + i * 50, 500 + i * 30],
+            y: [0, -10 + i * 8, 20 + i * 5, 40 + i * 8],
+            scale: [0.5, 1.2, 0.8, 0.3],
+          }}
+          transition={{
+            duration: 3 + i * 0.4,
+            repeat: Infinity,
+            delay: i * 0.6,
+            ease: "easeOut",
+          }}
+        />
+      ))}
+      
+      {/* Enhanced beam on hover - intensifies toward hovered card */}
+      <motion.div
+        className="absolute"
+        style={{
+          left: '17%',
+          top: '40%',
+          width: '550px',
+          height: '300px',
+          background: `radial-gradient(ellipse at 0% 50%, 
+            rgba(251, 191, 36, 0.45) 0%,
+            rgba(251, 191, 36, 0.2) 30%,
+            rgba(245, 158, 11, 0.08) 55%,
+            transparent 100%
+          )`,
+          clipPath: 'polygon(0% 35%, 0% 65%, 100% 80%, 100% 20%)',
+          filter: 'blur(20px)',
+          transformOrigin: '0% 50%',
+        }}
+        animate={{
+          opacity: hoveredCardIndex !== null ? [0.5, 0.8, 0.5] : 0,
+          scaleY: hoveredCardIndex !== null ? [0.95, 1.05, 0.95] : 1,
+        }}
+        transition={{
+          duration: 0.8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    </div>
+  );
+};
 
 // Card glow effect component - illuminates when owl's light "reaches" the card
 const CardEyeGlow = ({ cardIndex }: { cardIndex: number }) => {
@@ -673,6 +739,7 @@ const CompetitionModeSection = () => {
   const [hoveredCardIndex, setHoveredCardIndex] = useState<number | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLElement>(null);
+  const eyePositions = useRef({ left: { x: 0, y: 0 }, right: { x: 0, y: 0 } });
   
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     if (!sectionRef.current) return;
@@ -719,7 +786,7 @@ const CompetitionModeSection = () => {
         }}
       />
       
-      <EyeBeamEffect hoveredCardIndex={hoveredCardIndex} />
+      <EyeBeamEffect hoveredCardIndex={hoveredCardIndex} sectionRef={sectionRef} />
       
       {/* Cinematic vignette */}
       <div 
@@ -781,7 +848,7 @@ const CompetitionModeSection = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
             viewport={{ once: true }}
           >
-            <OwlCharacter hoveredCardIndex={hoveredCardIndex} mousePosition={mousePosition} />
+            <OwlCharacter hoveredCardIndex={hoveredCardIndex} mousePosition={mousePosition} eyePositions={eyePositions} />
           </motion.div>
           
           {/* Feature Cards - Right Side */}
