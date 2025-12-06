@@ -88,168 +88,390 @@ const SpotlightBeams = () => (
   </div>
 );
 
-// Enhanced presenter figure - more detailed and realistic
+// High-quality semi-realistic presenter illustration
 const PresenterFigure = () => (
   <div 
-    className="absolute bottom-0 left-0 w-[45%] md:w-[40%] lg:w-[38%] h-full pointer-events-none"
+    className="absolute bottom-0 left-0 w-[48%] md:w-[42%] lg:w-[40%] h-full pointer-events-none"
     style={{ zIndex: 10 }}
   >
     <svg 
-      viewBox="0 0 400 600" 
-      className="absolute bottom-0 left-[10%] h-[85%] md:h-[88%]"
+      viewBox="0 0 500 700" 
+      className="absolute bottom-0 left-[5%] h-[82%] md:h-[85%] lg:h-[88%]"
       style={{ 
-        filter: 'drop-shadow(0 25px 50px rgba(0, 0, 0, 0.6))',
+        filter: 'drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5)) drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3))',
       }}
       preserveAspectRatio="xMidYMax meet"
     >
-      {/* Stage/podium blocks - behind the figure */}
-      <rect x="80" y="480" width="70" height="120" rx="6" fill="url(#blockGradPurple)" opacity="0.85" />
-      <rect x="160" y="440" width="90" height="160" rx="6" fill="url(#blockGradOrange)" opacity="0.9" />
-      <rect x="265" y="500" width="60" height="100" rx="6" fill="url(#blockGradBlue)" opacity="0.75" />
+      <defs>
+        {/* Skin gradient with warmth */}
+        <linearGradient id="skinTone" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#f5c4a8" />
+          <stop offset="40%" stopColor="#e8b094" />
+          <stop offset="100%" stopColor="#d9a080" />
+        </linearGradient>
+        <linearGradient id="skinShadow" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#d4956e" />
+          <stop offset="100%" stopColor="#c58560" />
+        </linearGradient>
+        
+        {/* Orange sweater with rich gradients */}
+        <linearGradient id="sweaterMain" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#ff9f43" />
+          <stop offset="30%" stopColor="#f97316" />
+          <stop offset="70%" stopColor="#ea580c" />
+          <stop offset="100%" stopColor="#c2410c" />
+        </linearGradient>
+        <linearGradient id="sweaterHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#ffb347" />
+          <stop offset="50%" stopColor="#f97316" />
+          <stop offset="100%" stopColor="#d95a0c" />
+        </linearGradient>
+        <linearGradient id="sweaterShadow" x1="100%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#c2410c" />
+          <stop offset="100%" stopColor="#9a3412" />
+        </linearGradient>
+        
+        {/* Navy pants gradient */}
+        <linearGradient id="pantsMain" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#1e3a5f" />
+          <stop offset="50%" stopColor="#172554" />
+          <stop offset="100%" stopColor="#0c1a3d" />
+        </linearGradient>
+        <linearGradient id="pantsHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#264a70" />
+          <stop offset="100%" stopColor="#152344" />
+        </linearGradient>
+        
+        {/* Hair gradient */}
+        <linearGradient id="hairMain" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#2d2d3f" />
+          <stop offset="50%" stopColor="#1a1a2e" />
+          <stop offset="100%" stopColor="#0f0f1a" />
+        </linearGradient>
+        
+        {/* Stage gradient */}
+        <linearGradient id="stageTop" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#4338ca" />
+          <stop offset="100%" stopColor="#312e81" />
+        </linearGradient>
+        <linearGradient id="stageFront" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stopColor="#312e81" />
+          <stop offset="100%" stopColor="#1e1b4b" />
+        </linearGradient>
+        
+        {/* Rim lights */}
+        <linearGradient id="rimLightOrange" x1="100%" y1="0%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor="#ffb347" stopOpacity="0.6" />
+          <stop offset="100%" stopColor="transparent" />
+        </linearGradient>
+        <linearGradient id="rimLightBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#93c5fd" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="transparent" />
+        </linearGradient>
+        
+        {/* Glow effects */}
+        <radialGradient id="presenterAura" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stopColor="rgba(147, 197, 253, 0.15)" />
+          <stop offset="100%" stopColor="transparent" />
+        </radialGradient>
+        
+        <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="2" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      
+      {/* Stage / Platform */}
+      <g>
+        {/* Stage top surface */}
+        <path d="M60 620 L440 620 L400 590 L100 590 Z" fill="url(#stageTop)" />
+        {/* Stage front */}
+        <path d="M60 620 L440 620 L440 670 L60 670 Z" fill="url(#stageFront)" />
+        {/* Stage edge highlight */}
+        <path d="M60 620 L440 620" stroke="rgba(167, 139, 250, 0.5)" strokeWidth="2" />
+        {/* Stage shadow */}
+        <ellipse cx="250" cy="680" rx="200" ry="15" fill="rgba(0,0,0,0.4)" />
+      </g>
       
       {/* Figure shadow on stage */}
-      <ellipse cx="200" cy="510" rx="50" ry="12" fill="rgba(0,0,0,0.4)" />
+      <ellipse cx="250" cy="588" rx="55" ry="12" fill="rgba(0,0,0,0.5)" />
       
-      {/* Left leg */}
-      <path d="M165 320 L155 490 C155 495 162 500 170 500 L175 500 C183 500 188 495 188 490 L185 335" fill="url(#pantsGrad)" />
-      {/* Right leg */}
-      <path d="M215 335 L212 490 C212 495 217 500 225 500 L230 500 C238 500 243 495 243 490 L235 320" fill="url(#pantsGrad)" />
-      
-      {/* Left shoe */}
-      <ellipse cx="172" cy="505" rx="22" ry="8" fill="#0f172a" />
-      <ellipse cx="172" cy="503" rx="18" ry="5" fill="#1e293b" />
-      {/* Right shoe */}
-      <ellipse cx="228" cy="505" rx="22" ry="8" fill="#0f172a" />
-      <ellipse cx="228" cy="503" rx="18" ry="5" fill="#1e293b" />
-      
-      {/* Body - Orange sweater */}
+      {/* LEFT LEG */}
       <path 
-        d="M145 160 Q200 145 255 160 L250 330 Q200 345 150 330 Z" 
-        fill="url(#sweaterGrad)" 
+        d="M200 400 
+           Q195 450 192 500 
+           Q190 540 188 575 
+           L182 575 
+           Q178 540 176 500 
+           Q172 450 178 400"
+        fill="url(#pantsMain)"
       />
-      {/* Sweater shading */}
+      {/* Left leg highlight */}
       <path 
-        d="M150 180 Q160 200 155 250 Q150 300 155 330" 
-        stroke="rgba(154,52,18,0.3)" 
-        strokeWidth="8" 
+        d="M198 410 Q196 450 194 500 Q192 540 190 570"
+        stroke="url(#pantsHighlight)" 
+        strokeWidth="4" 
+        fill="none"
+        opacity="0.5"
+      />
+      
+      {/* RIGHT LEG */}
+      <path 
+        d="M280 400 
+           Q285 450 288 500 
+           Q290 540 292 575 
+           L298 575 
+           Q302 540 304 500 
+           Q308 450 302 400"
+        fill="url(#pantsMain)"
+      />
+      {/* Right leg highlight */}
+      <path 
+        d="M282 410 Q284 450 286 500 Q288 540 290 570"
+        stroke="url(#pantsHighlight)" 
+        strokeWidth="4" 
+        fill="none"
+        opacity="0.5"
+      />
+      
+      {/* LEFT SHOE */}
+      <ellipse cx="185" cy="587" rx="28" ry="10" fill="#1a1a2e" />
+      <ellipse cx="185" cy="584" rx="24" ry="7" fill="#2d2d3f" />
+      <ellipse cx="180" cy="582" rx="8" ry="3" fill="rgba(255,255,255,0.1)" />
+      
+      {/* RIGHT SHOE */}
+      <ellipse cx="295" cy="587" rx="28" ry="10" fill="#1a1a2e" />
+      <ellipse cx="295" cy="584" rx="24" ry="7" fill="#2d2d3f" />
+      <ellipse cx="290" cy="582" rx="8" ry="3" fill="rgba(255,255,255,0.1)" />
+      
+      {/* TORSO - Orange sweater */}
+      <path 
+        d="M170 200 
+           Q180 195 240 195 
+           Q300 195 310 200
+           L315 260
+           Q318 320 315 380
+           Q310 400 240 405
+           Q170 400 165 380
+           Q162 320 165 260
+           Z"
+        fill="url(#sweaterMain)"
+      />
+      
+      {/* Sweater chest shading - left side */}
+      <path 
+        d="M175 210 Q170 280 175 380"
+        stroke="url(#sweaterShadow)" 
+        strokeWidth="20" 
+        fill="none"
+        opacity="0.6"
+      />
+      
+      {/* Sweater highlight - right side */}
+      <path 
+        d="M300 215 Q310 280 305 375"
+        stroke="url(#sweaterHighlight)" 
+        strokeWidth="12" 
+        fill="none"
+        opacity="0.3"
+      />
+      
+      {/* Sweater fold lines */}
+      <path d="M200 250 Q205 280 200 320" stroke="rgba(154,52,18,0.3)" strokeWidth="3" fill="none" />
+      <path d="M270 260 Q275 290 270 330" stroke="rgba(255,255,255,0.08)" strokeWidth="2" fill="none" />
+      
+      {/* Collar / Neckline */}
+      <ellipse cx="240" cy="200" rx="35" ry="12" fill="url(#sweaterShadow)" />
+      <ellipse cx="240" cy="198" rx="30" ry="8" fill="url(#skinTone)" />
+      
+      {/* NECK */}
+      <rect x="222" y="165" width="36" height="40" rx="8" fill="url(#skinTone)" />
+      <path d="M225 175 Q230 180 230 195" stroke="url(#skinShadow)" strokeWidth="3" fill="none" opacity="0.4" />
+      
+      {/* HEAD */}
+      <ellipse cx="240" cy="115" rx="52" ry="60" fill="url(#skinTone)" />
+      
+      {/* Face shadow - left side */}
+      <path 
+        d="M195 90 Q188 120 195 150"
+        stroke="url(#skinShadow)" 
+        strokeWidth="10" 
+        fill="none"
+        opacity="0.3"
+      />
+      
+      {/* Left EAR */}
+      <ellipse cx="188" cy="120" rx="10" ry="16" fill="url(#skinTone)" />
+      <ellipse cx="188" cy="120" rx="6" ry="10" fill="url(#skinShadow)" opacity="0.4" />
+      
+      {/* Right EAR */}
+      <ellipse cx="292" cy="120" rx="10" ry="16" fill="url(#skinTone)" />
+      <ellipse cx="292" cy="120" rx="6" ry="10" fill="url(#skinShadow)" opacity="0.3" />
+      
+      {/* HAIR - fuller, styled */}
+      <path 
+        d="M190 85 
+           Q185 50 220 35 
+           Q250 28 280 35
+           Q295 50 290 85
+           Q295 65 288 50
+           Q265 25 240 22
+           Q215 25 195 50
+           Q185 65 190 85"
+        fill="url(#hairMain)"
+      />
+      {/* Hair texture/volume */}
+      <path d="M195 75 Q215 60 230 62" fill="#1a1a2e" />
+      <path d="M265 62 Q280 60 288 75" fill="#1a1a2e" />
+      {/* Hair highlights */}
+      <path d="M215 40 Q235 35 255 40" stroke="rgba(80,80,100,0.3)" strokeWidth="3" fill="none" />
+      
+      {/* EYES */}
+      {/* Left eye */}
+      <ellipse cx="218" cy="108" rx="12" ry="8" fill="white" />
+      <ellipse cx="220" cy="109" rx="6" ry="6" fill="#2d2d3f" />
+      <circle cx="222" cy="107" r="2" fill="white" />
+      {/* Left eyelid */}
+      <path d="M206 104 Q218 100 230 104" stroke="url(#skinShadow)" strokeWidth="2" fill="none" opacity="0.5" />
+      
+      {/* Right eye */}
+      <ellipse cx="262" cy="108" rx="12" ry="8" fill="white" />
+      <ellipse cx="260" cy="109" rx="6" ry="6" fill="#2d2d3f" />
+      <circle cx="262" cy="107" r="2" fill="white" />
+      {/* Right eyelid */}
+      <path d="M250 104 Q262 100 274 104" stroke="url(#skinShadow)" strokeWidth="2" fill="none" opacity="0.5" />
+      
+      {/* EYEBROWS */}
+      <path d="M205 95 Q218 90 232 95" stroke="url(#hairMain)" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+      <path d="M248 95 Q262 90 275 95" stroke="url(#hairMain)" strokeWidth="3.5" fill="none" strokeLinecap="round" />
+      
+      {/* NOSE */}
+      <path d="M240 110 L238 130 Q240 135 242 130 L240 110" stroke="url(#skinShadow)" strokeWidth="2.5" fill="none" />
+      <ellipse cx="240" cy="133" rx="6" ry="4" fill="url(#skinShadow)" opacity="0.2" />
+      
+      {/* MOUTH - friendly smile */}
+      <path d="M225 148 Q240 158 255 148" stroke="#c07060" strokeWidth="3" fill="none" strokeLinecap="round" />
+      {/* Upper lip highlight */}
+      <path d="M232 146 Q240 144 248 146" stroke="url(#skinShadow)" strokeWidth="1.5" fill="none" opacity="0.4" />
+      
+      {/* LEFT ARM - Extended presenting gesture toward cards */}
+      <g>
+        {/* Upper arm */}
+        <path 
+          d="M170 210 
+             Q140 200 100 175 
+             Q75 158 55 135"
+          stroke="url(#sweaterMain)" 
+          strokeWidth="38" 
+          strokeLinecap="round"
+          fill="none"
+        />
+        {/* Arm highlight */}
+        <path 
+          d="M165 205 Q135 195 100 172 Q80 158 62 140"
+          stroke="url(#sweaterHighlight)" 
+          strokeWidth="8" 
+          fill="none"
+          opacity="0.3"
+        />
+        
+        {/* Hand base */}
+        <ellipse cx="48" cy="125" rx="22" ry="20" fill="url(#skinTone)" />
+        
+        {/* Palm detail */}
+        <ellipse cx="50" cy="128" rx="15" ry="14" fill="url(#skinShadow)" opacity="0.15" />
+        
+        {/* Fingers - spread open gesture */}
+        <path d="M35 118 Q22 100 26 82" stroke="url(#skinTone)" strokeWidth="10" strokeLinecap="round" fill="none" />
+        <path d="M44 110 Q38 88 44 68" stroke="url(#skinTone)" strokeWidth="10" strokeLinecap="round" fill="none" />
+        <path d="M56 108 Q60 85 62 65" stroke="url(#skinTone)" strokeWidth="10" strokeLinecap="round" fill="none" />
+        <path d="M68 115 Q80 95 88 78" stroke="url(#skinTone)" strokeWidth="9" strokeLinecap="round" fill="none" />
+        
+        {/* Thumb */}
+        <path d="M30 132 Q15 140 8 132" stroke="url(#skinTone)" strokeWidth="9" strokeLinecap="round" fill="none" />
+        
+        {/* Finger highlights */}
+        <path d="M28 95 Q30 88 28 82" stroke="rgba(255,255,255,0.2)" strokeWidth="2" fill="none" />
+        <path d="M46 80 Q47 74 46 68" stroke="rgba(255,255,255,0.2)" strokeWidth="2" fill="none" />
+        <path d="M62 78 Q63 72 62 66" stroke="rgba(255,255,255,0.2)" strokeWidth="2" fill="none" />
+      </g>
+      
+      {/* RIGHT ARM - Holding clicker */}
+      <g>
+        {/* Upper arm - bent at side */}
+        <path 
+          d="M310 210 
+             Q330 240 328 290"
+          stroke="url(#sweaterMain)" 
+          strokeWidth="36" 
+          strokeLinecap="round"
+          fill="none"
+        />
+        {/* Arm shadow */}
+        <path 
+          d="M305 215 Q320 245 318 290"
+          stroke="url(#sweaterShadow)" 
+          strokeWidth="8" 
+          fill="none"
+          opacity="0.4"
+        />
+        
+        {/* Hand */}
+        <ellipse cx="325" cy="305" rx="18" ry="20" fill="url(#skinTone)" />
+        
+        {/* Fingers wrapped around clicker */}
+        <path d="M315 295 Q310 310 318 320" stroke="url(#skinTone)" strokeWidth="8" strokeLinecap="round" fill="none" />
+        <path d="M322 293 Q318 308 325 322" stroke="url(#skinTone)" strokeWidth="8" strokeLinecap="round" fill="none" />
+        
+        {/* Clicker device */}
+        <rect x="314" y="280" width="20" height="40" rx="5" fill="#1a1a2e" />
+        <rect x="318" y="286" width="12" height="6" rx="2" fill="#2d2d3f" />
+        {/* LED light */}
+        <circle cx="324" cy="289" r="2.5" fill="#4ade80" filter="url(#softGlow)" />
+        {/* Clicker button */}
+        <ellipse cx="324" cy="300" rx="6" ry="3" fill="#3d3d5c" />
+      </g>
+      
+      {/* Rim lighting effects */}
+      {/* Orange rim light - right side */}
+      <path 
+        d="M295 60 Q310 100 308 180 Q312 280 305 380"
+        stroke="url(#rimLightOrange)" 
+        strokeWidth="6" 
         fill="none"
       />
+      
+      {/* Blue rim light - left side */}
       <path 
-        d="M250 180 Q240 200 245 250 Q250 300 245 330" 
-        stroke="rgba(255,255,255,0.1)" 
+        d="M185 70 Q172 110 175 180 Q170 280 178 370"
+        stroke="url(#rimLightBlue)" 
         strokeWidth="5" 
         fill="none"
       />
-      {/* Sweater collar */}
-      <path d="M170 160 Q200 175 230 160" stroke="#c2410c" strokeWidth="4" fill="none" />
       
-      {/* Neck */}
-      <rect x="185" y="130" width="30" height="35" rx="5" fill="url(#skinGrad)" />
-      
-      {/* Head */}
-      <ellipse cx="200" cy="95" rx="42" ry="48" fill="url(#skinGrad)" />
-      {/* Ear */}
-      <ellipse cx="158" cy="100" rx="8" ry="12" fill="url(#skinGrad)" />
-      <ellipse cx="158" cy="100" rx="5" ry="8" fill="#e8956a" />
-      
-      {/* Hair - styled dark hair */}
-      <path 
-        d="M158 75 Q165 35 200 30 Q235 35 242 75 Q245 55 238 45 Q220 20 200 18 Q180 20 162 45 Q155 55 158 75" 
-        fill="#1a1a2e" 
-      />
-      <path d="M160 70 Q180 60 195 62 Q185 50 165 55 Q158 60 160 70" fill="#0f172a" />
-      
-      {/* Face features */}
-      {/* Eyes */}
-      <ellipse cx="182" cy="90" rx="6" ry="4" fill="#1a1a2e" />
-      <ellipse cx="218" cy="90" rx="6" ry="4" fill="#1a1a2e" />
-      <circle cx="184" cy="89" r="1.5" fill="white" />
-      <circle cx="220" cy="89" r="1.5" fill="white" />
-      {/* Eyebrows */}
-      <path d="M174 82 Q182 79 190 82" stroke="#1a1a2e" strokeWidth="2.5" fill="none" />
-      <path d="M210 82 Q218 79 226 82" stroke="#1a1a2e" strokeWidth="2.5" fill="none" />
-      {/* Nose */}
-      <path d="M200 95 L198 110 Q200 114 202 110 L200 95" stroke="#d4845a" strokeWidth="2" fill="none" />
-      {/* Smile */}
-      <path d="M188 120 Q200 130 212 120" stroke="#c2785a" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      
-      {/* Left arm - extended presenting gesture */}
-      <path 
-        d="M145 170 Q110 165 75 140 Q55 125 45 105" 
-        stroke="url(#sweaterGrad)" 
-        strokeWidth="32" 
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Left hand - open palm gesture */}
-      <ellipse cx="42" cy="95" rx="18" ry="15" fill="url(#skinGrad)" />
-      {/* Fingers spread out */}
-      <path d="M32 88 Q22 75 25 65" stroke="url(#skinGrad)" strokeWidth="7" strokeLinecap="round" fill="none" />
-      <path d="M38 82 Q35 65 40 55" stroke="url(#skinGrad)" strokeWidth="7" strokeLinecap="round" fill="none" />
-      <path d="M48 80 Q52 62 55 52" stroke="url(#skinGrad)" strokeWidth="7" strokeLinecap="round" fill="none" />
-      <path d="M56 85 Q65 70 70 62" stroke="url(#skinGrad)" strokeWidth="7" strokeLinecap="round" fill="none" />
-      {/* Thumb */}
-      <path d="M28 98 Q18 105 15 100" stroke="url(#skinGrad)" strokeWidth="6" strokeLinecap="round" fill="none" />
-      
-      {/* Right arm - holding clicker */}
-      <path 
-        d="M255 170 Q275 195 270 240" 
-        stroke="url(#sweaterGrad)" 
-        strokeWidth="32" 
-        strokeLinecap="round"
-        fill="none"
-      />
-      {/* Right hand */}
-      <ellipse cx="268" cy="250" rx="14" ry="16" fill="url(#skinGrad)" />
-      {/* Clicker device */}
-      <rect x="260" y="235" width="16" height="32" rx="4" fill="#1a1a2e" />
-      <rect x="264" y="240" width="8" height="4" rx="1" fill="#4ade80" />
-      
-      {/* Subtle highlight on presenter */}
-      <ellipse cx="200" cy="200" rx="60" ry="100" fill="url(#presenterGlow)" opacity="0.15" />
-      
-      <defs>
-        <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f4a574" />
-          <stop offset="50%" stopColor="#eda06a" />
-          <stop offset="100%" stopColor="#e8956a" />
-        </linearGradient>
-        <linearGradient id="sweaterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#fb923c" />
-          <stop offset="25%" stopColor="#f97316" />
-          <stop offset="60%" stopColor="#ea580c" />
-          <stop offset="100%" stopColor="#c2410c" />
-        </linearGradient>
-        <linearGradient id="pantsGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#1e3a5f" />
-          <stop offset="50%" stopColor="#172554" />
-          <stop offset="100%" stopColor="#0f172a" />
-        </linearGradient>
-        <linearGradient id="blockGradPurple" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#7c3aed" />
-          <stop offset="100%" stopColor="#4c1d95" />
-        </linearGradient>
-        <linearGradient id="blockGradOrange" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#f97316" />
-          <stop offset="100%" stopColor="#9a3412" />
-        </linearGradient>
-        <linearGradient id="blockGradBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#6366f1" />
-          <stop offset="100%" stopColor="#3730a3" />
-        </linearGradient>
-        <radialGradient id="presenterGlow" cx="50%" cy="30%" r="50%">
-          <stop offset="0%" stopColor="#93c5fd" />
-          <stop offset="100%" stopColor="transparent" />
-        </radialGradient>
-      </defs>
+      {/* Subtle body aura */}
+      <ellipse cx="240" cy="280" rx="100" ry="180" fill="url(#presenterAura)" opacity="0.5" />
     </svg>
     
-    {/* Soft glow behind presenter for depth separation */}
+    {/* Background glow behind presenter */}
     <div 
-      className="absolute bottom-[10%] left-[15%] w-[250px] h-[400px] rounded-full"
+      className="absolute bottom-[8%] left-[12%] w-[300px] h-[450px] rounded-full"
       style={{
-        background: 'radial-gradient(ellipse, rgba(147, 197, 253, 0.2) 0%, transparent 70%)',
-        filter: 'blur(40px)',
+        background: 'radial-gradient(ellipse, rgba(147, 197, 253, 0.18) 0%, rgba(167, 139, 250, 0.1) 40%, transparent 70%)',
+        filter: 'blur(50px)',
+        zIndex: -1,
+      }}
+    />
+    
+    {/* Warm accent glow */}
+    <div 
+      className="absolute bottom-[15%] left-[25%] w-[150px] h-[250px] rounded-full"
+      style={{
+        background: 'radial-gradient(ellipse, rgba(251, 146, 60, 0.12) 0%, transparent 70%)',
+        filter: 'blur(30px)',
         zIndex: -1,
       }}
     />
