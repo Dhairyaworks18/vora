@@ -179,89 +179,6 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      {/* Primary torch light beam shining toward cards */}
-      <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          right: '-30%',
-          top: '10%',
-          width: '600px',
-          height: '600px',
-          background: `conic-gradient(from -25deg at 0% 50%, 
-            transparent 0deg, 
-            rgba(251, 191, 36, 0.12) 10deg, 
-            rgba(251, 191, 36, 0.35) 25deg, 
-            rgba(251, 146, 60, 0.4) 35deg,
-            rgba(251, 191, 36, 0.35) 45deg,
-            rgba(251, 191, 36, 0.12) 55deg,
-            transparent 65deg
-          )`,
-          filter: 'blur(25px)',
-          transformOrigin: '0% 50%',
-        }}
-        animate={{
-          opacity: [0.7, 1, 0.7],
-          rotate: [-3, 3, -3],
-        }}
-        transition={{
-          duration: 3,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      
-      {/* Secondary intense light core */}
-      <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          right: '-15%',
-          top: '18%',
-          width: '350px',
-          height: '400px',
-          background: `conic-gradient(from -20deg at 0% 50%, 
-            transparent 0deg, 
-            rgba(255, 247, 237, 0.2) 15deg, 
-            rgba(251, 191, 36, 0.5) 30deg, 
-            rgba(255, 247, 237, 0.2) 45deg,
-            transparent 60deg
-          )`,
-          filter: 'blur(15px)',
-          transformOrigin: '0% 50%',
-        }}
-        animate={{
-          opacity: [0.6, 0.9, 0.6],
-          rotate: [-2, 2, -2],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 0.5,
-        }}
-      />
-      
-      {/* Torch source glow */}
-      <motion.div
-        className="absolute pointer-events-none rounded-full"
-        style={{
-          right: '8%',
-          top: '22%',
-          width: '80px',
-          height: '80px',
-          background: 'radial-gradient(circle, rgba(255, 247, 237, 0.9) 0%, rgba(251, 191, 36, 0.6) 40%, rgba(249, 115, 22, 0.3) 70%, transparent 100%)',
-          filter: 'blur(12px)',
-        }}
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.8, 1, 0.8],
-        }}
-        transition={{
-          duration: 0.8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      
       {/* Floating torch particles drifting toward cards */}
       <TorchParticles isActive={hoveredCardIndex !== null} />
       
@@ -872,6 +789,92 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
           opacity: [0.5, 0.7, 0.5]
         }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+      />
+      
+      {/* Primary torch light beam - renders ON TOP of character */}
+      <motion.div
+        className="absolute pointer-events-none"
+        style={{
+          right: '-60%',
+          top: '-5%',
+          width: '800px',
+          height: '700px',
+          background: `conic-gradient(from -30deg at 0% 50%, 
+            transparent 0deg, 
+            rgba(251, 191, 36, 0.08) 8deg, 
+            rgba(251, 191, 36, 0.25) 20deg, 
+            rgba(251, 146, 60, 0.35) 32deg,
+            rgba(251, 191, 36, 0.25) 44deg,
+            rgba(251, 191, 36, 0.08) 56deg,
+            transparent 65deg
+          )`,
+          filter: 'blur(30px)',
+          transformOrigin: '0% 50%',
+          zIndex: 50,
+        }}
+        animate={{
+          opacity: [0.8, 1, 0.8],
+          rotate: [-4, 4, -4],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      
+      {/* Secondary intense light beam */}
+      <motion.div
+        className="absolute pointer-events-none"
+        style={{
+          right: '-40%',
+          top: '5%',
+          width: '500px',
+          height: '500px',
+          background: `conic-gradient(from -25deg at 0% 50%, 
+            transparent 0deg, 
+            rgba(255, 247, 237, 0.15) 12deg, 
+            rgba(251, 191, 36, 0.45) 28deg, 
+            rgba(255, 247, 237, 0.15) 44deg,
+            transparent 58deg
+          )`,
+          filter: 'blur(20px)',
+          transformOrigin: '0% 50%',
+          zIndex: 50,
+        }}
+        animate={{
+          opacity: [0.7, 1, 0.7],
+          rotate: [-3, 3, -3],
+        }}
+        transition={{
+          duration: 2.5,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 0.3,
+        }}
+      />
+      
+      {/* Torch source glow - at the flame position */}
+      <motion.div
+        className="absolute pointer-events-none rounded-full"
+        style={{
+          right: '-5%',
+          top: '15%',
+          width: '120px',
+          height: '120px',
+          background: 'radial-gradient(circle, rgba(255, 247, 237, 1) 0%, rgba(251, 191, 36, 0.8) 30%, rgba(249, 115, 22, 0.4) 60%, transparent 100%)',
+          filter: 'blur(15px)',
+          zIndex: 50,
+        }}
+        animate={{
+          scale: [1, 1.4, 1],
+          opacity: [0.9, 1, 0.9],
+        }}
+        transition={{
+          duration: 0.6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
       />
     </motion.div>
   );
