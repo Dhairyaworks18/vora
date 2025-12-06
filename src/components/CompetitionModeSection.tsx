@@ -43,112 +43,83 @@ const features = [
 ];
 
 // Animated AI TV Character Component
-// Antenna particles that emit light from the robot's head antenna
+// Antenna particles that rise and drift upward/outward from the antenna tip
 const AntennaParticles = ({ isActive }: { isActive: boolean }) => {
   return (
-    <div className="absolute pointer-events-none" style={{ left: '50%', top: '-5%', width: '200%', height: '80%', transform: 'translateX(-25%)' }}>
-      {/* Main light rays shooting from antenna toward the right */}
-      {[...Array(14)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute"
-          style={{
-            left: '0%',
-            top: '8%',
-            width: `${100 + Math.random() * 150}px`,
-            height: '3px',
-            background: i % 3 === 0 
-              ? 'linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(251, 191, 36, 0.5) 40%, transparent 100%)'
-              : i % 3 === 1
-              ? 'linear-gradient(90deg, rgba(255, 247, 237, 1) 0%, rgba(251, 191, 36, 0.4) 40%, transparent 100%)'
-              : 'linear-gradient(90deg, rgba(249, 115, 22, 0.9) 0%, rgba(251, 146, 60, 0.4) 40%, transparent 100%)',
-            transformOrigin: 'left center',
-            transform: `rotate(${-15 + i * 6}deg)`,
-            boxShadow: '0 0 8px rgba(251, 191, 36, 0.6)',
-          }}
-          initial={{ opacity: 0, scaleX: 0 }}
-          animate={isActive ? {
-            opacity: [0, 1, 0.9, 0],
-            scaleX: [0, 1.3, 1.1, 0],
-          } : {
-            opacity: [0, 0.7, 0.5, 0],
-            scaleX: [0, 1, 0.8, 0],
-          }}
-          transition={{
-            duration: isActive ? 1.2 + Math.random() * 0.4 : 2 + Math.random() * 0.8,
-            repeat: Infinity,
-            delay: i * 0.12,
-            ease: "easeOut",
-          }}
-        />
-      ))}
+    <div className="absolute pointer-events-none" style={{ left: '50%', top: '-15%', width: '150px', height: '200px', transform: 'translateX(-50%)' }}>
+      {/* Rising light particles from antenna - float upward and outward */}
+      {[...Array(12)].map((_, i) => {
+        const angle = (i / 12) * 360;
+        const xOffset = Math.sin((angle * Math.PI) / 180) * (20 + Math.random() * 30);
+        return (
+          <motion.div
+            key={`particle-${i}`}
+            className="absolute rounded-full"
+            style={{
+              left: '50%',
+              bottom: '10%',
+              width: `${4 + Math.random() * 5}px`,
+              height: `${4 + Math.random() * 5}px`,
+              background: i % 3 === 0 
+                ? 'radial-gradient(circle, #fbbf24 0%, #f97316 60%, transparent 100%)'
+                : i % 3 === 1
+                ? 'radial-gradient(circle, #fff7ed 0%, #fbbf24 60%, transparent 100%)'
+                : 'radial-gradient(circle, #f97316 0%, #ea580c 60%, transparent 100%)',
+              boxShadow: '0 0 10px rgba(251, 191, 36, 0.9)',
+            }}
+            initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
+            animate={isActive ? {
+              opacity: [0, 1, 0.8, 0],
+              x: [0, xOffset * 0.5, xOffset, xOffset * 1.3],
+              y: [0, -40, -90, -150],
+              scale: [0.3, 1.2, 0.8, 0],
+            } : {
+              opacity: [0, 0.7, 0.5, 0],
+              x: [0, xOffset * 0.3, xOffset * 0.6],
+              y: [0, -30, -70],
+              scale: [0.2, 0.8, 0],
+            }}
+            transition={{
+              duration: isActive ? 2.5 + Math.random() * 0.8 : 3.5 + Math.random() * 1,
+              repeat: Infinity,
+              delay: i * 0.25,
+              ease: "easeOut",
+            }}
+          />
+        );
+      })}
       
-      {/* Glowing orbs flying from antenna */}
-      {[...Array(12)].map((_, i) => (
-        <motion.div
-          key={`orb-${i}`}
-          className="absolute rounded-full"
-          style={{
-            left: '0%',
-            top: '6%',
-            width: `${5 + Math.random() * 8}px`,
-            height: `${5 + Math.random() * 8}px`,
-            background: i % 3 === 0 
-              ? 'radial-gradient(circle, #fbbf24 0%, #f97316 60%, transparent 100%)'
-              : i % 3 === 1
-              ? 'radial-gradient(circle, #fff7ed 0%, #fbbf24 60%, transparent 100%)'
-              : 'radial-gradient(circle, #f97316 0%, #ea580c 60%, transparent 100%)',
-            boxShadow: '0 0 12px rgba(251, 191, 36, 1)',
-          }}
-          initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
-          animate={isActive ? {
-            opacity: [0, 1, 1, 0.7, 0],
-            x: [0, 120 + i * 35, 250 + i * 30, 380 + i * 25],
-            y: [0, 30 + Math.sin(i) * 60, 80 + Math.cos(i) * 80, 120 + Math.sin(i * 2) * 50],
-            scale: [0.5, 1.4, 1.1, 0.6, 0],
-          } : {
-            opacity: [0, 0.8, 0.6, 0],
-            x: [0, 80 + i * 25, 160 + i * 20],
-            y: [0, 20 + Math.sin(i) * 40, 50 + Math.cos(i) * 35],
-            scale: [0.4, 1, 0.6, 0],
-          }}
-          transition={{
-            duration: isActive ? 2 + Math.random() * 0.8 : 3 + Math.random() * 1,
-            repeat: Infinity,
-            delay: i * 0.18,
-            ease: "easeOut",
-          }}
-        />
-      ))}
-      
-      {/* Sparkle burst particles */}
-      {[...Array(10)].map((_, i) => (
-        <motion.div
-          key={`sparkle-${i}`}
-          className="absolute"
-          style={{
-            left: '1%',
-            top: '7%',
-            width: '4px',
-            height: '4px',
-            background: '#fff',
-            borderRadius: '50%',
-            boxShadow: '0 0 8px #fbbf24, 0 0 16px #fff',
-          }}
-          animate={{
-            opacity: [0, 1, 0],
-            x: [0, 140 + i * 40, 300 + i * 35],
-            y: [0, 40 + i * 15, 100 + i * 12],
-            scale: [0, 2, 0],
-          }}
-          transition={{
-            duration: 1.8 + Math.random() * 0.6,
-            repeat: Infinity,
-            delay: i * 0.25 + 0.1,
-            ease: "easeOut",
-          }}
-        />
-      ))}
+      {/* Tiny sparkles that drift upward */}
+      {[...Array(8)].map((_, i) => {
+        const xDrift = (Math.random() - 0.5) * 60;
+        return (
+          <motion.div
+            key={`sparkle-${i}`}
+            className="absolute"
+            style={{
+              left: '50%',
+              bottom: '12%',
+              width: '3px',
+              height: '3px',
+              background: '#fff',
+              borderRadius: '50%',
+              boxShadow: '0 0 6px #fbbf24, 0 0 12px #fff',
+            }}
+            animate={{
+              opacity: [0, 1, 0],
+              x: [0, xDrift * 0.5, xDrift],
+              y: [0, -50, -120],
+              scale: [0, 1.5, 0],
+            }}
+            transition={{
+              duration: 2 + Math.random() * 0.8,
+              repeat: Infinity,
+              delay: i * 0.35 + 0.2,
+              ease: "easeOut",
+            }}
+          />
+        );
+      })}
     </div>
   );
 };
@@ -694,61 +665,96 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
   );
 };
 
-// Animated spotlight beams
-const SpotlightBeams = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 2 }}>
+// Antenna cone beam - light projecting downward from antenna
+const AntennaBeam = () => (
+  <div className="absolute pointer-events-none" style={{ zIndex: 1 }}>
+    {/* Main cone beam from antenna projecting downward and forward */}
     <motion.div
-      animate={{ opacity: [0.3, 0.5, 0.3] }}
-      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-      className="absolute top-0 h-full"
+      className="absolute"
       style={{
-        left: '5%',
-        width: '120px',
-        background: `linear-gradient(180deg, rgba(147, 197, 253, 0.5) 0%, rgba(147, 197, 253, 0.1) 40%, transparent 70%)`,
-        clipPath: 'polygon(30% 0%, 70% 0%, 100% 100%, 0% 100%)',
+        left: '8%',
+        top: '28%',
+        width: '500px',
+        height: '600px',
+        background: `conic-gradient(from 90deg at 50% 0%, 
+          transparent 0deg,
+          rgba(251, 191, 36, 0.03) 30deg,
+          rgba(251, 191, 36, 0.12) 60deg,
+          rgba(251, 146, 60, 0.2) 90deg,
+          rgba(251, 191, 36, 0.12) 120deg,
+          rgba(251, 191, 36, 0.03) 150deg,
+          transparent 180deg
+        )`,
+        clipPath: 'polygon(48% 0%, 52% 0%, 100% 100%, 0% 100%)',
+        filter: 'blur(25px)',
+        transformOrigin: '50% 0%',
+      }}
+      animate={{
+        opacity: [0.6, 0.9, 0.6],
+        scaleX: [0.95, 1.05, 0.95],
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+    
+    {/* Inner brighter cone */}
+    <motion.div
+      className="absolute"
+      style={{
+        left: '10%',
+        top: '29%',
+        width: '400px',
+        height: '500px',
+        background: `conic-gradient(from 90deg at 50% 0%, 
+          transparent 0deg,
+          rgba(255, 247, 237, 0.05) 50deg,
+          rgba(251, 191, 36, 0.25) 80deg,
+          rgba(255, 247, 237, 0.35) 90deg,
+          rgba(251, 191, 36, 0.25) 100deg,
+          rgba(255, 247, 237, 0.05) 130deg,
+          transparent 180deg
+        )`,
+        clipPath: 'polygon(48% 0%, 52% 0%, 90% 100%, 10% 100%)',
         filter: 'blur(15px)',
+        transformOrigin: '50% 0%',
+      }}
+      animate={{
+        opacity: [0.5, 0.85, 0.5],
+        scaleX: [0.98, 1.02, 0.98],
+      }}
+      transition={{
+        duration: 2.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: 0.2,
       }}
     />
+    
+    {/* Bright source glow at antenna tip */}
     <motion.div
-      animate={{ opacity: [0.2, 0.4, 0.2] }}
-      transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-      className="absolute top-0 h-full"
+      className="absolute rounded-full"
       style={{
-        left: '15%',
+        left: '12%',
+        top: '27%',
         width: '80px',
-        background: `linear-gradient(180deg, rgba(167, 139, 250, 0.4) 0%, transparent 50%)`,
-        clipPath: 'polygon(35% 0%, 65% 0%, 100% 100%, 0% 100%)',
-        filter: 'blur(12px)',
+        height: '80px',
+        background: 'radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(251, 191, 36, 0.8) 25%, rgba(249, 115, 22, 0.4) 50%, transparent 100%)',
+        filter: 'blur(6px)',
+        transform: 'translate(-50%, -50%)',
+      }}
+      animate={{
+        scale: [1, 1.4, 1],
+        opacity: [0.7, 1, 0.7],
+      }}
+      transition={{
+        duration: 1.5,
+        repeat: Infinity,
+        ease: "easeInOut",
       }}
     />
-  </div>
-);
-
-// Light streaks in background
-const LightStreaks = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-    {[...Array(5)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute h-[2px] bg-gradient-to-r from-transparent via-blue-300/50 to-transparent"
-        style={{
-          top: `${15 + i * 18}%`,
-          left: '-10%',
-          width: '120%',
-          transform: `rotate(${-2 + i * 0.5}deg)`,
-        }}
-        animate={{
-          opacity: [0, 0.5, 0],
-          x: ['-100%', '100%'],
-        }}
-        transition={{
-          duration: 8 + i * 2,
-          repeat: Infinity,
-          delay: i * 1.5,
-          ease: "linear",
-        }}
-      />
-    ))}
   </div>
 );
 
@@ -803,100 +809,13 @@ const CompetitionModeSection = () => {
         }}
       />
       
-      <SpotlightBeams />
-      <LightStreaks />
+      <AntennaBeam />
       
       {/* Cinematic vignette */}
       <div 
         className="absolute inset-0 pointer-events-none"
         style={{
           background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.4) 100%)',
-        }}
-      />
-      
-      {/* Antenna light beams - emanating from the robot's head antenna */}
-      <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          left: '12%',
-          top: '32%',
-          width: '1200px',
-          height: '600px',
-          background: `conic-gradient(from 25deg at 0% 0%, 
-            transparent 0deg, 
-            rgba(251, 191, 36, 0.12) 20deg, 
-            rgba(251, 191, 36, 0.35) 45deg, 
-            rgba(251, 146, 60, 0.5) 65deg,
-            rgba(251, 191, 36, 0.35) 85deg,
-            rgba(251, 191, 36, 0.12) 105deg,
-            transparent 125deg
-          )`,
-          filter: 'blur(20px)',
-          transformOrigin: '0% 0%',
-          zIndex: 5,
-        }}
-        animate={{
-          opacity: [0.5, 0.9, 0.5],
-          rotate: [-6, 6, -6],
-        }}
-        transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-      />
-      
-      {/* Secondary antenna light spread - brighter core */}
-      <motion.div
-        className="absolute pointer-events-none"
-        style={{
-          left: '14%',
-          top: '33%',
-          width: '900px',
-          height: '450px',
-          background: `conic-gradient(from 30deg at 0% 0%, 
-            transparent 0deg, 
-            rgba(255, 247, 237, 0.25) 25deg, 
-            rgba(251, 191, 36, 0.6) 50deg, 
-            rgba(255, 247, 237, 0.25) 75deg,
-            transparent 100deg
-          )`,
-          filter: 'blur(12px)',
-          transformOrigin: '0% 0%',
-          zIndex: 5,
-        }}
-        animate={{
-          opacity: [0.4, 0.85, 0.4],
-          rotate: [-4, 4, -4],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 0.15,
-        }}
-      />
-      
-      {/* Antenna source glow - bright point at the antenna */}
-      <motion.div
-        className="absolute pointer-events-none rounded-full"
-        style={{
-          left: '14%',
-          top: '34%',
-          width: '120px',
-          height: '120px',
-          background: 'radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(251, 191, 36, 1) 20%, rgba(249, 115, 22, 0.6) 45%, transparent 100%)',
-          filter: 'blur(8px)',
-          zIndex: 6,
-        }}
-        animate={{
-          scale: [1, 1.6, 1],
-          opacity: [0.8, 1, 0.8],
-        }}
-        transition={{
-          duration: 0.5,
-          repeat: Infinity,
-          ease: "easeInOut",
         }}
       />
 
