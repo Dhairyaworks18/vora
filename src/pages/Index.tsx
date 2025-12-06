@@ -9,7 +9,7 @@ import DualModesSection from "@/components/DualModesSection";
 import TrustedBySection from "@/components/TrustedBySection";
 import WhatMakesVoraDifferentSection from "@/components/WhatMakesVoraDifferentSection";
 import WorkflowSection from "@/components/WorkflowSection";
-import PricingSection from "@/components/PricingSection";
+
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
@@ -47,7 +47,7 @@ const Index = () => {
         <DataVisualizationSection />
         <DualModesSection />
         <WorkflowSection />
-        <PricingSection />
+        
         <CTASection />
         <Footer />
       </main>
