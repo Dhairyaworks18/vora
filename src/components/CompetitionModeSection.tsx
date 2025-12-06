@@ -43,6 +43,78 @@ const features = [
 ];
 
 // Animated AI TV Character Component
+// Floating torch particles that drift toward cards
+const TorchParticles = ({ isActive }: { isActive: boolean }) => {
+  return (
+    <div className="absolute pointer-events-none" style={{ right: '-5%', top: '15%', width: '60%', height: '50%' }}>
+      {[...Array(15)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            left: '0%',
+            top: '30%',
+            width: `${3 + Math.random() * 5}px`,
+            height: `${3 + Math.random() * 5}px`,
+            background: i % 3 === 0 
+              ? 'radial-gradient(circle, #fbbf24 0%, #f97316 50%, transparent 100%)'
+              : i % 3 === 1
+              ? 'radial-gradient(circle, #fff7ed 0%, #fbbf24 50%, transparent 100%)'
+              : 'radial-gradient(circle, #f97316 0%, #ea580c 50%, transparent 100%)',
+            boxShadow: '0 0 6px rgba(251, 191, 36, 0.8)',
+          }}
+          initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
+          animate={isActive ? {
+            opacity: [0, 1, 1, 0.8, 0],
+            x: [0, 80 + i * 25, 180 + i * 30, 280 + i * 20],
+            y: [0, -30 + Math.sin(i) * 40, -60 + Math.cos(i) * 50, -40 + Math.sin(i * 2) * 30],
+            scale: [0.5, 1.2, 1, 0.6, 0],
+          } : {
+            opacity: [0, 0.8, 0.6, 0],
+            x: [0, 60 + i * 15, 120 + i * 20],
+            y: [0, -20 + Math.sin(i) * 25, -30 + Math.cos(i) * 20],
+            scale: [0.3, 0.8, 0.5, 0],
+          }}
+          transition={{
+            duration: isActive ? 3 + Math.random() * 1.5 : 4 + Math.random() * 2,
+            repeat: Infinity,
+            delay: i * 0.25,
+            ease: "easeOut",
+          }}
+        />
+      ))}
+      {/* Sparkle particles */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={`sparkle-${i}`}
+          className="absolute"
+          style={{
+            left: '5%',
+            top: '25%',
+            width: '2px',
+            height: '2px',
+            background: '#fff',
+            borderRadius: '50%',
+            boxShadow: '0 0 4px #fbbf24, 0 0 8px #fff',
+          }}
+          animate={{
+            opacity: [0, 1, 0],
+            x: [0, 100 + i * 30, 200 + i * 25],
+            y: [0, -40 + i * 8, -20 + i * 5],
+            scale: [0, 1.5, 0],
+          }}
+          transition={{
+            duration: 2.5 + Math.random(),
+            repeat: Infinity,
+            delay: i * 0.4 + 0.5,
+            ease: "easeOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: number | null; mousePosition: { x: number; y: number } }) => {
   const [isBlinking, setIsBlinking] = useState(false);
   const [isPresenting, setIsPresenting] = useState(false);
@@ -136,32 +208,8 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
         }}
       />
       
-      {/* Torch glow particles */}
-      {[...Array(8)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full pointer-events-none"
-          style={{
-            right: `${-10 + i * 15}%`,
-            top: `${30 + (i % 3) * 15}%`,
-            width: `${4 + Math.random() * 6}px`,
-            height: `${4 + Math.random() * 6}px`,
-            background: 'rgba(251, 191, 36, 0.6)',
-            filter: 'blur(2px)',
-          }}
-          animate={{
-            opacity: [0, 0.8, 0],
-            x: [0, 50 + i * 10],
-            y: [0, -20 + i * 5],
-          }}
-          transition={{
-            duration: 2 + Math.random() * 2,
-            repeat: Infinity,
-            delay: i * 0.3,
-            ease: "easeOut",
-          }}
-        />
-      ))}
+      {/* Floating torch particles drifting toward cards */}
+      <TorchParticles isActive={hoveredCardIndex !== null} />
       
       {/* AI TV Character SVG */}
       <motion.svg
@@ -583,7 +631,7 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
             </motion.g>
           </motion.g>
           
-          {/* Antenna */}
+          {/* Antenna - Glows brighter when hovering cards */}
           <motion.g
             animate={{ rotate: [-5, 5, -5] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
@@ -591,16 +639,68 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
           >
             <rect x="145" y="25" width="10" height="30" rx="5" fill="#3d3d5c" />
             <circle cx="150" cy="18" r="10" fill="#4a4a6a" />
+            {/* Outer glow ring when processing */}
+            <motion.circle
+              cx="150"
+              cy="18"
+              r="14"
+              fill="none"
+              stroke="#93c5fd"
+              strokeWidth="2"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={hoveredCardIndex !== null ? {
+                opacity: [0, 0.8, 0],
+                scale: [0.8, 1.5, 2],
+              } : { opacity: 0, scale: 0.8 }}
+              transition={{ duration: 1, repeat: hoveredCardIndex !== null ? Infinity : 0, ease: "easeOut" }}
+            />
+            {/* Secondary pulse ring */}
+            <motion.circle
+              cx="150"
+              cy="18"
+              r="12"
+              fill="none"
+              stroke="rgba(251, 191, 36, 0.6)"
+              strokeWidth="1.5"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={hoveredCardIndex !== null ? {
+                opacity: [0, 0.6, 0],
+                scale: [0.9, 1.3, 1.8],
+              } : { opacity: 0, scale: 0.8 }}
+              transition={{ duration: 1.2, repeat: hoveredCardIndex !== null ? Infinity : 0, delay: 0.2, ease: "easeOut" }}
+            />
+            {/* Main antenna light */}
             <motion.circle 
               cx="150" 
               cy="18" 
               r="6" 
-              fill="#93c5fd"
-              animate={{ 
+              fill={hoveredCardIndex !== null ? "#fbbf24" : "#93c5fd"}
+              animate={hoveredCardIndex !== null ? { 
+                opacity: [0.8, 1, 0.8],
+                r: [6, 9, 6],
+                fill: ["#93c5fd", "#fbbf24", "#f97316", "#fbbf24", "#93c5fd"]
+              } : { 
                 opacity: [0.6, 1, 0.6],
                 r: [5, 7, 5]
               }}
-              transition={{ duration: 2, repeat: Infinity }}
+              transition={{ 
+                duration: hoveredCardIndex !== null ? 0.8 : 2, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            {/* Intense glow when active */}
+            <motion.circle
+              cx="150"
+              cy="18"
+              r="8"
+              fill="url(#torchGlow)"
+              initial={{ opacity: 0 }}
+              animate={hoveredCardIndex !== null ? {
+                opacity: [0.3, 0.7, 0.3],
+                r: [8, 12, 8],
+              } : { opacity: 0 }}
+              transition={{ duration: 0.6, repeat: Infinity, ease: "easeInOut" }}
             />
           </motion.g>
           
