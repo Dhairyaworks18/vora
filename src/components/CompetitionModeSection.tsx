@@ -43,70 +43,107 @@ const features = [
 ];
 
 // Animated AI TV Character Component
-// Floating torch particles that drift toward cards
-const TorchParticles = ({ isActive }: { isActive: boolean }) => {
+// Antenna particles that emit light toward cards
+const AntennaParticles = ({ isActive }: { isActive: boolean }) => {
   return (
-    <div className="absolute pointer-events-none" style={{ right: '-5%', top: '15%', width: '60%', height: '50%' }}>
-      {[...Array(15)].map((_, i) => (
+    <div className="absolute pointer-events-none" style={{ left: '40%', top: '-10%', width: '80%', height: '60%' }}>
+      {/* Main light rays shooting from antenna */}
+      {[...Array(12)].map((_, i) => (
         <motion.div
           key={i}
+          className="absolute"
+          style={{
+            left: '10%',
+            top: '20%',
+            width: `${80 + Math.random() * 120}px`,
+            height: '2px',
+            background: i % 3 === 0 
+              ? 'linear-gradient(90deg, rgba(251, 191, 36, 0.9) 0%, rgba(251, 191, 36, 0.4) 50%, transparent 100%)'
+              : i % 3 === 1
+              ? 'linear-gradient(90deg, rgba(255, 247, 237, 0.8) 0%, rgba(251, 191, 36, 0.3) 50%, transparent 100%)'
+              : 'linear-gradient(90deg, rgba(249, 115, 22, 0.7) 0%, rgba(251, 146, 60, 0.3) 50%, transparent 100%)',
+            transformOrigin: 'left center',
+            transform: `rotate(${-25 + i * 8}deg)`,
+          }}
+          initial={{ opacity: 0, scaleX: 0 }}
+          animate={isActive ? {
+            opacity: [0, 1, 0.8, 0],
+            scaleX: [0, 1.2, 1, 0],
+          } : {
+            opacity: [0, 0.6, 0.4, 0],
+            scaleX: [0, 0.8, 0.6, 0],
+          }}
+          transition={{
+            duration: isActive ? 1.5 + Math.random() * 0.5 : 2.5 + Math.random() * 1,
+            repeat: Infinity,
+            delay: i * 0.15,
+            ease: "easeOut",
+          }}
+        />
+      ))}
+      
+      {/* Glowing orbs floating from antenna */}
+      {[...Array(10)].map((_, i) => (
+        <motion.div
+          key={`orb-${i}`}
           className="absolute rounded-full"
           style={{
-            left: '0%',
-            top: '30%',
-            width: `${3 + Math.random() * 5}px`,
-            height: `${3 + Math.random() * 5}px`,
+            left: '10%',
+            top: '18%',
+            width: `${4 + Math.random() * 6}px`,
+            height: `${4 + Math.random() * 6}px`,
             background: i % 3 === 0 
               ? 'radial-gradient(circle, #fbbf24 0%, #f97316 50%, transparent 100%)'
               : i % 3 === 1
               ? 'radial-gradient(circle, #fff7ed 0%, #fbbf24 50%, transparent 100%)'
               : 'radial-gradient(circle, #f97316 0%, #ea580c 50%, transparent 100%)',
-            boxShadow: '0 0 6px rgba(251, 191, 36, 0.8)',
+            boxShadow: '0 0 8px rgba(251, 191, 36, 0.9)',
           }}
           initial={{ opacity: 0, x: 0, y: 0, scale: 0 }}
           animate={isActive ? {
-            opacity: [0, 1, 1, 0.8, 0],
-            x: [0, 80 + i * 25, 180 + i * 30, 280 + i * 20],
-            y: [0, -30 + Math.sin(i) * 40, -60 + Math.cos(i) * 50, -40 + Math.sin(i * 2) * 30],
-            scale: [0.5, 1.2, 1, 0.6, 0],
+            opacity: [0, 1, 1, 0.6, 0],
+            x: [0, 100 + i * 30, 200 + i * 25, 300 + i * 20],
+            y: [0, 20 + Math.sin(i) * 50, 60 + Math.cos(i) * 60, 100 + Math.sin(i * 2) * 40],
+            scale: [0.5, 1.3, 1, 0.5, 0],
           } : {
-            opacity: [0, 0.8, 0.6, 0],
-            x: [0, 60 + i * 15, 120 + i * 20],
-            y: [0, -20 + Math.sin(i) * 25, -30 + Math.cos(i) * 20],
-            scale: [0.3, 0.8, 0.5, 0],
+            opacity: [0, 0.7, 0.5, 0],
+            x: [0, 70 + i * 20, 140 + i * 15],
+            y: [0, 15 + Math.sin(i) * 30, 40 + Math.cos(i) * 25],
+            scale: [0.3, 0.9, 0.5, 0],
           }}
           transition={{
-            duration: isActive ? 3 + Math.random() * 1.5 : 4 + Math.random() * 2,
+            duration: isActive ? 2.5 + Math.random() * 1 : 3.5 + Math.random() * 1.5,
             repeat: Infinity,
-            delay: i * 0.25,
+            delay: i * 0.2,
             ease: "easeOut",
           }}
         />
       ))}
-      {/* Sparkle particles */}
+      
+      {/* Sparkle burst particles */}
       {[...Array(8)].map((_, i) => (
         <motion.div
           key={`sparkle-${i}`}
           className="absolute"
           style={{
-            left: '5%',
-            top: '25%',
-            width: '2px',
-            height: '2px',
+            left: '12%',
+            top: '20%',
+            width: '3px',
+            height: '3px',
             background: '#fff',
             borderRadius: '50%',
-            boxShadow: '0 0 4px #fbbf24, 0 0 8px #fff',
+            boxShadow: '0 0 6px #fbbf24, 0 0 12px #fff',
           }}
           animate={{
             opacity: [0, 1, 0],
-            x: [0, 100 + i * 30, 200 + i * 25],
-            y: [0, -40 + i * 8, -20 + i * 5],
-            scale: [0, 1.5, 0],
+            x: [0, 120 + i * 35, 250 + i * 30],
+            y: [0, 30 + i * 12, 80 + i * 8],
+            scale: [0, 1.8, 0],
           }}
           transition={{
-            duration: 2.5 + Math.random(),
+            duration: 2 + Math.random() * 0.8,
             repeat: Infinity,
-            delay: i * 0.4 + 0.5,
+            delay: i * 0.3 + 0.2,
             ease: "easeOut",
           }}
         />
@@ -179,8 +216,8 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      {/* Floating torch particles drifting toward cards */}
-      <TorchParticles isActive={hoveredCardIndex !== null} />
+      {/* Antenna light particles shooting toward cards */}
+      <AntennaParticles isActive={hoveredCardIndex !== null} />
       
       {/* AI TV Character SVG */}
       <motion.svg
@@ -776,30 +813,30 @@ const CompetitionModeSection = () => {
         }}
       />
       
-      {/* Torch light beams - positioned BEFORE content so they appear behind cards but visible */}
+      {/* Antenna light beams - emanating from the robot's antenna */}
       <motion.div
         className="absolute pointer-events-none"
         style={{
-          left: '20%',
-          top: '30%',
-          width: '1000px',
-          height: '800px',
-          background: `conic-gradient(from -30deg at 0% 50%, 
+          left: '15%',
+          top: '22%',
+          width: '1100px',
+          height: '700px',
+          background: `conic-gradient(from 10deg at 0% 0%, 
             transparent 0deg, 
-            rgba(251, 191, 36, 0.08) 8deg, 
-            rgba(251, 191, 36, 0.25) 20deg, 
-            rgba(251, 146, 60, 0.35) 32deg,
-            rgba(251, 191, 36, 0.25) 44deg,
-            rgba(251, 191, 36, 0.08) 56deg,
-            transparent 65deg
+            rgba(251, 191, 36, 0.1) 15deg, 
+            rgba(251, 191, 36, 0.3) 35deg, 
+            rgba(251, 146, 60, 0.4) 55deg,
+            rgba(251, 191, 36, 0.3) 75deg,
+            rgba(251, 191, 36, 0.1) 95deg,
+            transparent 110deg
           )`,
-          filter: 'blur(30px)',
-          transformOrigin: '0% 50%',
+          filter: 'blur(25px)',
+          transformOrigin: '0% 0%',
           zIndex: 5,
         }}
         animate={{
-          opacity: [0.7, 1, 0.7],
-          rotate: [-4, 4, -4],
+          opacity: [0.6, 1, 0.6],
+          rotate: [-8, 8, -8],
         }}
         transition={{
           duration: 3,
@@ -808,55 +845,55 @@ const CompetitionModeSection = () => {
         }}
       />
       
-      {/* Secondary intense light beam */}
+      {/* Secondary antenna light spread */}
       <motion.div
         className="absolute pointer-events-none"
         style={{
-          left: '25%',
-          top: '35%',
-          width: '700px',
-          height: '600px',
-          background: `conic-gradient(from -25deg at 0% 50%, 
+          left: '18%',
+          top: '24%',
+          width: '800px',
+          height: '500px',
+          background: `conic-gradient(from 20deg at 0% 0%, 
             transparent 0deg, 
-            rgba(255, 247, 237, 0.15) 12deg, 
-            rgba(251, 191, 36, 0.45) 28deg, 
-            rgba(255, 247, 237, 0.15) 44deg,
-            transparent 58deg
+            rgba(255, 247, 237, 0.2) 20deg, 
+            rgba(251, 191, 36, 0.5) 45deg, 
+            rgba(255, 247, 237, 0.2) 70deg,
+            transparent 90deg
           )`,
-          filter: 'blur(20px)',
-          transformOrigin: '0% 50%',
+          filter: 'blur(15px)',
+          transformOrigin: '0% 0%',
           zIndex: 5,
         }}
         animate={{
-          opacity: [0.6, 0.95, 0.6],
-          rotate: [-3, 3, -3],
+          opacity: [0.5, 0.9, 0.5],
+          rotate: [-5, 5, -5],
         }}
         transition={{
           duration: 2.5,
           repeat: Infinity,
           ease: "easeInOut",
-          delay: 0.3,
+          delay: 0.2,
         }}
       />
       
-      {/* Torch source glow */}
+      {/* Antenna source glow - at the top of the robot */}
       <motion.div
         className="absolute pointer-events-none rounded-full"
         style={{
-          left: '28%',
-          top: '38%',
-          width: '200px',
-          height: '200px',
-          background: 'radial-gradient(circle, rgba(255, 247, 237, 1) 0%, rgba(251, 191, 36, 0.8) 30%, rgba(249, 115, 22, 0.4) 60%, transparent 100%)',
-          filter: 'blur(15px)',
+          left: '18%',
+          top: '28%',
+          width: '180px',
+          height: '180px',
+          background: 'radial-gradient(circle, rgba(255, 247, 237, 1) 0%, rgba(251, 191, 36, 0.9) 25%, rgba(249, 115, 22, 0.5) 50%, transparent 100%)',
+          filter: 'blur(12px)',
           zIndex: 5,
         }}
         animate={{
-          scale: [1, 1.4, 1],
-          opacity: [0.9, 1, 0.9],
+          scale: [1, 1.5, 1],
+          opacity: [0.85, 1, 0.85],
         }}
         transition={{
-          duration: 0.7,
+          duration: 0.6,
           repeat: Infinity,
           ease: "easeInOut",
         }}
