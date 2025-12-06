@@ -4,42 +4,79 @@ import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.png";
 import { useRef } from "react";
 
-// Shooting Star Component
-const ShootingStar = ({ delay, duration, top, left, angle }: { 
+// Shooting Star Component - Ultra smooth continuous motion
+const ShootingStar = ({ delay, duration, top, left, angle, size = 'normal' }: { 
   delay: number; 
   duration: number; 
   top: string; 
   left: string; 
   angle: number;
-}) => (
-  <motion.div
-    className="absolute pointer-events-none"
-    style={{ top, left, rotate: `${angle}deg` }}
-    initial={{ opacity: 0, x: 0, y: 0 }}
-    animate={{ 
-      opacity: [0, 1, 1, 0],
-      x: [0, 150, 300],
-      y: [0, 75, 150],
-    }}
-    transition={{
-      duration,
-      delay,
-      repeat: Infinity,
-      repeatDelay: Math.random() * 8 + 4,
-      ease: "easeOut"
-    }}
-  >
-    <div className="relative">
-      {/* Star head */}
-      <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_10px_4px_rgba(255,255,255,0.8)]" />
-      {/* Star tail */}
-      <div 
-        className="absolute top-1/2 right-full -translate-y-1/2 w-20 h-[2px] bg-gradient-to-l from-white via-white/60 to-transparent"
-        style={{ filter: 'blur(0.5px)' }}
-      />
-    </div>
-  </motion.div>
-);
+  size?: 'small' | 'normal' | 'large';
+}) => {
+  const sizeConfig = {
+    small: { head: 'w-1 h-1', tail: 'w-12', glow: '0_0_6px_2px_rgba(255,255,255,0.7)' },
+    normal: { head: 'w-1.5 h-1.5', tail: 'w-20', glow: '0_0_8px_3px_rgba(255,255,255,0.8)' },
+    large: { head: 'w-2 h-2', tail: 'w-28', glow: '0_0_12px_4px_rgba(255,255,255,0.9)' },
+  };
+  
+  const config = sizeConfig[size];
+  
+  return (
+    <motion.div
+      className="absolute pointer-events-none"
+      style={{ 
+        top, 
+        left, 
+        rotate: `${angle}deg`,
+      }}
+      initial={{ 
+        opacity: 0, 
+        x: -50,
+        y: -25,
+        scale: 0.5
+      }}
+      animate={{ 
+        opacity: [0, 1, 1, 1, 0],
+        x: [-50, 0, 200, 400, 500],
+        y: [-25, 0, 100, 200, 250],
+        scale: [0.5, 1, 1, 0.8, 0.3]
+      }}
+      transition={{
+        duration,
+        delay,
+        repeat: Infinity,
+        repeatDelay: Math.random() * 6 + 3,
+        ease: [0.25, 0.1, 0.25, 1], // Smooth cubic bezier
+        times: [0, 0.1, 0.5, 0.85, 1] // Natural timing
+      }}
+    >
+      <div className="relative">
+        {/* Glowing star head */}
+        <div 
+          className={`${config.head} rounded-full bg-white`}
+          style={{ 
+            boxShadow: config.glow,
+          }}
+        />
+        {/* Elegant gradient tail */}
+        <div 
+          className={`absolute top-1/2 right-full -translate-y-1/2 ${config.tail} h-[1.5px]`}
+          style={{ 
+            background: 'linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0.6), rgba(255,255,255,0.2), transparent)',
+          }}
+        />
+        {/* Secondary softer glow trail */}
+        <div 
+          className={`absolute top-1/2 right-full -translate-y-1/2 ${config.tail} h-[4px] opacity-40`}
+          style={{ 
+            background: 'linear-gradient(to left, rgba(255,200,180,0.8), rgba(255,200,180,0.3), transparent)',
+            filter: 'blur(2px)',
+          }}
+        />
+      </div>
+    </motion.div>
+  );
+};
 
 const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -52,14 +89,16 @@ const HeroSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Shooting stars configuration
+  // Shooting stars with varied sizes and timings for realism
   const shootingStars = [
-    { delay: 0, duration: 1.5, top: '15%', left: '10%', angle: 35 },
-    { delay: 3, duration: 1.2, top: '25%', left: '60%', angle: 40 },
-    { delay: 6, duration: 1.8, top: '10%', left: '75%', angle: 30 },
-    { delay: 9, duration: 1.4, top: '20%', left: '30%', angle: 38 },
-    { delay: 12, duration: 1.6, top: '8%', left: '85%', angle: 42 },
-    { delay: 15, duration: 1.3, top: '18%', left: '45%', angle: 33 },
+    { delay: 0.5, duration: 2.2, top: '12%', left: '5%', angle: 38, size: 'large' as const },
+    { delay: 4, duration: 1.8, top: '22%', left: '55%', angle: 42, size: 'normal' as const },
+    { delay: 7, duration: 2.5, top: '8%', left: '70%', angle: 35, size: 'small' as const },
+    { delay: 10, duration: 2.0, top: '18%', left: '25%', angle: 40, size: 'normal' as const },
+    { delay: 13, duration: 1.6, top: '6%', left: '80%', angle: 45, size: 'large' as const },
+    { delay: 16, duration: 2.3, top: '15%', left: '40%', angle: 36, size: 'small' as const },
+    { delay: 19, duration: 1.9, top: '10%', left: '15%', angle: 43, size: 'normal' as const },
+    { delay: 22, duration: 2.1, top: '20%', left: '65%', angle: 38, size: 'small' as const },
   ];
 
   return (
