@@ -83,16 +83,11 @@ const HeroSection = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
-  // Shooting stars with staggered timings for continuous effect
+  // Fewer shooting stars, contained in upper sky area only
   const shootingStars = [
-    { delay: 0, duration: 3, top: '8%', startX: '-5%', size: 'large' as const },
-    { delay: 2.5, duration: 2.5, top: '15%', startX: '20%', size: 'normal' as const },
-    { delay: 5, duration: 3.5, top: '5%', startX: '45%', size: 'small' as const },
-    { delay: 7, duration: 2.8, top: '20%', startX: '10%', size: 'normal' as const },
-    { delay: 9.5, duration: 3.2, top: '12%', startX: '60%', size: 'large' as const },
-    { delay: 12, duration: 2.6, top: '18%', startX: '35%', size: 'small' as const },
-    { delay: 14, duration: 3, top: '7%', startX: '75%', size: 'normal' as const },
-    { delay: 16.5, duration: 2.9, top: '22%', startX: '5%', size: 'small' as const },
+    { delay: 0, duration: 2.5, top: '5%', startX: '10%', size: 'normal' as const },
+    { delay: 4, duration: 3, top: '12%', startX: '50%', size: 'small' as const },
+    { delay: 8, duration: 2.8, top: '8%', startX: '25%', size: 'large' as const },
   ];
 
   return (
