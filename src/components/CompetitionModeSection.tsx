@@ -43,89 +43,6 @@ const features = [
 ];
 
 // Animated AI TV Character Component
-// Particles that flow FROM antenna TOWARD the cards
-const AntennaToCardsParticles = ({ isActive, activeCardIndex }: { isActive: boolean; activeCardIndex: number | null }) => {
-  // Generate particles that travel toward the right (toward cards)
-  const particles = [...Array(16)].map((_, i) => {
-    // Stagger the target Y positions to spread across all 6 card positions
-    const cardRow = i % 3; // 0, 1, 2 for top, middle, bottom
-    const yTarget = 80 + cardRow * 120; // Spread across card grid height
-    const xTarget = 400 + (i % 4) * 50; // Vary x endpoint
-    const curveAmount = (Math.random() - 0.5) * 60; // Curved path variation
-    
-    return (
-      <motion.div
-        key={`particle-${i}`}
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          left: '50%',
-          top: '5%',
-          width: `${3 + Math.random() * 4}px`,
-          height: `${3 + Math.random() * 4}px`,
-          background: i % 3 === 0 
-            ? 'radial-gradient(circle, #fbbf24 0%, #f97316 70%, transparent 100%)'
-            : i % 3 === 1
-            ? 'radial-gradient(circle, #fff7ed 0%, #fbbf24 70%, transparent 100%)'
-            : 'radial-gradient(circle, #fb923c 0%, #ea580c 70%, transparent 100%)',
-          boxShadow: '0 0 8px rgba(251, 191, 36, 0.9)',
-        }}
-        initial={{ opacity: 0, x: 0, y: 0, scale: 1 }}
-        animate={{
-          opacity: [0, 1, 1, 0.8, 0.3, 0],
-          x: [0, xTarget * 0.25, xTarget * 0.5, xTarget * 0.75, xTarget * 0.9, xTarget],
-          y: [0, yTarget * 0.2 + curveAmount, yTarget * 0.5, yTarget * 0.8 - curveAmount * 0.5, yTarget * 0.95, yTarget],
-          scale: [0.5, 1.2, 1, 0.8, 0.5, 0.2],
-        }}
-        transition={{
-          duration: isActive ? 2.5 + Math.random() * 0.5 : 3.5 + Math.random() * 0.8,
-          repeat: Infinity,
-          delay: i * 0.2,
-          ease: [0.25, 0.1, 0.25, 1], // Smooth easing - slow down at end
-        }}
-      />
-    );
-  });
-
-  // Flowing trail particles (smaller, more numerous)
-  const trailParticles = [...Array(10)].map((_, i) => {
-    const yTarget = 60 + (i % 3) * 140;
-    const xTarget = 350 + Math.random() * 100;
-    
-    return (
-      <motion.div
-        key={`trail-${i}`}
-        className="absolute rounded-full pointer-events-none"
-        style={{
-          left: '50%',
-          top: '8%',
-          width: '2px',
-          height: '2px',
-          background: '#fff',
-          boxShadow: '0 0 4px #fbbf24, 0 0 8px rgba(255, 255, 255, 0.8)',
-        }}
-        animate={{
-          opacity: [0, 0.9, 0.7, 0],
-          x: [0, xTarget * 0.4, xTarget * 0.7, xTarget],
-          y: [0, yTarget * 0.3, yTarget * 0.6, yTarget],
-          scale: [0.5, 1.5, 1, 0],
-        }}
-        transition={{
-          duration: 2.8 + Math.random() * 0.6,
-          repeat: Infinity,
-          delay: i * 0.28 + 0.5,
-          ease: [0.4, 0, 0.2, 1],
-        }}
-      />
-    );
-  });
-
-  return (
-    <div className="absolute pointer-events-none overflow-visible" style={{ left: '0', top: '0', width: '100%', height: '100%', zIndex: 10 }}>
-      {particles}
-      {trailParticles}
-    </div>
-  );
-};
 
 const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: number | null; mousePosition: { x: number; y: number } }) => {
   const [isBlinking, setIsBlinking] = useState(false);
@@ -191,8 +108,6 @@ const AITVCharacter = ({ hoveredCardIndex, mousePosition }: { hoveredCardIndex: 
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
-      {/* Particles flowing from antenna toward cards */}
-      <AntennaToCardsParticles isActive={hoveredCardIndex !== null} activeCardIndex={hoveredCardIndex} />
       
       {/* AI TV Character SVG */}
       <motion.svg
