@@ -1,8 +1,10 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const navLinks = [
   { name: "Features", href: "#features", isPage: false },
@@ -15,6 +17,8 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, signOut, loading } = useAuth();
+  const { toast } = useToast();
 
   const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string, isPage: boolean) => {
     e.preventDefault();
@@ -59,6 +63,15 @@ const Navbar = () => {
     }
   }, [navigate, location.pathname]);
 
+  const handleSignOut = async () => {
+    await signOut();
+    toast({
+      title: "Signed out",
+      description: "You have been signed out successfully.",
+    });
+    setIsOpen(false);
+  };
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,12 +112,28 @@ const Navbar = () => {
 
           {/* Desktop CTAs */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button variant="ghost" size="sm">
-              Log In
-            </Button>
-            <Button variant="hero" size="default">
-              Get Started Free
-            </Button>
+            {loading ? (
+              <div className="h-10 w-24 animate-pulse bg-muted rounded-lg" />
+            ) : user ? (
+              <>
+                <span className="text-sm text-muted-foreground">
+                  {user.email}
+                </span>
+                <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
+                  <LogOut className="w-4 h-4" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")}>
+                  Log In
+                </Button>
+                <Button variant="hero" size="default" onClick={() => navigate("/auth")}>
+                  Get Started Free
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -138,8 +167,26 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
-                <Button variant="ghost">Log In</Button>
-                <Button variant="hero">Get Started Free</Button>
+                {loading ? (
+                  <div className="h-10 animate-pulse bg-muted rounded-lg" />
+                ) : user ? (
+                  <>
+                    <p className="text-sm text-muted-foreground py-2">{user.email}</p>
+                    <Button variant="ghost" onClick={handleSignOut} className="gap-2">
+                      <LogOut className="w-4 h-4" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="ghost" onClick={() => { navigate("/auth"); setIsOpen(false); }}>
+                      Log In
+                    </Button>
+                    <Button variant="hero" onClick={() => { navigate("/auth"); setIsOpen(false); }}>
+                      Get Started Free
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>
