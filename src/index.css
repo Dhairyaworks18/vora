@@ -267,24 +267,27 @@
   }
 }
 
-/* Sequenced shooting star - appears for ~11% of cycle (2s out of 18s), then hidden */
-@keyframes shootingStarSequence {
+/* Shooting star animation - smooth ease-in-out motion */
+@keyframes shootingStarMove {
+  0% {
+    transform: rotate(45deg) translateX(0);
+  }
+  100% {
+    transform: rotate(45deg) translateX(calc(60vw + 200px));
+  }
+}
+
+@keyframes shootingStarFade {
   0% {
     opacity: 0;
-    transform: rotate(45deg) translateX(0);
   }
-  1% {
+  5% {
     opacity: 1;
   }
-  8% {
+  85% {
     opacity: 1;
   }
-  11% {
+  100% {
     opacity: 0;
-    transform: rotate(45deg) translateX(calc(100vw + 200px));
-  }
-  11.1%, 100% {
-    opacity: 0;
-    transform: rotate(45deg) translateX(0);
   }
 }

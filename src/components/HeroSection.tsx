@@ -2,68 +2,126 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.png";
-import { useRef } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
-// Single shooting star with proper sequencing (one at a time, 7s delay between)
+// Shooting star component with smooth CSS animations
 const ShootingStar = ({ 
-  index,
-  totalCycleDuration,
-  animationDuration,
-  top, 
+  isActive,
+  top,
   startX,
+  onComplete
 }: { 
-  index: number;
-  totalCycleDuration: number;
-  animationDuration: number;
-  top: string; 
+  isActive: boolean;
+  top: string;
   startX: string;
+  onComplete: () => void;
 }) => {
-  // Each star appears at a specific offset in the cycle
-  // Star 0: starts at 0s, Star 1: starts at (animationDuration + 7s)
-  const starDelay = index * (animationDuration + 7);
-  
+  const animationDuration = 2500; // 2.5 seconds for smooth motion
+
+  useEffect(() => {
+    if (isActive) {
+      const timer = setTimeout(() => {
+        onComplete();
+      }, animationDuration);
+      return () => clearTimeout(timer);
+    }
+  }, [isActive, onComplete, animationDuration]);
+
+  if (!isActive) return null;
+
   return (
     <div
       className="absolute pointer-events-none"
       style={{
         top,
         left: startX,
-        width: '120px',
+        width: '140px',
         height: '3px',
         transform: 'rotate(45deg)',
-        animation: `shootingStarSequence ${totalCycleDuration}s linear ${starDelay}s infinite`,
+        animation: `shootingStarMove ${animationDuration}ms cubic-bezier(0.25, 0.1, 0.25, 1) forwards,
+                    shootingStarFade ${animationDuration}ms ease-in-out forwards`,
       }}
     >
-      {/* Star head */}
+      {/* Star head - bright point */}
       <div
         className="absolute right-0 top-0 rounded-full bg-white"
         style={{
-          width: '3px',
-          height: '3px',
-          boxShadow: `0 0 6px 2px rgba(255,255,255,0.9), 0 0 12px 4px rgba(255,255,255,0.4)`,
+          width: '4px',
+          height: '4px',
+          boxShadow: `0 0 8px 3px rgba(255,255,255,0.95), 0 0 16px 6px rgba(200,220,255,0.5)`,
         }}
       />
-      {/* Main tail */}
+      {/* Main tail - crisp gradient */}
       <div
         className="absolute right-0 top-1/2 -translate-y-1/2"
         style={{
           width: '100%',
-          height: '1.5px',
-          background: 'linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0.8) 10%, rgba(255,255,255,0.4) 40%, rgba(255,255,255,0.1) 70%, transparent 100%)',
+          height: '2px',
+          background: 'linear-gradient(to left, rgba(255,255,255,1) 0%, rgba(255,255,255,0.85) 15%, rgba(255,255,255,0.5) 40%, rgba(255,255,255,0.15) 70%, transparent 100%)',
           borderRadius: '100px',
         }}
       />
       {/* Soft glow trail */}
       <div
-        className="absolute right-0 top-1/2 -translate-y-1/2 opacity-50"
+        className="absolute right-0 top-1/2 -translate-y-1/2 opacity-60"
         style={{
           width: '100%',
-          height: '4.5px',
-          background: 'linear-gradient(to left, rgba(200,220,255,0.6) 0%, rgba(200,220,255,0.2) 30%, transparent 100%)',
+          height: '6px',
+          background: 'linear-gradient(to left, rgba(200,220,255,0.7) 0%, rgba(200,220,255,0.3) 30%, transparent 100%)',
           filter: 'blur(2px)',
           borderRadius: '100px',
         }}
       />
+    </div>
+  );
+};
+
+// Controller for sequenced shooting stars
+const ShootingStarsController = () => {
+  const [activeStarIndex, setActiveStarIndex] = useState<number | null>(null);
+  const delayBetweenStars = 7000; // 7 seconds delay between stars
+  
+  // Star positions - upper sky area only (3-7% from top), avoiding center characters
+  const starConfigs = [
+    { top: '4%', startX: '12%' },   // Upper left sky
+    { top: '5%', startX: '58%' },   // Upper right sky
+  ];
+
+  const scheduleNextStar = useCallback(() => {
+    // Wait for delay, then show next star
+    setTimeout(() => {
+      setActiveStarIndex(prev => {
+        const next = prev === null ? 0 : (prev + 1) % starConfigs.length;
+        return next;
+      });
+    }, delayBetweenStars);
+  }, [starConfigs.length, delayBetweenStars]);
+
+  // Start the first star after initial delay
+  useEffect(() => {
+    const initialDelay = setTimeout(() => {
+      setActiveStarIndex(0);
+    }, 2000); // Start first star after 2 seconds
+
+    return () => clearTimeout(initialDelay);
+  }, []);
+
+  const handleStarComplete = useCallback(() => {
+    setActiveStarIndex(null);
+    scheduleNextStar();
+  }, [scheduleNextStar]);
+
+  return (
+    <div className="absolute inset-0 z-[5] overflow-hidden pointer-events-none">
+      {starConfigs.map((config, index) => (
+        <ShootingStar
+          key={index}
+          isActive={activeStarIndex === index}
+          top={config.top}
+          startX={config.startX}
+          onComplete={handleStarComplete}
+        />
+      ))}
     </div>
   );
 };
@@ -78,17 +136,6 @@ const HeroSection = () => {
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
-
-  // Shooting star timing: 2s animation + 7s wait = 9s per star, 18s total cycle
-  const animationDuration = 2;
-  const delayBetweenStars = 7;
-  const totalCycleDuration = 2 * (animationDuration + delayBetweenStars); // 18s
-  
-  // Two stars in safe sky zones (top 3-7%, avoiding human/robot in center)
-  const shootingStars = [
-    { top: '4%', startX: '15%' },
-    { top: '6%', startX: '55%' },
-  ];
 
   return (
     <section 
@@ -110,19 +157,8 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-vora-navy/60 via-transparent to-vora-navy/80" />
       </motion.div>
 
-      {/* Shooting Stars Layer - one at a time with 7s delay */}
-      <div className="absolute inset-0 z-[5] overflow-hidden pointer-events-none">
-        {shootingStars.map((star, index) => (
-          <ShootingStar 
-            key={index} 
-            index={index}
-            totalCycleDuration={totalCycleDuration}
-            animationDuration={animationDuration}
-            top={star.top}
-            startX={star.startX}
-          />
-        ))}
-      </div>
+      {/* Shooting Stars Layer - one at a time with smooth animation */}
+      <ShootingStarsController />
 
       {/* Content Layer */}
       <div className="relative z-10 container mx-auto px-4 pt-32 pb-20 lg:pt-40 min-h-screen flex flex-col">
