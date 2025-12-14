@@ -26,14 +26,14 @@ const Auth = () => {
   useEffect(() => {
     const demoSession = localStorage.getItem("vora_demo_session");
     if (demoSession === "active") {
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [navigate]);
 
   // Also check real auth state
   useEffect(() => {
     if (!loading && user) {
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [user, loading, navigate]);
 
@@ -77,7 +77,7 @@ const Auth = () => {
         description: "You have successfully logged in to the demo.",
       });
       
-      navigate("/");
+      navigate("/dashboard");
     } else {
       toast({
         title: "Invalid credentials",
