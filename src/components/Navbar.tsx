@@ -17,8 +17,23 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signOut, loading } = useAuth();
+  const { user, isDemoUser, signOut, loading } = useAuth();
   const { toast } = useToast();
+
+  // Get demo user info from localStorage
+  const getDemoUserEmail = () => {
+    const demoUser = localStorage.getItem("vora_demo_user");
+    if (demoUser) {
+      try {
+        return JSON.parse(demoUser).email;
+      } catch {
+        return "Demo User";
+      }
+    }
+    return "Demo User";
+  };
+
+  const isLoggedIn = user || isDemoUser;
 
   const handleNavClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string, isPage: boolean) => {
     e.preventDefault();
@@ -114,10 +129,10 @@ const Navbar = () => {
           <div className="hidden lg:flex items-center gap-3">
             {loading ? (
               <div className="h-10 w-24 animate-pulse bg-muted rounded-lg" />
-            ) : user ? (
+            ) : isLoggedIn ? (
               <>
                 <span className="text-sm text-muted-foreground">
-                  {user.email}
+                  {user?.email || getDemoUserEmail()}
                 </span>
                 <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
                   <LogOut className="w-4 h-4" />
@@ -125,14 +140,9 @@ const Navbar = () => {
                 </Button>
               </>
             ) : (
-              <>
-                <Button variant="ghost" size="sm" onClick={() => navigate("/auth")}>
-                  Log In
-                </Button>
-                <Button variant="hero" size="default" onClick={() => navigate("/auth")}>
-                  Get Started Free
-                </Button>
-              </>
+              <Button variant="hero" size="default" onClick={() => navigate("/auth")}>
+                Log In
+              </Button>
             )}
           </div>
 
@@ -169,23 +179,18 @@ const Navbar = () => {
               <div className="flex flex-col gap-2 pt-4 border-t border-border">
                 {loading ? (
                   <div className="h-10 animate-pulse bg-muted rounded-lg" />
-                ) : user ? (
+                ) : isLoggedIn ? (
                   <>
-                    <p className="text-sm text-muted-foreground py-2">{user.email}</p>
+                    <p className="text-sm text-muted-foreground py-2">{user?.email || getDemoUserEmail()}</p>
                     <Button variant="ghost" onClick={handleSignOut} className="gap-2">
                       <LogOut className="w-4 h-4" />
                       Sign Out
                     </Button>
                   </>
                 ) : (
-                  <>
-                    <Button variant="ghost" onClick={() => { navigate("/auth"); setIsOpen(false); }}>
-                      Log In
-                    </Button>
-                    <Button variant="hero" onClick={() => { navigate("/auth"); setIsOpen(false); }}>
-                      Get Started Free
-                    </Button>
-                  </>
+                  <Button variant="hero" onClick={() => { navigate("/auth"); setIsOpen(false); }}>
+                    Log In
+                  </Button>
                 )}
               </div>
             </div>
