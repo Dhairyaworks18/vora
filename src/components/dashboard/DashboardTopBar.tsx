@@ -80,7 +80,7 @@ const DashboardTopBar = ({ onCreateNew }: DashboardTopBarProps) => {
 
   const handleSignOut = async () => {
     await signOut();
-    navigate("/auth");
+    navigate("/");
   };
 
   return (
