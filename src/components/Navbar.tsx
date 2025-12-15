@@ -85,6 +85,7 @@ const Navbar = () => {
       description: "You have been signed out successfully.",
     });
     setIsOpen(false);
+    navigate("/");
   };
 
   return (
