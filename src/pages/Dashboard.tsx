@@ -7,6 +7,7 @@ import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardTopBar from "@/components/dashboard/DashboardTopBar";
 import PresentationsGrid from "@/components/dashboard/PresentationsGrid";
 import EditorView from "@/components/dashboard/EditorView";
+import BlankDeckEditor from "@/components/editor/BlankDeckEditor";
 import SectionContent from "@/components/dashboard/SectionContent";
 import { useToast } from "@/hooks/use-toast";
 
@@ -111,11 +112,18 @@ const DashboardContent = () => {
       {/* Editor Overlay */}
       <AnimatePresence>
         {editorState.isOpen && editorState.presentation && (
-          <EditorView
-            presentation={editorState.presentation}
-            mode={editorState.mode}
-            onBack={handleCloseEditor}
-          />
+          editorState.mode === "blank" ? (
+            <BlankDeckEditor
+              presentation={editorState.presentation}
+              onBack={handleCloseEditor}
+            />
+          ) : (
+            <EditorView
+              presentation={editorState.presentation}
+              mode={editorState.mode}
+              onBack={handleCloseEditor}
+            />
+          )
         )}
       </AnimatePresence>
     </div>
